@@ -1,8 +1,16 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
+
 #include "StartScene.h"
 #include "GameScene.h"
+
 #include "Hero.h"
+
+
+#include "HouyiHero.h"
+#include "HouyiNormalAttack.h"
+#include "HouyiESkill.h"
+#include "HouyiWSkill.h"
 
 
 USING_NS_CC;
@@ -14,6 +22,7 @@ Scene* GameScene::createScene()
 //返回初始场景函数
 void GameScene::menuBackCallback(cocos2d::Ref* pSender)
 {
+	
 	auto sc = HelloWorld::createScene();
 	Director::getInstance()->replaceScene(sc);
 }
@@ -29,6 +38,11 @@ void GameScene::onEnter()
 	//onEnter函数第一行一定要加这句
 	Scene::onEnter();
 	
+	//////////首先默认己方英雄为后羿，用于调试////////////////////////////////////////////////////////////////
+	
+
+
+
 	//注册鼠标监听器
 	//使用λ表达式
 	//目前只实现了使英雄在鼠标松开时  根据移动速度 移动到鼠标位置的功能
@@ -45,93 +59,94 @@ void GameScene::onEnter()
 	//点击后未松开并移动鼠标时
 	mouseListener->onTouchMoved = [](Touch* touch , Event* event)
 	{
-
+		
 	};
 
 	//松开时
-	mouseListener->onTouchEnded = [](Touch* touch , Event* event)
-	{
-		//通过给英雄设置的标签获取英雄
-		//书上原话是获取事件所绑定的精灵
-		//很玄学的一步我也不知道是什么原理
-		//init函数中addChild(hero,20,tag),其中的tag就是该英雄的标签
-		auto target = static_cast<Hero*>(event->getCurrentTarget());
+	mouseListener->onTouchEnded = CC_CALLBACK_2(GameScene::touchEnded, this);
+	
 
-		//获取松开鼠标时的鼠标位置
-		Vec2 touchPosition = touch->getLocation();
-		//获取英雄当前位置
-		Vec2 heroPosition = target->getPosition();
-		//英雄向该点运动
-
-		//获取英雄目前的速度
-		float heroSpeed = target->getMoveSpeed();
-		//获取相对位置
-		Vec2 relativePosition = heroPosition - touchPosition;
-		//获取相对位置的模长
-		float distanceSquare = relativePosition.x*relativePosition.x + relativePosition.y*relativePosition.y;
-		float distance = sqrt(distanceSquare);
-		//计算运动到该点所需的时间
-		float timeNeeded = distance / heroSpeed;
-
-		//先停止当前的运动动作，否则会造成运动的叠加
-		target->stopActionByTag(HeroMove);
-
-		//定义一个运动动作moveAction，运动到指定坐标touchPosition
-		FiniteTimeAction * moveAction =(FiniteTimeAction*)target->runAction(MoveTo::create(timeNeeded,touchPosition));
-		//给这个动作设置tag ----> HeroMove
-		moveAction->setTag(HeroMove);
-
-
-
-	};
 
 	//吞没事件，使鼠标的操作不传给下一层
 	mouseListener->setSwallowTouches(true);
 
 	//又是看不懂的玄学一步，通过这步给鼠标监听器绑定英雄的tag/////////////////////////////////    ↓这个就是tag
 	EventDispatcher *mouseDispatcher = Director::getInstance()->getEventDispatcher(); //     ↓
-	mouseDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, getChildByTag(Hero_Tag));
+	mouseDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, getChildByTag(HeroTag));
 
 
 	//注册键盘监听器
 	//使用λ表达式
-	//目前只实现了 Q W E A键按下时英雄做出响应，S键是用来测试的
+	//目前只实现了 Q W E A B P键按下时英雄做出响应
 
 	auto keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = [](EventKeyboard::KeyCode keyCode, Event* event) 
 	{
 		//根据tag获取英雄
 		auto target = static_cast<Hero*>(event->getCurrentTarget());
+		//当前正在按下按键，此时点击鼠标会变为类似选择攻击目标的作用
+		//不再是移动
+		target->setPressingKeyboard();
 		switch (keyCode)
 		{
-		
-		case EventKeyboard::KeyCode::KEY_Q :
-			{
-			target->changeMoveSpeed(50);
+		case EventKeyboard::KeyCode::KEY_A:
+		{
+			target->thisKeyPressed('A');
 			break;
+		}
+
+		case EventKeyboard::KeyCode::KEY_Q:
+		{
+			target->thisKeyPressed('Q');
+			if (target->getHeroName() == 'H')
+			{
+				if (target->getQSkillWaitTime() <= 0.01)
+				{
+					//停止移动动作发动技能
+					target->stopActionByTag(HeroMove);
+					//发动q技能，持续时间内增加后羿攻击速度
+					target->setBuff(true);
+					//持续时间5*q技能等级
+					target->setBuffTime(5 * target->getQSkillLevel());
+					//该技能实现效果在update函数中实现
+					target->setQSkillWaitTime(target->getQSkillCdTime());
+				}
 			}
+			break;
+		}
 
 		case EventKeyboard::KeyCode::KEY_W:
 		{
+			target->thisKeyPressed('W');
 			break;
 		}
 
 		case EventKeyboard::KeyCode::KEY_E:
 		{
+			target->thisKeyPressed('E');
+			break;
+		}
+		//暂定按P键实现查看装备功能
+		case EventKeyboard::KeyCode::KEY_P:
+		{
+			target->thisKeyPressed('P');
 			break;
 		}
 
-		case EventKeyboard::KeyCode::KEY_A:
+		//B键打开商店
+		case EventKeyboard::KeyCode::KEY_B:
 		{
+			target->thisKeyPressed('B');
 			break;
 		}
-		default:break;
-			
+		default : break;
 		}
+		
 	};
 	keyboardListener->onKeyReleased = [](EventKeyboard::KeyCode keyCode, Event* event)
 	{
-
+		auto target = static_cast<Hero*>(event->getCurrentTarget());
+		target->setUnPressingKeyboard();
 	};
 	//不知道该不该吞没事件，也不知道怎么设置键盘吞没
 	//书上没写
@@ -139,14 +154,14 @@ void GameScene::onEnter()
 
 	//跟鼠标监听看不懂的玄学一步一样，通过这步给鼠标监听器绑定英雄的tag/////////////////////////////    ↓这个就是tag
 	EventDispatcher *keyboardDispatcher = Director::getInstance()->getEventDispatcher();//       ↓
-	keyboardDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, getChildByTag(Hero_Tag));
+	keyboardDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, getChildByTag(HeroTag));
 }
 
 void GameScene::onExit()
 {
 	//反正一定要加下边这句
 	Scene::onExit();
-	
+
 	//在onExit函数中注销监听器
 	//不会呐
 	//不知道会弄出什么bug//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,14 +179,50 @@ bool GameScene::init()
 	{
 		return false;
 	}
+	////////目前默认设置为后羿//////////////////////////////////////////////////////后边要改这个///////////////////////////
+	this->setMeHeroTag('H');
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	//设置英雄精灵
-	auto hero = Hero::create();
-	hero->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
-	addChild(hero, 100, Hero_Tag);
+
+
+
+	//时间调度函数
+	this->scheduleUpdate();
+
+	
+	//根据meHeroTag设置英雄精灵
+	switch (this->getMeHeroTag())
+	{
+
+	case 'H':
+	{
+		auto hero = HouyiHero::create();
+		hero->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
+		addChild(hero, 100, HeroTag);
+		//该函数为计算冷却时间和攻击间隔的函数
+		hero->scheduleUpdate();
+		break;
+	}
+	case 'Y':
+	{
+		break;
+	}
+
+	case 'D':
+	{
+		break;
+	}
+
+	default:break;
+	}
+
+
+
+
+	
+	
 
 	//设置返回初始场景的菜单
 	MenuItemFont::setFontName("Arial");
@@ -185,4 +236,170 @@ bool GameScene::init()
 	this->addChild(menu, 200);
 
 	return true;
+}
+
+
+void GameScene::touchEnded(cocos2d::Touch* touch,cocos2d:: Event* event)
+{
+	//通过给英雄设置的标签获取英雄
+	//书上原话是获取事件所绑定的精灵
+	//很玄学的一步我也不知道是什么原理
+	//init函数中addChild(hero,20,tag),其中的tag就是该英雄的标签
+
+	//获取松开鼠标时的鼠标位置
+	Vec2 touchPosition = touch->getLocation();
+
+	//如果当前英雄为后羿
+	if (this->meHeroTag == 'H')
+	{
+		auto target = static_cast<HouyiHero*>(event->getCurrentTarget());
+		//将英雄的成员变量touchPoint赋值为touchPosition
+		target->setTouchPoint(touchPosition);
+		//获取英雄当前位置
+		Vec2 heroPosition = target->getPosition();
+
+		//如果点击鼠标时未按键，则把鼠标点击作为向该点移动
+		if (!target->isPressingKeyboard())
+		{
+			//英雄向该点运动
+
+			//获取英雄目前的速度
+			float heroSpeed = target->getMoveSpeed();
+			//10
+			Vec2 relativePosition = heroPosition - touchPosition;
+			//获取相对位置的模长
+			float distanceSquare = relativePosition.x*relativePosition.x + relativePosition.y*relativePosition.y;
+			float distance = sqrt(distanceSquare);
+			//计算运动到该点所需的时间
+			float timeNeeded = distance / heroSpeed;
+
+			//先停止当前的运动动作，否则会造成运动的叠加
+			target->stopActionByTag(HeroMove);
+
+			//定义一个运动动作moveAction，运动到指定坐标touchPosition
+			FiniteTimeAction * moveAction = (FiniteTimeAction*)target->runAction(MoveTo::create(timeNeeded, touchPosition));
+			//给这个动作设置tag ----> HeroMove
+			moveAction->setTag(HeroMove);
+		}
+
+		//如果点击鼠标时按键，则根据按键进行技能释放
+		//此时鼠标的点对应于技能释放的点
+		if (target->isPressingKeyboard())
+		{
+		
+		char key = target->pressThisKey();
+		switch (key)
+		{
+		case 'A':
+		{
+			if (target->getAttackWaitTime() <= 0.01)
+			{
+				HouyiNormalAttack* houyiNormalAttack = HouyiNormalAttack::createTheAttack();
+
+				//停止当前的移动进行普攻
+				target->stopActionByTag(HeroMove);
+				houyiNormalAttack->takeHouyiNormalAttack(target);
+				//把普攻显示在gamescene场景中
+				this->addChild(houyiNormalAttack, 200);
+				//当普攻精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
+				//重置平A等待时间
+				target->setAttackWaitTime(1.0/target->getAttackSpeed());
+			}
+			break;
+		}
+
+		case 'Q':
+		{
+		//后羿的q技能为未点击鼠标时使用
+		//在键盘监听中定义
+			break;
+		}
+
+		case 'W':
+		{
+			if (target->getWSkillWaitTime() <= 0.01)
+			{
+				//停止当前的移动进行普攻
+				target->stopActionByTag(HeroMove);
+
+				//先弄他十个箭头
+				//修改箭头数记得修改for循环
+				HouyiWSkill* houyiWSkill[13];
+				//中间的箭头单独创建
+				houyiWSkill[0] = HouyiWSkill::createHouyiWSkill();
+				houyiWSkill[0]->takeHouyiWSkill(target, 0);
+				this->addChild(houyiWSkill[0], 200);
+				//两边的箭头成对创建
+				for (int i = 1; i < 13; i+=2)
+				{
+					houyiWSkill[i] = HouyiWSkill::createHouyiWSkill();
+					houyiWSkill[i]->takeHouyiWSkill(target,i * 3.14 / 30);//根据弧度制
+					houyiWSkill[i+1] = HouyiWSkill::createHouyiWSkill();//i乘的数为两箭头夹角
+					houyiWSkill[i+1]->takeHouyiWSkill(target, -i * 3.14 / 30);
+					//把箭头显示在gamescene场景中
+					this->addChild(houyiWSkill[i], 200);
+					this->addChild(houyiWSkill[i+1], 200);
+				}
+				
+				//当普攻精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
+				//重置平A等待时间
+				target->setWSkillWaitTime(target->getWSkillCdTime());
+			}
+			break;
+		}
+
+		case 'E':
+		{
+			if (target->getESkillWaitTime() <= 0.01)
+			{
+				HouyiESkill* bigBird = HouyiESkill::createHouyiESkill();
+			
+
+				//停止当前的移动进行大招
+				target->stopActionByTag(HeroMove);
+				bigBird->takeHouyiESkill(target);
+				//把大招显示在gamescene场景中
+				this->addChild(bigBird, 200);
+				//当大招精灵运动一定距离时删除，该功能在HouyiESkill类的update函数中实现
+				//重置大招等待时间
+				target->setESkillWaitTime(target->getESkillCdTime());
+				
+			}
+			break;
+			
+		}
+
+		case 'P':
+		{
+			break;
+		}
+
+		case 'B':
+		{
+			break;
+		}
+		default:break;
+		}
+	}
+	}
+	
+	//如果当前英雄为亚瑟
+	if (this->meHeroTag == 'Y')
+	{
+
+	}
+
+	//如果当前英雄为妲己
+	if (this->meHeroTag == 'D')
+	{
+
+	}
+	
+	
+
+	
+	
+	
+
+
 }

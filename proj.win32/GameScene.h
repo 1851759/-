@@ -6,16 +6,33 @@
 
 #include "cocos2d.h"
 
+typedef enum
+{
+	HeroTag = 1111,
+} lalala;
 
 class GameScene :public cocos2d::Scene
 {
+	char meHeroTag;
+	char otherHeroTag;
+
 
 public:
+	//获取meHeroTag
+	char getMeHeroTag() { return meHeroTag; } 
+	//设置gamescene的herotag，在roomscece中调用
+	void setMeHeroTag(char heroType) { meHeroTag = heroType; }
+
+	//获取otherHeroTag
+	char getOtherHeroTag() { return otherHeroTag; }
+	void setOtherHeroTag(char heroType) { otherHeroTag = heroType; }
+
 	static cocos2d::Scene* createScene();
 	virtual bool init();
 
 	//返回初始场景
 	void menuBackCallback(cocos2d::Ref* pSender);
+	void touchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
 	CREATE_FUNC(GameScene);
 	virtual void onEnter();
 	virtual void onExit();
