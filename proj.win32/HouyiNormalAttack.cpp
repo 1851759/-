@@ -1,3 +1,4 @@
+//by 王文政 2019年5月27日
 #include "cocos2d.h"
 
 #include "HouyiHero.h"

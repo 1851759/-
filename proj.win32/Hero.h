@@ -97,7 +97,7 @@ public:
 
 	
 	//获得和改变攻击速度
-	float getAttackSpeed() { return _attackSpeed; } const
+	float getAttackSpeed() const{ return _attackSpeed; } 
 	void changeAttackSpeed(const float equipmentAttackSpeed) { _attackSpeed += equipmentAttackSpeed; }
 
 	//获得和改变技能冷却
@@ -115,45 +115,45 @@ public:
 	void cutAttackWaitTime(float waittime) { _attackWaitTime -= waittime; }
 	void setAttackWaitTime(float waittime) { _attackWaitTime = waittime; }
 
-	float getQSkillWaitTime() { return _qSkillWaitTime; } const
+	float getQSkillWaitTime() const{ return _qSkillWaitTime; } 
 	void cutQSkillWaitTime(float waittime) { _qSkillWaitTime -= waittime; }
 	void setQSkillWaitTime(float waittime) { _qSkillWaitTime = waittime; }
 
-	float getWSkillWaitTime() { return _wSkillWaitTime; } const
+	float getWSkillWaitTime() const{ return _wSkillWaitTime; } 
 	void cutWSkillWaitTime(float waittime) { _wSkillWaitTime -= waittime; }
 	void setWSkillWaitTime(float waittime) { _wSkillWaitTime = waittime; }
 
-	float getESkillWaitTime() { return _eSkillWaitTime; } const
+	float getESkillWaitTime() const{ return _eSkillWaitTime; } 
 	void cutESkillWaitTime(float waittime) { _eSkillWaitTime -= waittime; }
 	void setESkillWaitTime(float waittime) { _eSkillWaitTime = waittime; }
 
 	//获得和改变buff持续时间
-	float getBuffTime() { return _buffTime; } const
+	float getBuffTime() const{ return _buffTime; } 
 	void cutBuffTime(float waittime) { _buffTime -= waittime; }
 	void setBuffTime(float lasttime) { _buffTime = lasttime; }
 	void setBuff(bool isinbuff) { _isInBuff = isinbuff; }
-	bool isInBuff() { return _isInBuff; } const 
+	bool isInBuff() const{ return _isInBuff; }  
 
 	//获得和改变属性
 		
 	//给英雄命名和获得英雄名字
 	void setHeroName(char name) { _heroName = name; }
-	char getHeroName() { return _heroName; } const
+	char getHeroName() const{ return _heroName; } 
 
 	//获得和改变等级
 
 	//获得和改变技能等级
-	int getQSkillLevel() { return _qSkillLevel; } const
+	int getQSkillLevel() const{ return _qSkillLevel; } 
 	void qSkillLevelUp() { _qSkillLevel++; } 
 
-	int getWSkillLevel() { return _wSkillLevel; } const
+	int getWSkillLevel() const{ return _wSkillLevel; } 
 	void wSkillLevelUp() { _wSkillLevel++; }
 
-	int getESkillLevel() { return _eSkillLevel; } const
+	int getESkillLevel() const{ return _eSkillLevel; } 
 	void eSkillLevelUp() { _eSkillLevel++; }
 
 	//获得和改变移动速度
-	float getMoveSpeed() { return _moveSpeed; } const
+	float getMoveSpeed() const{ return _moveSpeed; } 
 	void changeMoveSpeed(const float equipmentAttackSpeed) { _moveSpeed += equipmentAttackSpeed; }
 
 	//获得和改变攻击速度
@@ -172,7 +172,7 @@ public:
 	//下列几个函数用于模拟同时监听鼠标和键盘
 	//判断是否在按键盘
 	//和监听中的技能释放有关
-	bool isPressingKeyboard() { return _isPressingKeyboard; } const
+	bool isPressingKeyboard() const{ return _isPressingKeyboard; } 
 	void setPressingKeyboard() { _isPressingKeyboard = true; }
 	void setUnPressingKeyboard() { _isPressingKeyboard = false; }
 	void thisKeyPressed(char key) { _pressedKey = key; }

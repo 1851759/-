@@ -19,7 +19,7 @@ class GameScene :public cocos2d::Scene
 
 public:
 	//获取meHeroTag
-	char getMeHeroTag() { return meHeroTag; } 
+	char getMeHeroTag() { return meHeroTag; }
 	//设置gamescene的herotag，在roomscece中调用
 	void setMeHeroTag(char heroType) { meHeroTag = heroType; }
 
@@ -27,18 +27,25 @@ public:
 	char getOtherHeroTag() { return otherHeroTag; }
 	void setOtherHeroTag(char heroType) { otherHeroTag = heroType; }
 
-	static cocos2d::Scene* createScene();
+	static cocos2d::Scene* createScene(char meHero,char otherHero);
 	virtual bool init();
 
 	//返回初始场景
 	void menuBackCallback(cocos2d::Ref* pSender);
 	void touchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
-	CREATE_FUNC(GameScene);
+	static GameScene* create(char meName, char otherName);
 	virtual void onEnter();
 	virtual void onExit();
+
+	void shop_xie(cocos2d::Ref *pSender);
+	void shop_shoutao(cocos2d::Ref* pSender);
+	void shop_changgong(cocos2d::Ref *pSender);
+	void shop_kaijia(cocos2d::Ref *pSender);
+	void shop_hongshuijing(cocos2d::Ref *pSender);
+	void shop_lanshuijing(cocos2d::Ref *pSender);
+	void Update(float dt);
 
 	//鼠标监听器和键盘监听器在onEnter函数中通过λ表达式定义
 };
 
 #endif
-
