@@ -19,29 +19,30 @@ class Soldier :public Sprite
 public:
 	virtual bool init();
 	static Soldier* create();
-	//»ñµÃºÍ¸Ä±äµÈ´ıÊ±¼ä
+	//è·å¾—å’Œæ”¹å˜ç­‰å¾…æ—¶é—´
 	float getAttackWaitTime() { return _attackWaitTime; }
 	void cutAttackWaitTime(float waittime) { _attackWaitTime -= waittime; }
 	void setAttackWaitTime(float waittime) { _attackWaitTime = waittime; }
 
-	//»ñµÃºÍ¸Ä±ä¹¥»÷ËÙ¶È
+	//è·å¾—å’Œæ”¹å˜æ”»å‡»é€Ÿåº¦
 	float getAttackSpeed() const { return _attackSpeed; }
 	void changeAttackSpeed(const float equipmentAttackSpeed) { _attackSpeed += equipmentAttackSpeed; }
 
-	//»ñµÃºÍ¸Ä±äÒÆ¶¯ËÙ¶È
+	//è·å¾—å’Œæ”¹å˜ç§»åŠ¨é€Ÿåº¦
 	float getMoveSpeed() const { return _moveSpeed; }
 	void changeMoveSpeed(const float equipmentAttackSpeed) { _moveSpeed += equipmentAttackSpeed; }
 
-	//»ñµÃºÍ¸Ä±ä¹¥»÷Á¦
+	//è·å¾—å’Œæ”¹å˜æ”»å‡»åŠ›
 	float getAttackForce() const { return _attackForce; }
 	void changeAttackForce(const float equipmentAttackForce) { _attackForce += equipmentAttackForce; }
 
-	//»ñµÃºÍ¸Ä±ä·ÀÓùÁ¦
+	//è·å¾—å’Œæ”¹å˜é˜²å¾¡åŠ›
 	float getDefenceForce() const { return _defenceForce; }
 	void changeDefenceForce(const float equipmentDefenceForce) { _defenceForce += equipmentDefenceForce; }
 
-	//»ñµÃºÍ¸Ä±äÉúÃüÖµ
+	//è·å¾—å’Œæ”¹å˜ç”Ÿå‘½å€¼
 	float getHealthPoint() const { return _healthPoint; }
 	void changeHealthPoint(const float equipmentHealthPoint) { _healthPoint += equipmentHealthPoint; }
 };
+void update(float dt);
 #endif // __SOLDIER_H__
