@@ -24,7 +24,8 @@ bool RoomScene::init()
 
 	//默认先选择己方英雄
 	this->setFlag(MeFlag);
-
+	//先默认敌方是human
+	this->setHuman();
 	//设置背景
 	Sprite *bg = Sprite::create("RoomSceneBackground.jpg");
 	bg->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
@@ -88,7 +89,7 @@ bool RoomScene::init()
 void RoomScene::menuReadyCallback(cocos2d::Ref* pSender)
 {
 	log("ready get %c,%c\n", this->getMeHeroName(), this->getOtherHeroName());
-	auto gs = GameScene::createScene(this->getMeHeroName(),this->getOtherHeroName());
+	auto gs = GameScene::createScene(this->getMeHeroName(),this->getOtherHeroName(),this->isAI());
 	Director::getInstance()->replaceScene(gs);
 }
 
@@ -172,6 +173,7 @@ void RoomScene::ChooseHero_d(cocos2d::Ref* pSender)
 void RoomScene::menuClickToAddAI(Ref* pSender)
 {
 	this->setFlag(OtherFlag);
+	this->setAI();
 	log("flag is %d", this->getFlag());
 }
 

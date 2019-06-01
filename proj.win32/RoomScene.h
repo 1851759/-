@@ -16,6 +16,7 @@ class RoomScene : public cocos2d::Scene
 	char _meHeroName;
 	char _otherHeroName;
 	int _flag;
+	bool _isAI;
 
 public:
 
@@ -45,7 +46,9 @@ public:
 	void menuClickToAddAI(cocos2d::Ref* pSender);
 	void menuClickToAddMyHero(cocos2d::Ref* pSender);
 	
-
+	void setAI() { _isAI = true; }
+	void setHuman() { _isAI = false; }
+	bool isAI() const { return _isAI; }
 
 	CREATE_FUNC(RoomScene);
 };

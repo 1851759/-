@@ -152,18 +152,28 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="RoomScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Hero.cpp" />
+    <ClCompile Include="HouyiESkill.cpp" />
+    <ClCompile Include="HouyiHero.cpp" />
+    <ClCompile Include="HouyiWSkill.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="StartScene.cpp" />
+    <ClCompile Include="HouyiNormalAttack.cpp" />
+    <ClCompile Include="YaseHero.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
+    <ClInclude Include="RoomScene.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Hero.h" />
+    <ClInclude Include="HouyiESkill.h" />
+    <ClInclude Include="HouyiHero.h" />
+    <ClInclude Include="HouyiWSkill.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="StartScene.h" />
+    <ClInclude Include="HouyiNormalAttack.h" />
+    <ClInclude Include="YaseHero.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cocos2d\cocos\2d\libcocos2d.vcxproj">

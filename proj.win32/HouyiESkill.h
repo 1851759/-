@@ -22,6 +22,8 @@ public:
 	//触发技能
 	static HouyiESkill* createHouyiESkill();
 	void takeHouyiESkill(HouyiHero* hero);
+	//重载take函数
+	void takeHouyiESkill(cocos2d::Vec2 startPoint,cocos2d::Vec2 targetPoint);
 
 	//设置大鸟箭头移动方向
 	//需要设置一个模长为1的二维向量

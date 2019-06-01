@@ -5,8 +5,8 @@
 
 
 
-#ifndef __NORMALATTACK__
-#define __NORALATTACK__
+#ifndef __HOUYINORMALATTACK__
+#define __HOUYINORMALATTACK__
 
 #include "cocos2d.h"
 #include "HouyiHero.h"
@@ -27,6 +27,8 @@ public:
 	//触发平A
 	static HouyiNormalAttack* createTheAttack();
 	void takeHouyiNormalAttack(HouyiHero* hero);
+	//重载take函数
+	void takeHouyiNormalAttack(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
 	//设置平A箭头移动方向
 	//需要设置一个模长为1的二维向量

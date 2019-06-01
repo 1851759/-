@@ -21,13 +21,28 @@
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="StartScene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="Hero.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HouyiHero.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HouyiNormalAttack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HouyiESkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HouyiWSkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="RoomScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="YaseHero.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,13 +56,28 @@
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="StartScene.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="Hero.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="GameScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HouyiHero.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HouyiNormalAttack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HouyiESkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HouyiWSkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="RoomScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="YaseHero.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

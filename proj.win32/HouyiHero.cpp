@@ -1,8 +1,9 @@
 //by 王文政 2019年5月27日
 #include "cocos2d.h"
-#include "Hero.h"
 #include "HouyiHero.h"
 #include "HouyiNormalAttack.h"
+#include "HouyiESkill.h"
+
 
 HouyiHero* HouyiHero::create()
 {
@@ -15,24 +16,34 @@ HouyiHero* HouyiHero::create()
 		//在下边初始化后羿的属性值////////////////////////////////////////////
 		houyi->setHeroName('H');
 		//基础移动速度
-		houyi->changeMoveSpeed(60);
+		houyi->changeMoveSpeed(HouyiMoveSpeed);
 		
 		//基础攻击速度，每秒攻击多少次
-		houyi->changeAttackSpeed(0.5);
+		houyi->changeAttackSpeed(HouyiAttackSpeed);
 		houyi->setAttackWaitTime(0);
+
+		//基础攻击力
+
+		//基础防御力
+
+		//基础等级
+
+		//基础金币
+
+		//基础经验值
 
 		//q技能
 		houyi->qSkillLevelUp();//此处默认技能一级用于测试////////////////////////////////////
-		houyi->setQSkillCdTime(10);
+		houyi->setQSkillCdTime(HouyiQSkillCD);
 		houyi->setBuff(false);
 
 		//w技能
 		houyi->wSkillLevelUp();
-		houyi->setWSkillCdTime(5);
+		houyi->setWSkillCdTime(HouyiWSkillCD);
 
 		//e技能
 		houyi->eSkillLevelUp();
-		houyi->setESkillCdTime(2);
+		houyi->setESkillCdTime(HouyiESkillCD);
 	}
 	else
 	{
@@ -50,11 +61,16 @@ bool HouyiHero::init()
 	//下边的if里搞出了英雄的图片
 	if (!Sprite::initWithFile("HouyiHero.png"))
 	{
+		
 		return false;
 	}
-
+	this->setScale(0.5);
 	return true;
 }
+
+
+
+
 
 void HouyiHero::update(float dt)
 {
@@ -87,8 +103,8 @@ void HouyiHero::update(float dt)
 		if (this->getBuffTime() <= 0.01)
 		{
 			//此处为应减去的属性
-			this->changeMoveSpeed(-this->getQSkillLevel() * 200);
-			this->changeAttackSpeed(-this->getQSkillLevel() * 20);
+			this->changeMoveSpeed(-this->getQSkillLevel() * HouyiQSkillMoveSpeedAdd);
+			this->changeAttackSpeed(-this->getQSkillLevel() * HouyiQSkillAttackSpeedAdd);
 		}
 	}
 	//获得buff
@@ -96,11 +112,38 @@ void HouyiHero::update(float dt)
 	{
 		this->setBuff(false);
 		//此处为获得的buff属性
-		this->changeMoveSpeed(this->getQSkillLevel() * 200);
-		this->changeAttackSpeed(this->getQSkillLevel() * 20);
+		this->changeMoveSpeed(this->getQSkillLevel() * HouyiQSkillMoveSpeedAdd);
+		this->changeAttackSpeed(this->getQSkillLevel() * HouyiQSkillAttackSpeedAdd);
 	}
+
 }
 
+//实现AI
+void HouyiHero::AIcontrol(Hero* hero)
+{
+	/*
+	this->setHeroPoint(this->getPosition());
+	this->setOtherHeroPoint(hero->getPosition());
+	*/
+	this->setOtherHero(hero);
+	this->schedule(schedule_selector(HouyiHero::AIAction),1.0/60.0f);
+}
+	
+void HouyiHero::AIAction(float dt)
+{
+//	cocos2d::log("%f  %f\n",this->getOtherHero()->getPosition().x, this->getOtherHero()->getPosition().y);
+	this->setOtherHeroPoint(this->getOtherHero()->getPosition());
+	this->setHeroPoint(this->getPosition());
+
+	//移动AI
+	cocos2d::Vec2 distance = this->getOtherHeroPoint() - this->getHeroPoint();
+	float length = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
+	cocos2d::Vec2 standardDistance = distance / length;
+	this->setPosition(this->getPosition() + standardDistance);
+	
+	
+
+}
 
 
 

@@ -22,6 +22,8 @@ public:
 	//触发散射技能
 	static HouyiWSkill* createHouyiWSkill();
 	void takeHouyiWSkill(HouyiHero* hero ,float angle);
+	//重载take函数
+	void takeHouyiWSkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint, float angle);
 
 	//设置散射中间箭头移动方向
 	//需要设置一个模长为1的二维向量

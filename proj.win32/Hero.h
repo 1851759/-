@@ -41,6 +41,13 @@ class Hero : public cocos2d::Sprite
 	cocos2d::Vec2 _touchPoint;
 	cocos2d::Vec2 _heroPoint;
 
+	//pve,pvp相关
+	bool _isAI;
+	cocos2d::Vec2 _otherHeroPoint;
+	cocos2d::Vec2 _otherTowerPoint;
+	cocos2d::Vec2 _otherSoldierPoint;
+	Hero* _otherHero;
+	
 	//在此处添加英雄的属性数值
 
 	//该版本目的为测试移动和技能释放所以暂不定义英雄属性
@@ -50,7 +57,12 @@ class Hero : public cocos2d::Sprite
 	//妲己的名字为'D'
 	char _heroName;
 	int _level;
+	int _experiencePoint;
+	int _money;
 	float _moveSpeed;
+	float _atk;
+	float _def;
+
 
 	//用数组模拟装备
 	//每个装备有一个枚举值
@@ -81,7 +93,7 @@ class Hero : public cocos2d::Sprite
 	//buff技能的持续时间
 	float _buffTime;
 	bool _isInBuff;
-
+	
 public:
 
 	//重写SPrite类的init函数
@@ -95,6 +107,13 @@ public:
 	//剩余冷却时间的减少在update函数中实现
 	virtual void update(float dt);
 
+	//设定为人机
+	void setAI() { _isAI = true; };
+	void setHuman() { _isAI = false; }
+	bool isAI() const { return _isAI; }
+	//设置该英雄的敌方英雄
+	void setOtherHero(Hero* hero) { _otherHero = hero; }
+	Hero* getOtherHero() const { return _otherHero; }
 	
 	//获得和改变攻击速度
 	float getAttackSpeed() const{ return _attackSpeed; } 
@@ -156,15 +175,22 @@ public:
 	float getMoveSpeed() const{ return _moveSpeed; } 
 	void changeMoveSpeed(const float equipmentAttackSpeed) { _moveSpeed += equipmentAttackSpeed; }
 
-	//获得和改变攻击速度
-
 	//获得和改变攻击力
+	float getAttackPoint() const { return _atk; }
+	void changeAttackPoint(float point) { _atk += point; }
 
 	//获得和改变防御力
+	float getDefensePoint() const { return _def; }
+	void changeDefensePoint(float point) { _def += point; }
 
 	//获得和改变经验值
+	float getExperiencePoint() const { return _experiencePoint; }
+	void changeExperiencePoint(int point) { _experiencePoint += point; }
 
 	//获得和改变金币
+	int showMeTheMoney() const { return _money; }
+	void changeMoney(int point) { _money += point; }
+
 
 	//获得装备
 	
@@ -180,9 +206,13 @@ public:
 
 
 	void setTouchPoint(cocos2d::Vec2 touchPoint) { _touchPoint = touchPoint; }
-	void setHeroPoint(cocos2d::Vec2 heroPoint) { _heroPoint = heroPoint; }
 	cocos2d::Vec2 getTouchPoint() { return _touchPoint; }
+
+	void setHeroPoint(cocos2d::Vec2 heroPoint) { _heroPoint = heroPoint; }
 	cocos2d::Vec2 getHeroPoint() { return _heroPoint; }
+
+	void setOtherHeroPoint(cocos2d::Vec2 heroPoint) { _otherHeroPoint = heroPoint; }
+	cocos2d::Vec2 getOtherHeroPoint() { return _otherHeroPoint; }
 
 };
 
