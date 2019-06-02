@@ -119,7 +119,7 @@ void GameScene::onEnter()
 
 	//又是看不懂的玄学一步，通过这步给鼠标监听器绑定英雄的tag/////////////////////////////////    ↓这个就是tag
 	EventDispatcher *mouseDispatcher = Director::getInstance()->getEventDispatcher(); //     ↓
-	mouseDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, getChildByTag(HeroTag));
+	mouseDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, getChildByTag(MeHeroTag));
 
 
 	//注册键盘监听器
@@ -147,16 +147,19 @@ void GameScene::onEnter()
 			target->thisKeyPressed('Q');
 			if (target->getHeroName() == 'H')
 			{
+				
 				if (target->getQSkillWaitTime() <= 0.01)
 				{
+				
 					//停止移动动作发动技能
 					target->stopActionByTag(HeroMove);
-					//发动q技能，持续时间内增加后羿攻击速度
+					//发动q技能，持续时间内增加后羿攻击速度和移动速度
 					target->setBuff(true);
 					//持续时间5*q技能等级
 					target->setBuffTime(HouyiQSkillLastTime * target->getQSkillLevel());
 					//该技能实现效果在HouyiHero update函数中实现
 					target->setQSkillWaitTime(target->getQSkillCdTime());
+				
 				}
 			}
 			break;
@@ -202,7 +205,7 @@ void GameScene::onEnter()
 
 	//跟鼠标监听看不懂的玄学一步一样，通过这步给鼠标监听器绑定英雄的tag/////////////////////////////    ↓这个就是tag
 	EventDispatcher *keyboardDispatcher = Director::getInstance()->getEventDispatcher();//       ↓
-	keyboardDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, getChildByTag(HeroTag));
+	keyboardDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, getChildByTag(MeHeroTag));
 
 
 	
@@ -251,7 +254,7 @@ bool GameScene::init()
 		static auto hero = HouyiHero::create();
 		hero->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
 		hero->setHuman();
-		addChild(hero, 100, HeroTag);
+		addChild(hero, 100, MeHeroTag);
 		
 		//该函数为计算冷却时间和攻击间隔的函数
 		hero->scheduleUpdate();
@@ -261,7 +264,7 @@ bool GameScene::init()
 	{
 		auto hero = YaseHero::create();
 		hero->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
-		addChild(hero, 100, HeroTag);
+		addChild(hero, 100, MeHeroTag);
 		hero->setHuman();
 		//该函数为计算冷却时间和攻击间隔的函数
 		hero->scheduleUpdate();
@@ -287,7 +290,7 @@ bool GameScene::init()
 			otherHero->setPosition(origin.x + visibleSize.width , origin.y + visibleSize.height / 2);
 			addChild(otherHero, 100, this->getEnermyType());
 			otherHero->setAI();
-			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(HeroTag)));
+			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
 			otherHero->scheduleUpdate();
 	
 		break;
@@ -369,7 +372,7 @@ this->addChild(menu,1);*/
 //by 王文政 2019年6月2日
 void GameScene::watchMeAndOther(float dt)
 {
-	Hero* meHero = dynamic_cast<Hero*>(this->getChildByTag(HeroTag));
+	Hero* meHero = dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag));
 	Hero* otherHero = dynamic_cast<Hero*>(this->getChildByTag(this->getEnermyType()));
 
 	//获取双方英雄的位置
@@ -386,12 +389,13 @@ void GameScene::watchMeAndOther(float dt)
 		if (this->getOtherHeroTag() == 'H')
 		{
 			//判断并进行普攻
-			if (length <= HouyiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
+			if (length <= HouyiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01 
+				&& otherHero->getHeroAfterShake() <= 0.01)
 			{
 				HouyiNormalAttack* attack = HouyiNormalAttack::createTheAttack();
 				//注意这里不要搞混顺序////////////////↓//////////////↓
 				attack->takeHouyiNormalAttack(otherHeroPoint, meHeroPoint);
-				this->addChild(attack, 200);
+				this->addChild(attack, 200,OtherSkillTag);
 				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
 			}//end 普攻
 
@@ -415,7 +419,7 @@ void GameScene::watchMeAndOther(float dt)
 				//中间的箭头单独创建
 				houyiWSkill[0] = HouyiWSkill::createHouyiWSkill();
 				houyiWSkill[0]->takeHouyiWSkill(otherHeroPoint, meHeroPoint, 0);
-				this->addChild(houyiWSkill[0], 200);
+				this->addChild(houyiWSkill[0], 200, OtherSkillTag);
 				//两边的箭头成对创建
 				for (int i = 1; i < HouyiWSkillArrowNumber; i += 2)
 				{
@@ -424,8 +428,8 @@ void GameScene::watchMeAndOther(float dt)
 					houyiWSkill[i + 1] = HouyiWSkill::createHouyiWSkill();//i乘的数为两箭头夹角
 					houyiWSkill[i + 1]->takeHouyiWSkill(otherHeroPoint, meHeroPoint, -i * 3.14 / 30);
 					//把箭头显示在gamescene场景中
-					this->addChild(houyiWSkill[i], 200);
-					this->addChild(houyiWSkill[i + 1], 200);
+					this->addChild(houyiWSkill[i], 200, OtherSkillTag);
+					this->addChild(houyiWSkill[i + 1], 200, OtherSkillTag);
 				}
 
 				//当普攻精灵运动一定距离时删除，该功能在HouyiWSkill类的update函数中实现
@@ -441,7 +445,7 @@ void GameScene::watchMeAndOther(float dt)
 				//停止当前的移动进行大招
 				bigBird->takeHouyiESkill(otherHeroPoint,meHeroPoint);
 				//把大招显示在gamescene场景中
-				this->addChild(bigBird, 200);
+				this->addChild(bigBird, 200, OtherSkillTag);
 				//当大招精灵运动一定距离时删除，该功能在HouyiESkill类的update函数中实现
 				//重置大招等待时间
 				otherHero->setESkillWaitTime(otherHero->getESkillCdTime());
@@ -473,7 +477,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 		Vec2 heroPosition = target->getPosition();
 
 		//如果点击鼠标时未按键，则把鼠标点击作为向该点移动
-		if (!target->isPressingKeyboard())
+		if (!target->isPressingKeyboard() && target->getHeroAfterShake() <= 0.01)
 		{
 			//英雄向该点运动
 
@@ -515,7 +519,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					target->stopActionByTag(HeroMove);
 					houyiNormalAttack->takeHouyiNormalAttack(target);
 					//把普攻显示在gamescene场景中
-					this->addChild(houyiNormalAttack, 200);
+					this->addChild(houyiNormalAttack, 200, MeSkillTag);
 					//当普攻精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
 					//重置平A等待时间
 					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
@@ -544,7 +548,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//中间的箭头单独创建
 					houyiWSkill[0] = HouyiWSkill::createHouyiWSkill();
 					houyiWSkill[0]->takeHouyiWSkill(target, 0);
-					this->addChild(houyiWSkill[0], 200);
+					this->addChild(houyiWSkill[0], 200, MeSkillTag);
 					//两边的箭头成对创建
 					for (int i = 1; i < HouyiWSkillArrowNumber; i += 2)
 					{
@@ -553,8 +557,8 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 						houyiWSkill[i + 1] = HouyiWSkill::createHouyiWSkill();//i乘的数为两箭头夹角
 						houyiWSkill[i + 1]->takeHouyiWSkill(target, -i * 3.14 / 30);
 						//把箭头显示在gamescene场景中
-						this->addChild(houyiWSkill[i], 200);
-						this->addChild(houyiWSkill[i + 1], 200);
+						this->addChild(houyiWSkill[i], 200, MeSkillTag);
+						this->addChild(houyiWSkill[i + 1], 200, MeSkillTag);
 					}
 
 					//当普攻精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
@@ -573,8 +577,9 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
 					bigBird->takeHouyiESkill(target);
+					
 					//把大招显示在gamescene场景中
-					this->addChild(bigBird, 200);
+					this->addChild(bigBird, 200, MeSkillTag);
 					//当大招精灵运动一定距离时删除，该功能在HouyiESkill类的update函数中实现
 					//重置大招等待时间
 					target->setESkillWaitTime(target->getESkillCdTime());

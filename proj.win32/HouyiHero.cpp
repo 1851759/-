@@ -16,11 +16,12 @@ HouyiHero* HouyiHero::create()
 		//在下边初始化后羿的属性值////////////////////////////////////////////
 		houyi->setHeroName('H');
 		//基础移动速度
-		houyi->changeMoveSpeed(HouyiMoveSpeed);
+		houyi->changeMoveSpeed(HouyiMoveSpeed * cocos2d::Vec2(1.0,0).x);
 		
 		//基础攻击速度，每秒攻击多少次
 		houyi->changeAttackSpeed(HouyiAttackSpeed);
 		houyi->setAttackWaitTime(0);
+		houyi->setNormalAttackAfterShake(HouyiNormalAttackAfterShake);
 
 		//基础攻击力
 
@@ -36,14 +37,17 @@ HouyiHero* HouyiHero::create()
 		houyi->qSkillLevelUp();//此处默认技能一级用于测试////////////////////////////////////
 		houyi->setQSkillCdTime(HouyiQSkillCD);
 		houyi->setBuff(false);
+		houyi->setQSkillAfterShake(HouyiQSkillAfterShake);
 
 		//w技能
 		houyi->wSkillLevelUp();
 		houyi->setWSkillCdTime(HouyiWSkillCD);
+		houyi->setWSkillAfterShake(HouyiWSkillAfterShake);
 
 		//e技能
 		houyi->eSkillLevelUp();
 		houyi->setESkillCdTime(HouyiESkillCD);
+		houyi->setESkillAfterShake(HouyiESkillAfterShake);
 	}
 	else
 	{
@@ -105,6 +109,7 @@ void HouyiHero::update(float dt)
 			//此处为应减去的属性
 			this->changeMoveSpeed(-this->getQSkillLevel() * HouyiQSkillMoveSpeedAdd);
 			this->changeAttackSpeed(-this->getQSkillLevel() * HouyiQSkillAttackSpeedAdd);
+			this->removeChildByTag(HouyiBuffTag);
 		}
 	}
 	//获得buff
@@ -114,7 +119,18 @@ void HouyiHero::update(float dt)
 		//此处为获得的buff属性
 		this->changeMoveSpeed(this->getQSkillLevel() * HouyiQSkillMoveSpeedAdd);
 		this->changeAttackSpeed(this->getQSkillLevel() * HouyiQSkillAttackSpeedAdd);
+		Sprite* houyiBuff = Sprite::create("HouyiBuff.png");
+		houyiBuff->setPosition(0, 0);
+		houyiBuff->setAnchorPoint(cocos2d::Vec2(0,0));
+		this->addChild(houyiBuff, 200, HouyiBuffTag);
 	}
+	//英雄后摇时间
+	if (this->getHeroAfterShake() > 0, 01)
+	{
+		this->cutHeroAfterShake(cuttime);
+	}
+
+//	cocos2d::log("%d s otherHero position %f %f", this->getTag(),this->getOtherHeroPoint().x, this->getOtherHeroPoint().y);
 
 }
 
@@ -139,7 +155,12 @@ void HouyiHero::AIAction(float dt)
 	cocos2d::Vec2 distance = this->getOtherHeroPoint() - this->getHeroPoint();
 	float length = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
 	cocos2d::Vec2 standardDistance = distance / length;
-	this->setPosition(this->getPosition() + standardDistance);
+	//AI后羿离玩家80以上
+	if (length >= 80.0)
+	{
+		this->setPosition(this->getPosition() + this->getMoveSpeed() / 60 * standardDistance);
+	}
+	
 	
 	
 

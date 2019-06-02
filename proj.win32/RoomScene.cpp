@@ -89,8 +89,13 @@ bool RoomScene::init()
 void RoomScene::menuReadyCallback(cocos2d::Ref* pSender)
 {
 	log("ready get %c,%c\n", this->getMeHeroName(), this->getOtherHeroName());
-	auto gs = GameScene::createScene(this->getMeHeroName(),this->getOtherHeroName(),this->isAI());
-	Director::getInstance()->replaceScene(gs);
+
+	if (this->getMeHeroName() != '\0' && this->getOtherHeroName() != '\0')
+	{
+		auto gs = GameScene::createScene(this->getMeHeroName(),this->getOtherHeroName(),this->isAI());
+		Director::getInstance()->replaceScene(gs);
+	}
+	
 }
 
 void RoomScene::menuBackToStart(Ref* pSender)

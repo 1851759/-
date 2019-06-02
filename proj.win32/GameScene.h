@@ -8,10 +8,16 @@
 
 typedef enum
 {
-	HeroTag = 1111,
+	MeHeroTag = 1111,
 	AIHeroTag = 1112,
 	OtherHeroTag = 1113
 } PlayerType;
+
+typedef enum
+{
+	MeSkillTag = 1114,
+	OtherSkillTag = 1115,
+};
 
 class GameScene :public cocos2d::Scene
 {
