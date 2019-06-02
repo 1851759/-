@@ -16,14 +16,33 @@ typedef enum
 typedef enum
 {
 	MeSkillTag = 1114,
-	OtherSkillTag = 1115,
-};
+    OtherSkillTag=1115
+}SkillTag;
+
+typedef enum
+{
+	MeJinzhanSoldierTag = 1116,
+	OtherJinzhanSodierTag = 1117,
+	MeYuanchengSoldierTag = 1118,
+	OtherYuanchengSoldierTag = 1119,
+	MePaocheSoldierTag = 1120,
+	OtherPaocheSoldierTag = 1121,
+	MeTowerTag = 1122,
+	OtherTowerTag = 1123,
+	MeCrystalTag = 1124,
+	OtherCrystalTag = 1125
+} UnitType;
 
 class GameScene :public cocos2d::Scene
 {
 	char meHeroTag;
 	char otherHeroTag;
 	int _enermyType;
+	cocos2d::TMXTiledMap *_tileMap;
+	cocos2d::TMXLayer *_collidable;
+	cocos2d::Vec2 position_now;
+	bool me, enemy;
+	
 
 public:
 	//获取meHeroTag
@@ -39,7 +58,7 @@ public:
 	int getEnermyType() const { return _enermyType; }
 	void setEnermyType(int type) { _enermyType = type; }
 
-	static cocos2d::Scene* createScene(char meHero,char otherHero,bool isAI);
+	static cocos2d::Scene* createScene(char meHero, char otherHero, bool isAI);
 	virtual bool init();
 
 	//返回初始场景
@@ -55,7 +74,11 @@ public:
 	void shop_kaijia(cocos2d::Ref *pSender);
 	void shop_hongshuijing(cocos2d::Ref *pSender);
 	void shop_lanshuijing(cocos2d::Ref *pSender);
-	virtual void Update(float dt);
+	void collision(float dt);
+	void update(float dt);
+
+	bool setPlayerPosition(cocos2d::Vec2 position);
+	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 
 	//鼠标监听器和键盘监听器在onEnter函数中通过λ表达式定义
 
