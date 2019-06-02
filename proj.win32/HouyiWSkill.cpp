@@ -11,6 +11,8 @@ HouyiWSkill* HouyiWSkill::createHouyiWSkill()
 	HouyiWSkill* arrow = new HouyiWSkill();
 	if (arrow&&arrow->initWithFile("HouyiWSkill.png"))
 	{
+		arrow->setCanTakeDamage(true);
+		arrow->setIfRemoveWhenDamage(true);
 		arrow->autorelease();
 		arrow->setScale(0.6);
 		return arrow;

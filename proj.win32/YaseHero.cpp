@@ -11,27 +11,27 @@ YaseHero* YaseHero::create()
 
 		yase->autorelease();
 
-		//在下边初始化后羿的属性值////////////////////////////////////////////
+		//在下边初始化亚瑟的属性值////////////////////////////////////////////
 		yase->setHeroName('Y');
 		//基础移动速度
-		yase->changeMoveSpeed(60);
+		yase->changeMoveSpeed(YaseMoveSpeed * cocos2d::Vec2(1.0, 0).x);
 
 		//基础攻击速度，每秒攻击多少次
-		yase->changeAttackSpeed(0.5);
+		yase->changeAttackSpeed(YaseAttackSpeed);
 		yase->setAttackWaitTime(0);
 
 		//q技能
 		yase->qSkillLevelUp();//此处默认技能一级用于测试////////////////////////////////////
-		yase->setQSkillCdTime(10);
+		yase->setQSkillCdTime(YaseQSkillCD);
 		yase->setBuff(false);
 
 		//w技能
 		yase->wSkillLevelUp();
-		yase->setWSkillCdTime(5);
+		yase->setWSkillCdTime(YaseWSkillCD);
 
 		//e技能
 		yase->eSkillLevelUp();
-		yase->setESkillCdTime(2);
+		yase->setESkillCdTime(YaseESkillCD);
 	}
 	else
 	{
@@ -86,8 +86,7 @@ void YaseHero::update(float dt)
 		if (this->getBuffTime() <= 0.01)
 		{
 			//此处为应减去的属性
-			this->changeMoveSpeed(-this->getQSkillLevel() * 200);
-			this->changeAttackSpeed(-this->getQSkillLevel() * 20);
+			this->changeDefensePoint(-this->getQSkillLevel() * YaseQSkillDefenceAdd);
 		}
 	}
 	//获得buff
@@ -95,7 +94,6 @@ void YaseHero::update(float dt)
 	{
 		this->setBuff(false);
 		//此处为获得的buff属性
-		this->changeMoveSpeed(this->getQSkillLevel() * 200);
-		this->changeAttackSpeed(this->getQSkillLevel() * 20);
+		this->changeDefensePoint(this->getQSkillLevel() * YaseQSkillDefenceAdd);
 	}
 }

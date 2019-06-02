@@ -93,6 +93,15 @@ class Hero : public cocos2d::Sprite
 	//buff技能的持续时间
 	float _buffTime;
 	bool _isInBuff;
+
+	//普攻和技能后摇时间
+	float _attackAfterShake;
+	float _qSkillAfterShake;
+	float _wSkillAfterShake;
+	float _eSkillAfterShake;
+
+	float _heroAfterShake;
+	bool _heroInShake;
 	
 public:
 
@@ -153,6 +162,25 @@ public:
 	void setBuff(bool isinbuff) { _isInBuff = isinbuff; }
 	bool isInBuff() const{ return _isInBuff; }  
 
+	//获得和改变技能后摇及后摇相关
+	float getNormalAttackAfterShake() const { return _attackAfterShake; }
+	void setNormalAttackAfterShake(float shakeTime) { _attackAfterShake = shakeTime; }
+	bool isInShake() const { return _heroInShake; }
+	void setHeroInSkake(bool isshake) { _heroInShake = isshake; }
+
+
+	float getQSkillAfterShake() const { return _qSkillAfterShake; }
+	void setQSkillAfterShake(float shakeTime) { _qSkillAfterShake = shakeTime; }
+
+	float getWSkillAfterShake() const { return _wSkillAfterShake; }
+	void setWSkillAfterShake(float shakeTime) { _wSkillAfterShake = shakeTime; }
+
+	float getESkillAfterShake() const { return _eSkillAfterShake; }
+	void setESkillAfterShake(float shakeTime) { _eSkillAfterShake = shakeTime; }
+
+	float getHeroAfterShake() const { return _heroAfterShake; }
+	void setHeroAfterShake(float shakeTime) { _heroAfterShake = shakeTime; }
+	void cutHeroAfterShake(float cuttime) { _heroAfterShake -= cuttime; }
 	//获得和改变属性
 		
 	//给英雄命名和获得英雄名字
@@ -192,6 +220,7 @@ public:
 	void changeMoney(int point) { _money += point; }
 
 
+
 	//获得装备
 	
 
@@ -204,15 +233,17 @@ public:
 	void thisKeyPressed(char key) { _pressedKey = key; }
 	char pressThisKey() { return _pressedKey; } 
 
-
 	void setTouchPoint(cocos2d::Vec2 touchPoint) { _touchPoint = touchPoint; }
 	cocos2d::Vec2 getTouchPoint() { return _touchPoint; }
 
 	void setHeroPoint(cocos2d::Vec2 heroPoint) { _heroPoint = heroPoint; }
 	cocos2d::Vec2 getHeroPoint() { return _heroPoint; }
 
+	//人机控制相关
 	void setOtherHeroPoint(cocos2d::Vec2 heroPoint) { _otherHeroPoint = heroPoint; }
 	cocos2d::Vec2 getOtherHeroPoint() { return _otherHeroPoint; }
+
+
 
 };
 

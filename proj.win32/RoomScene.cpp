@@ -61,7 +61,7 @@ bool RoomScene::init()
 	
 	//设置点击返回初始页面菜单 准备菜单 添加人机菜单
 	MenuItemFont::setFontName("Arial");
-	MenuItemFont::setFontSize(24);
+	MenuItemFont::setFontSize(100);
 
 	MenuItemFont *back = MenuItemFont::create("Back", CC_CALLBACK_1(RoomScene::menuBackToStart, this));
 	back->setPosition(origin.x + visibleSize.width - back->getContentSize().width / 2,

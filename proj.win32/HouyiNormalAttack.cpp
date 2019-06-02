@@ -1,16 +1,15 @@
 //by 王文政 2019年5月27日
 #include "cocos2d.h"
-
 #include "HouyiHero.h"
 #include "HouyiNormalAttack.h"
-
-#include "SimpleAudioEngine.h"
 
 HouyiNormalAttack* HouyiNormalAttack::createTheAttack()
 {
 	HouyiNormalAttack* normalAttack = new HouyiNormalAttack();
 	if (normalAttack&&normalAttack->initWithFile("HouyiNormalAttack.png"))
 	{
+		normalAttack->setCanTakeDamage(true);
+		normalAttack->setIfRemoveWhenDamage(true);
 		normalAttack->autorelease();
 		normalAttack->setScale(0.5);
 		return normalAttack;

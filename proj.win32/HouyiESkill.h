@@ -9,13 +9,15 @@
 
 #include "cocos2d.h"
 #include "HouyiHero.h"
+#include "BasicSkill.h"
 
-class HouyiESkill : public cocos2d::Sprite
+class HouyiESkill : public BasicSkill
 {
 	cocos2d::Vec2 _arrowMoveDirection;
 	cocos2d::Vec2 _originPosition;
 
 public:
+
 	//¸üÐÂº¯Êý
 	virtual void update(float dt);
 

@@ -10,16 +10,15 @@
 
 #include "cocos2d.h"
 #include "HouyiHero.h"
+#include "BasicSkill.h"
 
 
-
-class HouyiNormalAttack : public cocos2d::Sprite
+class HouyiNormalAttack : public BasicSkill
 {
 	cocos2d::Vec2 _arrowMoveDirection;
 	cocos2d::Vec2 _originPosition;
-
-public:
 	
+public:
 	
 	//¸üÐÂº¯Êý
 	virtual void update(float dt);
@@ -47,5 +46,5 @@ public:
 
 
 
-#endif // __NORMALATTACK__
+#endif // __HOUYINORMALATTACK__
 

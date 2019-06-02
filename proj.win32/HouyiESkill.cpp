@@ -10,6 +10,8 @@ HouyiESkill* HouyiESkill::createHouyiESkill()
 	HouyiESkill* bigBird = new HouyiESkill();
 	if (bigBird&&bigBird->initWithFile("HouyiESkill.png"))
 	{
+		bigBird->setCanTakeDamage(true);
+		bigBird->setIfRemoveWhenDamage(true);
 		bigBird->autorelease();
 		bigBird->setScale(1);
 		return bigBird;
