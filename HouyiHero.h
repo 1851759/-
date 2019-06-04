@@ -8,9 +8,11 @@
 #include "cocos2d.h"
 #include "Hero.h"
 
+
+//后羿技能属性
 #define HouyiNormalAttackRange 100.0
 #define HouyiNormalAttackMoveSpeed 3.0
-#define HouyiNormalAttackAfterShake 0.5
+
 
 #define HouyiQSkillLastTime 5.0
 #define HouyiQSkillAttackSpeedAdd 2.0
@@ -34,11 +36,13 @@
 #define HouyiAttackSpeed 0.5
 #define HouyiAttack 100.0
 #define HouyiDefence 100.0
+#define HouyiNormalAttackAfterShake 1.0/ HouyiAttackSpeed
 
 typedef enum
 {
-	HouyiBuffTag = 2222
+	HouyiBuffTag = 2222,
 } HouyiBuff;
+
 
 class HouyiHero : public Hero
 {

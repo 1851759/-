@@ -13,10 +13,12 @@
 #include "HouyiWSkill.h"
 
 #include "YaseHero.h"
+#include "YaseNormalAttack.h"
+#include"client.h"
 //修改技能范围时需要修改英雄头文件define中的参数
 
 USING_NS_CC;
-Vec2 position_last=Vec2(0,0);
+Vec2 position_last = Vec2(0, 0);
 GameScene* GameScene::create(char meName, char otherName, bool isAI)
 {
 	log("create before if");
@@ -81,6 +83,14 @@ void GameScene::onEnter()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	//游戏地图
+	_tileMap = TMXTiledMap::create("Map.tmx");
+	addChild(_tileMap, 0, 100);
+
+	//初始化碰撞层
+	_collidable = _tileMap->getLayer("Collidable");
+
+
 	//注册鼠标监听器
 	//使用λ表达式
 	//目前只实现了使英雄在鼠标松开时  根据移动速度 移动到鼠标位置的功能
@@ -136,6 +146,7 @@ void GameScene::onEnter()
 		case EventKeyboard::KeyCode::KEY_Q:
 		{
 			target->thisKeyPressed('Q');
+			//在此处发动后羿Q
 			if (target->getHeroName() == 'H')
 			{
 
@@ -150,7 +161,26 @@ void GameScene::onEnter()
 					target->setBuffTime(HouyiQSkillLastTime * target->getQSkillLevel());
 					//该技能实现效果在HouyiHero update函数中实现
 					target->setQSkillWaitTime(target->getQSkillCdTime());
+					target->setHeroAfterShake(target->getQSkillAfterShake());
 
+				}
+			}
+
+			//在此处发动亚瑟Q
+			if (target->getHeroName() == 'H')
+			{
+				if (target->getQSkillWaitTime() <= 0.01)
+				{
+
+					//停止移动动作发动技能
+					target->stopActionByTag(HeroMove);
+					//发动q技能，持续时间内增加后羿攻击速度和移动速度
+					target->setBuff(true);
+					//持续时间5*q技能等级
+					target->setBuffTime(YaseQSkillLastTime * target->getQSkillLevel());
+					//该技能实现效果在HouyiHero update函数中实现
+					target->setQSkillWaitTime(target->getQSkillCdTime());
+					target->setHeroAfterShake(target->getQSkillAfterShake());
 				}
 			}
 			break;
@@ -247,7 +277,7 @@ bool GameScene::init()
 	case 'H':
 	{
 		static auto hero = HouyiHero::create();
-		hero->setPosition(origin.x+visibleSize.width/2, origin.y + visibleSize.height/2);
+		hero->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
 		hero->setHuman();
 		addChild(hero, 100, MeHeroTag);
 
@@ -279,15 +309,12 @@ bool GameScene::init()
 	{
 	case 'H':
 	{
-
-
 		auto otherHero = HouyiHero::create();
 		otherHero->setPosition(origin.x + visibleSize.width, origin.y + visibleSize.height / 2);
 		addChild(otherHero, 100, this->getEnermyType());
 		otherHero->setAI();
 		otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
 		otherHero->scheduleUpdate();
-
 		break;
 	}
 
@@ -306,10 +333,8 @@ bool GameScene::init()
 	default:break;
 	}
 
-
-
-
-
+	//获取位置发送给服务器
+	/*this->schedule(schedule_selector(GameScene::get_position), 0.001f);*/
 	//设置返回初始场景的菜单
 	MenuItemFont::setFontName("Arial");
 	MenuItemFont::setFontSize(20);
@@ -321,44 +346,56 @@ bool GameScene::init()
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 200);
 
-
-
-
 	//装备商店
-/*MenuItemImage *shop_xie = MenuItemImage::create("shop_xie.png", "shop_xie.png", CC_CALLBACK_1(GameScene::shop_xie, this));
-shop_xie->setPosition(Vec2(0,75));
-MenuItemImage *shop_shoutao = MenuItemImage::create("shop_shoutao.png", "shop_shoutao.png", CC_CALLBACK_1(GameScene::shop_shoutao, this));
-shop_shoutao->setPosition(Vec2(0,45));
-MenuItemImage *shop_changgong = MenuItemImage::create("shop_changgong.png", "shop_changgong.png", CC_CALLBACK_1(GameScene::shop_changgong, this));
-shop_changgong->setPosition(Vec2(0,15));
-MenuItemImage *shop_kaijia = MenuItemImage::create("shop_kaijia.png", "shop_kaijia.png", CC_CALLBACK_1(GameScene::shop_kaijia, this));
-shop_kaijia->setPosition(Vec2(0,-15));
-MenuItemImage *shop_hongshuijing = MenuItemImage::create("shop_hongshuijing.png", "shop_hongshuijing.png", CC_CALLBACK_1(GameScene::shop_hongshuijing, this));
-shop_hongshuijing->setPosition(Vec2(0,-45));
-MenuItemImage *shop_lanshuijing = MenuItemImage::create("shop_lanshuijing.png", "shop_lanshuijing.png", CC_CALLBACK_1(GameScene::shop_lanshuijing, this));
-shop_lanshuijing->setPosition(Vec2(0,-75));
-Menu *menu = Menu::create(shop_xie, shop_shoutao,shop_changgong,shop_kaijia,shop_hongshuijing,shop_lanshuijing, NULL);
-this->addChild(menu,1);*/
+MenuItemImage *shop_xie = MenuItemImage::create("zhuangbei/xie.png", "zhuangbei/xie.png", CC_CALLBACK_1(GameScene::shop_xie, this));
+shop_xie->setPosition(Vec2(-710,350));
+MenuItemImage *shop_shoutao = MenuItemImage::create("zhuangbei/changjian.png", "zhuangbei/changjian.png", CC_CALLBACK_1(GameScene::shop_shoutao, this));
+shop_shoutao->setPosition(Vec2(-710,280));
+MenuItemImage *shop_changgong = MenuItemImage::create("zhuangbei/duanjian.png", "zhuangbei/duanjian.png", CC_CALLBACK_1(GameScene::shop_changgong, this));
+shop_changgong->setPosition(Vec2(-710,210));
+MenuItemImage *shop_kaijia = MenuItemImage::create("zhuangbei/kaijia.png", "zhuangbei/kaijia.png", CC_CALLBACK_1(GameScene::shop_kaijia, this));
+shop_kaijia->setPosition(Vec2(-710,140));
+MenuItemImage *shop_hongshuijing = MenuItemImage::create("zhuangbei/hongshuijing.png", "zhuangbei/hongshuijing.png", CC_CALLBACK_1(GameScene::shop_hongshuijing, this));
+shop_hongshuijing->setPosition(Vec2(-710,70));
+Menu *menu2 = Menu::create(shop_xie, shop_shoutao,shop_changgong,shop_kaijia,shop_hongshuijing, NULL);
+this->addChild(menu2,300);
 
 //水晶
 	Sprite *shuijing1 = Sprite::create("shuijing.png");
-	shuijing1->setPosition(Vec2(origin.x+visibleSize.width/4, origin.y+visibleSize.height/5));
-	this->addChild(shuijing1);
+	shuijing1->setPosition(Vec2(400,200));
+	this->addChild(shuijing1,2);
 
 	Sprite *shuijing2 = Sprite::create("shuijing2.png");
-	shuijing2->setPosition(Vec2(origin.x + visibleSize.width *4/5, origin.y + visibleSize.height*6/7));
-	this->addChild(shuijing2);
+	shuijing2->setPosition(Vec2(1300,800));
+	this->addChild(shuijing2,2);
 
 	//防御塔
 	Sprite *tower1 = Sprite::create("tower.png");
-	tower1->setPosition(Vec2(origin.x + visibleSize.width / 3+18, origin.y + visibleSize.height / 3+11));
-	this->addChild(tower1);
+	tower1->setPosition(Vec2(550, 300));
+	this->addChild(tower1,2);
 
 	Sprite *tower2 = Sprite::create("tower.png");
-	tower2->setPosition(Vec2(origin.x + visibleSize.width*3/4-20, origin.y + visibleSize.height*3/4+40));
-	this->addChild(tower2);
+	tower2->setPosition(Vec2(1200, 700));
+	this->addChild(tower2,2);
 
+	this->scheduleUpdate();
 	this->schedule(schedule_selector(GameScene::watchMeAndOther), 1.0 / 60.0);
+
+	//左上角的战绩
+	auto score_blue = LabelTTF::create("0 ", "Arial", 36);
+	this->addChild(score_blue, 2);
+	score_blue->setPosition(origin.x + 100, visibleSize.height-50);
+	score_blue->setTag(BlueScore);
+	auto vs = LabelTTF::create("vs", "Arial", 24);
+	this->addChild(vs, 2);
+	vs->setPosition(origin.x + 122, visibleSize.height-50);
+	auto score_red = LabelTTF::create("0 ", "Arial", 36);
+	this->addChild(score_red, 2);
+	score_red->setPosition(origin.x + 150, visibleSize.height-50);
+	score_blue->setTag(RedScore);
+
+	this->schedule(schedule_selector(GameScene::updateScore), 0.001f);
+
 	return true;
 }
 
@@ -383,14 +420,14 @@ void GameScene::watchMeAndOther(float dt)
 		if (this->getOtherHeroTag() == 'H')
 		{
 			//判断并进行普攻
-			if (length <= HouyiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01
-				&& otherHero->getHeroAfterShake() <= 0.01)
+			if (length <= HouyiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
 			{
 				HouyiNormalAttack* attack = HouyiNormalAttack::createTheAttack();
 				//注意这里不要搞混顺序////////////////↓//////////////↓
 				attack->takeHouyiNormalAttack(otherHeroPoint, meHeroPoint);
-				this->addChild(attack, 200,OtherSkillTag);
+				this->addChild(attack, 200, OtherSkillTag);
 				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
+				otherHero->setHeroAfterShake(otherHero->getNormalAttackAfterShake());
 			}//end 普攻
 
 			//判断并Q技能开buff
@@ -402,6 +439,7 @@ void GameScene::watchMeAndOther(float dt)
 				otherHero->setBuffTime(HouyiQSkillLastTime * otherHero->getQSkillLevel());
 				//该技能实现效果在update函数中实现
 				otherHero->setQSkillWaitTime(otherHero->getQSkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getQSkillAfterShake());
 			}//end buff
 
 			//判断并W技能
@@ -413,7 +451,7 @@ void GameScene::watchMeAndOther(float dt)
 				//中间的箭头单独创建
 				houyiWSkill[0] = HouyiWSkill::createHouyiWSkill();
 				houyiWSkill[0]->takeHouyiWSkill(otherHeroPoint, meHeroPoint, 0);
-				this->addChild(houyiWSkill[0], 200,OtherSkillTag);
+				this->addChild(houyiWSkill[0], 200, OtherSkillTag);
 				//两边的箭头成对创建
 				for (int i = 1; i < HouyiWSkillArrowNumber; i += 2)
 				{
@@ -422,13 +460,14 @@ void GameScene::watchMeAndOther(float dt)
 					houyiWSkill[i + 1] = HouyiWSkill::createHouyiWSkill();//i乘的数为两箭头夹角
 					houyiWSkill[i + 1]->takeHouyiWSkill(otherHeroPoint, meHeroPoint, -i * 3.14 / 30);
 					//把箭头显示在gamescene场景中
-					this->addChild(houyiWSkill[i], 200,OtherSkillTag);
-					this->addChild(houyiWSkill[i + 1], 200,OtherSkillTag);
+					this->addChild(houyiWSkill[i], 200, OtherSkillTag);
+					this->addChild(houyiWSkill[i + 1], 200, OtherSkillTag);
 				}
 
 				//当普攻精灵运动一定距离时删除，该功能在HouyiWSkill类的update函数中实现
 				//重置W等待时间
 				otherHero->setWSkillWaitTime(otherHero->getWSkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getWSkillAfterShake());
 			}//end W
 
 			//判断并放大
@@ -439,10 +478,11 @@ void GameScene::watchMeAndOther(float dt)
 				//停止当前的移动进行大招
 				bigBird->takeHouyiESkill(otherHeroPoint, meHeroPoint);
 				//把大招显示在gamescene场景中
-				this->addChild(bigBird, 200,OtherSkillTag);
+				this->addChild(bigBird, 200, OtherSkillTag);
 				//当大招精灵运动一定距离时删除，该功能在HouyiESkill类的update函数中实现
 				//重置大招等待时间
 				otherHero->setESkillWaitTime(otherHero->getESkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getESkillAfterShake());
 			}//end E
 		}
 	}
@@ -487,14 +527,11 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 
 			//先停止当前的运动动作，否则会造成运动的叠加
 			target->stopActionByTag(HeroMove);
-			//碰撞检测
-			
+
 			//定义一个运动动作moveAction，运动到指定坐标touchPosition
 			FiniteTimeAction * moveAction = (FiniteTimeAction*)target->runAction(MoveTo::create(timeNeeded, touchPosition));
 			//给这个动作设置tag ----> HeroMove
 			moveAction->setTag(HeroMove);
-			
-			this->schedule(schedule_selector(GameScene::collision), 0.001f);
 		}
 		//如果点击鼠标时按键，则根据按键进行技能释放
 		//此时鼠标的点对应于技能释放的点
@@ -508,19 +545,16 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 				if (target->getAttackWaitTime() <= 0.01)
 				{
-
-
 					HouyiNormalAttack* houyiNormalAttack = HouyiNormalAttack::createTheAttack();
-
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
 					houyiNormalAttack->takeHouyiNormalAttack(target);
 					//把普攻显示在gamescene场景中
-					this->addChild(houyiNormalAttack, 200,MeSkillTag);
+					this->addChild(houyiNormalAttack, 200, MeSkillTag);
 					//当普攻精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
 					//重置平A等待时间
 					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
-
+					target->setHeroAfterShake(target->getNormalAttackAfterShake());
 				}
 				break;
 			}
@@ -545,7 +579,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//中间的箭头单独创建
 					houyiWSkill[0] = HouyiWSkill::createHouyiWSkill();
 					houyiWSkill[0]->takeHouyiWSkill(target, 0);
-					this->addChild(houyiWSkill[0], 200,MeSkillTag);
+					this->addChild(houyiWSkill[0], 200, MeSkillTag);
 					//两边的箭头成对创建
 					for (int i = 1; i < HouyiWSkillArrowNumber; i += 2)
 					{
@@ -554,13 +588,14 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 						houyiWSkill[i + 1] = HouyiWSkill::createHouyiWSkill();//i乘的数为两箭头夹角
 						houyiWSkill[i + 1]->takeHouyiWSkill(target, -i * 3.14 / 30);
 						//把箭头显示在gamescene场景中
-						this->addChild(houyiWSkill[i], 200,MeSkillTag);
-						this->addChild(houyiWSkill[i + 1], 200,MeSkillTag);
+						this->addChild(houyiWSkill[i], 200, MeSkillTag);
+						this->addChild(houyiWSkill[i + 1], 200, MeSkillTag);
 					}
 
 					//当普攻精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
 					//重置平A等待时间
 					target->setWSkillWaitTime(target->getWSkillCdTime());
+					target->setHeroAfterShake(target->getWSkillAfterShake());
 				}
 				break;
 			}
@@ -574,11 +609,13 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
 					bigBird->takeHouyiESkill(target);
+
 					//把大招显示在gamescene场景中
-					this->addChild(bigBird, 200,MeSkillTag);
+					this->addChild(bigBird, 200, MeSkillTag);
 					//当大招精灵运动一定距离时删除，该功能在HouyiESkill类的update函数中实现
 					//重置大招等待时间
 					target->setESkillWaitTime(target->getESkillCdTime());
+					target->setHeroAfterShake(target->getESkillAfterShake());
 				}
 				break;
 
@@ -624,7 +661,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 
 			//先停止当前的运动动作，否则会造成运动的叠加
 			target->stopActionByTag(HeroMove);
-			this->scheduleUpdate();
+
 			//定义一个运动动作moveAction，运动到指定坐标touchPosition
 			FiniteTimeAction * moveAction = (FiniteTimeAction*)target->runAction(MoveTo::create(timeNeeded, touchPosition));
 			//给这个动作设置tag ----> HeroMove
@@ -641,6 +678,21 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 			case 'A':
 			{
+				if (target->getAttackWaitTime() <= 0.01)
+				{
+					YaseNormalAttack* yaseNormalAttack = YaseNormalAttack::createTheAttack();
+
+					//停止当前的移动进行普攻
+					target->stopActionByTag(HeroMove);
+					yaseNormalAttack->takeYaseNormalAttack(heroPosition, touchPosition);
+					//把普攻显示在gamescene场景中
+					this->addChild(yaseNormalAttack, 200, MeSkillTag);
+					//当普攻精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
+					//重置平A等待时间
+					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
+					target->setHeroAfterShake(target->getNormalAttackAfterShake());
+				}
+
 				break;
 			}
 
@@ -678,37 +730,48 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 	{
 
 	}
+	this->schedule(schedule_selector(GameScene::collision), 0.001f);
 }
 
 
 
 void GameScene::shop_xie(cocos2d::Ref* pSender)
 {
+	//setMoney(金币-300)
+	//移速增加
+	//装备栏里增加鞋子
 	Director::getInstance()->end();
 }
 
 void GameScene::shop_shoutao(cocos2d::Ref* pSender)
 {
+	//setMoney(金币-300)
+	//增加攻击力和法强
+	//装备栏里增加手套
 	Director::getInstance()->end();
 }
 
 void GameScene::shop_changgong(cocos2d::Ref* pSender)
 {
+	//setMoney（金币-300）
+	//增加攻速
+	//装备栏里增加长弓
 	Director::getInstance()->end();
 }
 
 void GameScene::shop_kaijia(cocos2d::Ref* pSender)
 {
+	//setMoney（金币-300）
+	//增加防御
+	//装备栏里增加铠甲
 	Director::getInstance()->end();
 }
 
 void GameScene::shop_hongshuijing(cocos2d::Ref* pSender)
 {
-	Director::getInstance()->end();
-}
-
-void GameScene::shop_lanshuijing(cocos2d::Ref* pSender)
-{
+	//setMoney（金币-300）
+	//增加血量
+	//装备栏里增加红水晶
 	Director::getInstance()->end();
 }
 
@@ -746,3 +809,15 @@ Vec2 GameScene::tileCoordFromPosition(Vec2 pos)
 	int y = ((_tileMap->getMapSize().height*_tileMap->getTileSize().height) - pos.y) / _tileMap->getTileSize().height;
 	return Vec2(x, y);
 }
+
+void GameScene::updateScore(float dt)
+{
+	
+}
+
+//void GameScene::get_position(float dt)
+//{
+//	Client a;
+//	position_client = (this->getChildByTag(MeHeroTag))->getPosition();
+//	a.SendMes(FloatToChar(position_client.x, position_client.y));
+//}

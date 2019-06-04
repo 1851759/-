@@ -16,8 +16,8 @@ typedef enum
 typedef enum
 {
 	MeSkillTag = 1114,
-    OtherSkillTag=1115
-}SkillTag;
+	OtherSkillTag = 1115,
+} SkillTag;
 
 typedef enum
 {
@@ -40,10 +40,8 @@ class GameScene :public cocos2d::Scene
 	int _enermyType;
 	cocos2d::TMXTiledMap *_tileMap;
 	cocos2d::TMXLayer *_collidable;
-	cocos2d::Vec2 position_now;
-	bool me, enemy;
-	
-
+	cocos2d::Vec2 position_now,position_client;
+	int BlueScore = 0, RedScore = 0;
 public:
 	//获取meHeroTag
 	char getMeHeroTag() { return meHeroTag; }
@@ -73,12 +71,14 @@ public:
 	void shop_changgong(cocos2d::Ref *pSender);
 	void shop_kaijia(cocos2d::Ref *pSender);
 	void shop_hongshuijing(cocos2d::Ref *pSender);
-	void shop_lanshuijing(cocos2d::Ref *pSender);
-	void collision(float dt);
-	void update(float dt);
+	virtual void update(float dt);
+	void updateScore(float dt);//更新战绩
+	/*void get_position(float dt);*/
+
 
 	bool setPlayerPosition(cocos2d::Vec2 position);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
+	void collision(float dt);
 
 	//鼠标监听器和键盘监听器在onEnter函数中通过λ表达式定义
 

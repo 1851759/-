@@ -33,19 +33,19 @@ bool RoomScene::init()
 	float scale_x = (float)visibleSize.width / (float)size_back.width;
 	float scale_y = (float)visibleSize.height / (float)size_back.height;
 	bg->setScale(scale_x, scale_y);
-	this->addChild(bg,-1);
+	this->addChild(bg, -1);
 
 	//设置player1的白框
 	Sprite *player1 = Sprite::create("WhiteImage.png");
 	player1->setPosition(origin.x + visibleSize.width / 5.0, origin.y + visibleSize.height / 3 * 2);
-	this->addChild(player1,1);
+	this->addChild(player1, 1);
 
 	//设置player2的白框
 	Sprite *player2 = Sprite::create("WhiteImage.png");
 	player2->setPosition(origin.x + visibleSize.width / 5.0*4.0, origin.y + visibleSize.height / 3.0*2.0);
 	this->addChild(player2, 1);
 
-	
+
 
 	//选择英雄菜单
 	MenuItemImage *houyi = MenuItemImage::create("houyi.jpg", "houyi.jpg", CC_CALLBACK_1(RoomScene::ChooseHero_h, this));
@@ -56,32 +56,32 @@ bool RoomScene::init()
 
 	MenuItemImage *daji = MenuItemImage::create("daji.png", "daji.png", CC_CALLBACK_1(RoomScene::ChooseHero_d, this));
 	daji->setPosition(Vec2(origin.x + visibleSize.width / 3.0 * 2.0, origin.y + visibleSize.height / 5.0));
-	
 
-	
+
+
 	//设置点击返回初始页面菜单 准备菜单 添加人机菜单
 	MenuItemFont::setFontName("Arial");
-	MenuItemFont::setFontSize(24);
+	MenuItemFont::setFontSize(100);
 
 	MenuItemFont *back = MenuItemFont::create("Back", CC_CALLBACK_1(RoomScene::menuBackToStart, this));
 	back->setPosition(origin.x + visibleSize.width - back->getContentSize().width / 2,
-					  origin.y + back->getContentSize().height / 2);
+		origin.y + back->getContentSize().height / 2);
 
 	MenuItemFont *ready = MenuItemFont::create("Ready", CC_CALLBACK_1(RoomScene::menuReadyCallback, this));
 	ready->setPosition(origin.x + visibleSize.width / 2.0, origin.y + visibleSize.height / 3.0);
 
 	MenuItemFont *addAI = MenuItemFont::create("AddAI", CC_CALLBACK_1(RoomScene::menuClickToAddAI, this));
-	addAI->setPosition(origin.x + visibleSize.width / 5.0*4.0, 
-					   origin.y + visibleSize.height / 3.0*2.0 + player2->getContentSize().height);
+	addAI->setPosition(origin.x + visibleSize.width / 5.0*4.0,
+		origin.y + visibleSize.height / 3.0*2.0 + player2->getContentSize().height);
 
 	MenuItemFont *addMyHero = MenuItemFont::create("AddMyHero", CC_CALLBACK_1(RoomScene::menuClickToAddMyHero, this));
-	addMyHero->setPosition(origin.x + visibleSize.width / 5.0, 
-					   origin.y + visibleSize.height / 3.0*2.0 + player1->getContentSize().height);
+	addMyHero->setPosition(origin.x + visibleSize.width / 5.0,
+		origin.y + visibleSize.height / 3.0*2.0 + player1->getContentSize().height);
 
 	Menu *menu = Menu::create(back, ready, addAI, addMyHero, houyi, daji, yase, NULL);
 	menu->setPosition(Vec2::ZERO);
-//	log("%f,%f", back->getPosition().x, back->getPosition().y);
-	this->addChild(menu,1);
+	//	log("%f,%f", back->getPosition().x, back->getPosition().y);
+	this->addChild(menu, 1);
 
 	return true;
 }
@@ -92,10 +92,10 @@ void RoomScene::menuReadyCallback(cocos2d::Ref* pSender)
 
 	if (this->getMeHeroName() != '\0' && this->getOtherHeroName() != '\0')
 	{
-		auto gs = GameScene::createScene(this->getMeHeroName(),this->getOtherHeroName(),this->isAI());
+		auto gs = GameScene::createScene(this->getMeHeroName(), this->getOtherHeroName(), this->isAI());
 		Director::getInstance()->replaceScene(gs);
 	}
-	
+
 }
 
 void RoomScene::menuBackToStart(Ref* pSender)
@@ -186,9 +186,4 @@ void RoomScene::menuClickToAddMyHero(cocos2d::Ref* pSender)
 {
 	this->setFlag(MeFlag);
 }
-
-
-
-
-
 
