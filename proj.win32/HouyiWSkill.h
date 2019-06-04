@@ -22,7 +22,7 @@ public:
 	virtual void update(float dt);
 
 	//触发散射技能
-	static HouyiWSkill* createHouyiWSkill();
+	static HouyiWSkill* createHouyiWSkill(Hero* hero);
 	void takeHouyiWSkill(HouyiHero* hero ,float angle);
 	//重载take函数
 	void takeHouyiWSkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint, float angle);

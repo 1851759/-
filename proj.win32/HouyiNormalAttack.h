@@ -24,7 +24,7 @@ public:
 	virtual void update(float dt);
 
 	//触发平A
-	static HouyiNormalAttack* createTheAttack();
+	static HouyiNormalAttack* createTheAttack(Hero* hero);
 	void takeHouyiNormalAttack(HouyiHero* hero);
 	//重载take函数
 	void takeHouyiNormalAttack(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);

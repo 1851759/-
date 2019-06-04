@@ -6,15 +6,16 @@
 
 #include "SimpleAudioEngine.h"
 
-HouyiWSkill* HouyiWSkill::createHouyiWSkill()
+HouyiWSkill* HouyiWSkill::createHouyiWSkill(Hero* hero)
 {
 	HouyiWSkill* arrow = new HouyiWSkill();
 	if (arrow&&arrow->initWithFile("HouyiWSkill.png"))
 	{
+		arrow->setDamagePoint(HouyiWSkillDamage * hero->getWSkillLevel());
 		arrow->setCanTakeDamage(true);
 		arrow->setIfRemoveWhenDamage(true);
 		arrow->autorelease();
-		arrow->setScale(0.6);
+		arrow->setScale(0.2);
 		return arrow;
 	}
 	CC_SAFE_DELETE(arrow);

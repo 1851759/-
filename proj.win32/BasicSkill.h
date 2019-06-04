@@ -5,18 +5,15 @@
 #define __BASICSKILL__
 
 #include "cocos2d.h"
+#include "BasicSprite.h"
 
-class BasicSkill : public cocos2d::Sprite
+class BasicSkill : public BasicSprite
 {
 	bool _canTakeDamage;
 	bool _removeWhenDamage;
-	//造成的伤害数值
-	float _damagePoint;
 
 public:
-	float getDamagePoint() const { return _damagePoint; }
-	void setDamagePoint(float damagePoint) { _damagePoint = damagePoint; }
-
+	
 	//判断能否造成伤害
 	//为true时可以造成伤害
 	//为false时忽视碰撞

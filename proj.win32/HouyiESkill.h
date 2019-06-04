@@ -22,7 +22,7 @@ public:
 	virtual void update(float dt);
 
 	//触发技能
-	static HouyiESkill* createHouyiESkill();
+	static HouyiESkill* createHouyiESkill(Hero* hero);
 	void takeHouyiESkill(HouyiHero* hero);
 	//重载take函数
 	void takeHouyiESkill(cocos2d::Vec2 startPoint,cocos2d::Vec2 targetPoint);
