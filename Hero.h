@@ -17,22 +17,34 @@ typedef enum
 
 } HeroName;
 
-//英雄进行各种动作时的tag
+//英雄进行移动时的tag
 typedef enum
 {
 	HeroMove = 10,
-	HeroSkillQ = 11,
-	HeroSkillW = 12,
-	HeroSkillE = 13,
-	HeroNormalAttack = 14
 } HeroAction;
 
-//定义英雄的状态 活着或者死了
-typedef	enum
+//两方玩家的flag 默认人机player2
+typedef enum
 {
-	dead = 1,
-	alive = 2
-} status;
+	Player1 = 300,
+	Player2 = 301
+} PlayerFlag;
+
+
+
+
+//所有英雄的通用属性
+//每级所需经验
+#define ExpPerLevel 200
+//每秒回蓝红
+#define MpPerSec 1.0
+#define HpPerSec 1.0
+
+//每级加属性
+#define MpPerLevel 20.0
+#define HpPerLevel 20.0
+#define AtkPerLevel 20.0
+#define DefPerLevel 20.0
 
 class Hero : public BasicSprite
 {
@@ -47,6 +59,7 @@ class Hero : public BasicSprite
 	cocos2d::Vec2 _otherHeroPoint;
 	cocos2d::Vec2 _otherTowerPoint;
 	cocos2d::Vec2 _otherSoldierPoint;
+	int _flag;
 	Hero* _otherHero;
 
 	//在此处添加英雄的属性数值
@@ -61,7 +74,16 @@ class Hero : public BasicSprite
 	float _moveSpeed;
 	float _atk;
 	float _def;
-
+	//血量
+	float _healthPoint;
+	float _maxHealthPoint;
+	//蓝
+	float _magicPoint;
+	float _maxMagicPoint;
+	//经验值
+	int _experiencePoint;
+	//金币
+	int _money;
 
 	//用数组模拟装备
 	//每个装备有一个枚举值
@@ -104,6 +126,9 @@ class Hero : public BasicSprite
 
 public:
 
+	int getFlag() const { return _flag; }
+	void setFlag(PlayerFlag flag) { _flag = flag; }
+
 	//重写SPrite类的init函数
 	virtual bool init();
 
@@ -122,6 +147,8 @@ public:
 	//设置该英雄的敌方英雄
 	void setOtherHero(Hero* hero) { _otherHero = hero; }
 	Hero* getOtherHero() const { return _otherHero; }
+
+	//交互相关
 
 	//获得和改变攻击速度
 	float getAttackSpeed() const { return _attackSpeed; }
@@ -187,6 +214,8 @@ public:
 	char getHeroName() const { return _heroName; }
 
 	//获得和改变等级
+	int getLevel() const { return _level; }
+	void levelUp() { _level++; }
 
 	//获得和改变技能等级
 	int getQSkillLevel() const { return _qSkillLevel; }
@@ -210,6 +239,27 @@ public:
 	float getDefensePoint() const { return _def; }
 	void changeDefensePoint(float point) { _def += point; }
 
+	//生命值相关
+	virtual float getHealthPoint() const { return _healthPoint; }
+	float getMaxHealthPoint() const { return _maxHealthPoint; }
+	void changeMaxHealthPoint(float point) { _maxHealthPoint += point; }
+	void changeHealthPoint(float point) { _healthPoint += point; }
+	virtual void setHealthPoint(float point) { _healthPoint = point; }
+	virtual void sufferDamage(float damage) { _healthPoint -= damage; }
+
+	//蓝相关
+	float getMagicPoint() const { return _magicPoint; }
+	float getMaxMagicPoint() const { return _maxMagicPoint; }
+	void changeMaxMagicPoint(float point) { _maxMagicPoint += point; }
+	void changeMagicPoint(float point) { _magicPoint += point; }
+	void cutMagicPoint(float point) { _magicPoint -= point; }
+
+	virtual int getExpPoint() const { return _experiencePoint; }
+	virtual void setExpPoint(int point) { _experiencePoint = point; }
+	virtual void changeExpPoint(int point) { _experiencePoint += point; }
+
+	virtual int showMeTheMoney() const { return _money; }
+	virtual void setMoney(int point) { _money = point; }
 	//获得装备
 
 

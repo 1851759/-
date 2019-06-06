@@ -3,15 +3,16 @@
 #include "HouyiHero.h"
 #include "HouyiNormalAttack.h"
 
-HouyiNormalAttack* HouyiNormalAttack::createTheAttack()
+HouyiNormalAttack* HouyiNormalAttack::createTheAttack(Hero* hero)
 {
 	HouyiNormalAttack* normalAttack = new HouyiNormalAttack();
 	if (normalAttack&&normalAttack->initWithFile("HouyiNormalAttack.png"))
 	{
+		normalAttack->setDamagePoint(hero->getAttackPoint());
 		normalAttack->setCanTakeDamage(true);
 		normalAttack->setIfRemoveWhenDamage(true);
 		normalAttack->autorelease();
-		normalAttack->setScale(0.5);
+		normalAttack->setScale(0.2);
 		return normalAttack;
 	}
 	CC_SAFE_DELETE(normalAttack);
@@ -94,4 +95,3 @@ void HouyiNormalAttack::update(float dt)
 
 	//Î´Ìí¼ÓÅö×²¼ì²â
 }
-

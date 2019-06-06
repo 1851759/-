@@ -5,27 +5,28 @@
 
 #include "SimpleAudioEngine.h"
 
-HouyiESkill* HouyiESkill::createHouyiESkill()
+HouyiESkill* HouyiESkill::createHouyiESkill(Hero* hero)
 {
 	HouyiESkill* bigBird = new HouyiESkill();
 	if (bigBird&&bigBird->initWithFile("HouyiESkill.png"))
 	{
 		bigBird->setCanTakeDamage(true);
 		bigBird->setIfRemoveWhenDamage(true);
+		bigBird->setDamagePoint(HouyiESkillDamage * hero->getESkillLevel());
 		bigBird->autorelease();
-		bigBird->setScale(1);
+		bigBird->setScale(0.2);
 		return bigBird;
-	}
+	} 
 	CC_SAFE_DELETE(bigBird);
 	return nullptr;
 }
 
 void HouyiESkill::takeHouyiESkill(HouyiHero* hero)
 {
-	cocos2d::Vec2 touchPoint = convertToWorldSpaceAR(hero->getTouchPoint());
-	cocos2d::Vec2 heroPoint = convertToWorldSpaceAR(hero->getPosition());
-	cocos2d::log("toouchPoint %f %f ", touchPoint.x, touchPoint.y);
-	cocos2d::log("heroPoint %f %f ", heroPoint.x, heroPoint.y);
+	cocos2d::Vec2 touchPoint = hero->getTouchPoint();
+	cocos2d::Vec2 heroPoint = hero->getPosition();
+	//	cocos2d::log("toouchPoint %f %f ", touchPoint.x, touchPoint.y);
+	//	cocos2d::log("heroPoint %f %f ", heroPoint.x, heroPoint.y);
 	this->setPosition(heroPoint);
 	this->setOriginPosition(heroPoint);
 	//获取模长不为1的方向向量

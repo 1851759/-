@@ -21,14 +21,16 @@
 #define HouyiQSkillAfterShake 1.0
 
 #define HouyiWSkillRange 200.0
-#define HouyiWSkillArrowNumber 13
+#define HouyiWSkillDamage 100
+#define HouyiWSkillArrowNumber 9
 #define HouyiWSkillMoveSpeed 3.0
-#define HouyiWSkillCD 10.0
+#define HouyiWSkillCD 5.0
 #define HouyiWSkillAfterShake 1.0
 
 #define HouyiESkillRange 1000.0
+#define HouyiESkillDamage 100
 #define HouyiESkillMoveSpeed 5.0
-#define HouyiESkillCD 10.0
+#define HouyiESkillCD 5.0
 #define HouyiESkillAfterShake 1.0
 
 //在此处定义后羿初始属性
@@ -36,6 +38,10 @@
 #define HouyiAttackSpeed 0.5
 #define HouyiAttack 100.0
 #define HouyiDefence 100.0
+#define HouyiMaxHealth 200.0
+#define HouyiHealth 200.0
+#define HouyiMaxMagic 100.0
+#define HouyiMagic 100.0
 #define HouyiNormalAttackAfterShake 1.0/ HouyiAttackSpeed
 
 typedef enum
@@ -57,7 +63,7 @@ public:
 
 	static HouyiHero* create();
 
-	virtual void update(float dt);
+	void buffUpdate(float dt);
 
 	void AIcontrol(Hero* hero);
 

@@ -29,4 +29,3 @@ public:
 };
 
 #endif // !__BASICSKILL__
-

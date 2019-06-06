@@ -20,6 +20,7 @@ public:
 
 	int getHealthPoint() const { return _healthPoint; }
 	void setHealthPoint(int point) { _healthPoint = point; }
+	void sufferDamage(int damage) { _healthPoint -= damage; }
 
 	int getExpPoint() const { return _experiencePoint; }
 	void setExpPoint(int point) { _experiencePoint = point; }
@@ -30,5 +31,4 @@ public:
 
 
 #endif // !__BASICSPRITE__
-
 

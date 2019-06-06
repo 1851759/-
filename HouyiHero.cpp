@@ -10,7 +10,6 @@ HouyiHero* HouyiHero::create()
 	HouyiHero* houyi = new HouyiHero();
 	if (houyi->init())
 	{
-
 		houyi->autorelease();
 
 		//在下边初始化后羿的属性值////////////////////////////////////////////
@@ -24,16 +23,19 @@ HouyiHero* HouyiHero::create()
 		houyi->setNormalAttackAfterShake(HouyiNormalAttackAfterShake);
 		houyi->setHeroInSkake(false);
 
+		//基础生命值
+		houyi->setHealthPoint(HouyiHealth);
+		houyi->changeMaxHealthPoint(HouyiHealth);
 		//基础攻击力
-
+		houyi->changeAttackPoint(HouyiAttack);
 		//基础防御力
-
+		houyi->changeDefensePoint(HouyiDefence);
 		//基础等级
-
+		houyi->levelUp();
 		//基础金币
-
+		houyi->setMoney(0);
 		//基础经验值
-
+		houyi->setExpPoint(0);
 		//q技能
 		houyi->qSkillLevelUp();//此处默认技能一级用于测试////////////////////////////////////
 		houyi->setQSkillCdTime(HouyiQSkillCD);
@@ -69,37 +71,14 @@ bool HouyiHero::init()
 
 		return false;
 	}
-	this->setScale(0.5);
+	this->setScale(0.2);
 	return true;
 }
 
-
-
-
-
-void HouyiHero::update(float dt)
+void HouyiHero::buffUpdate(float dt)
 {
 	float cuttime = 1.0 / 60.0;
-	//平A冷却
-	if (this->getAttackWaitTime() >= 0.01)
-	{
-		this->cutAttackWaitTime(cuttime);
-	}
-	//q技能冷却
-	if (this->getQSkillWaitTime() >= 0.01)
-	{
-		this->cutQSkillWaitTime(cuttime);
-	}
-	//w技能冷却
-	if (this->getWSkillWaitTime() >= 0.01)
-	{
-		this->cutWSkillWaitTime(cuttime);
-	}
-	//e技能冷却
-	if (this->getESkillWaitTime() >= 0.01)
-	{
-		this->cutESkillWaitTime(cuttime);
-	}
+
 	//buff持续时间
 	if (this->getBuffTime() >= 0.01)
 	{
@@ -127,12 +106,7 @@ void HouyiHero::update(float dt)
 		houyiBuff->setAnchorPoint(cocos2d::Vec2(0, 0));
 		this->addChild(houyiBuff, 200, HouyiBuffTag);
 	}
-	//英雄后摇时间
-	if (this->getHeroAfterShake() > 0.01)
-	{
-		this->setHeroInSkake(true);
-		this->cutHeroAfterShake(cuttime);
-	}
+	//cocos2d::log("attackspeed %f", this->getAttackSpeed());
 }
 
 //实现AI
