@@ -17,6 +17,10 @@
 #include"YaseESkill.h"
 #include"YaseWSkill.h"
 
+#include"Soldier.h"
+#include"JinzhanSoldier.h"
+#include"YuanchengSoldier.h"
+#include"PaocheSoldier.h"
 
 #include "DajiHero.h"
 //修改技能范围时需要修改英雄头文件define中的参数
@@ -378,6 +382,20 @@ bool GameScene::init()
 
 	case 'Y':
 	{
+		auto otherHero = YaseHero::create();
+		auto body = PhysicsBody::createCircle(otherHero->getContentSize().width / 2);
+		body->setContactTestBitmask(OTHERUNITTEST);
+		body->setCategoryBitmask(OTHERUNITCATEGORY);
+		body->setCollisionBitmask(OTHERUNITCOLLISION);
+	//	log("otherhero test mask %d", body->getContactTestBitmask());
+		otherHero->setPhysicsBody(body);
+		otherHero->setPosition(Player2StartPosition);
+		addChild(otherHero, 100, this->getEnermyType());
+		otherHero->setAI();
+		otherHero->setFlag(Player2);
+		otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+		otherHero->scheduleUpdate();
+		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
 	}
 
@@ -470,7 +488,7 @@ void GameScene::watchMeAndOther(float dt)
 		if (this->getOtherHeroTag() == 'H')
 		{
 			//判断并进行普攻
-		/*	if (length <= HouyiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
+			if (length <= HouyiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
 			{
 				takeHouyiNormalAttack(otherHero,false, otherHeroPoint, meHeroPoint);
 				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
@@ -504,13 +522,47 @@ void GameScene::watchMeAndOther(float dt)
 				otherHero->setESkillWaitTime(otherHero->getESkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getESkillAfterShake());
 			}//end E
-		*/	
+			
 		}
 		
 		//如果AI控制亚瑟
 		if (this->getOtherHeroTag() == 'Y')
 		{
+			//判断并进行普攻
+			if (length <= YaseNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
+			{
+				takeYaseNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
+				otherHero->setHeroAfterShake(otherHero->getNormalAttackAfterShake());
+			}//end 普攻
 
+			//判断并Q技能开buff
+			if (length <= 200.0 && otherHero->getQSkillWaitTime() <= 0.01)
+			{
+				//发动q技能，持续时间内增加后羿攻击速度
+				otherHero->setBuff(true);
+				//持续时间k*q技能等级
+				otherHero->setBuffTime(YaseQSkillLastTime * otherHero->getQSkillLevel());
+				//该技能实现效果在update函数中实现
+				otherHero->setQSkillWaitTime(otherHero->getQSkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getQSkillAfterShake());
+			}//end buff
+
+			//判断并W技能
+			if (length <= YaseWSkillRange - 20 && otherHero->getWSkillWaitTime() <= 0.01)
+			{
+				takeYaseWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setWSkillWaitTime(otherHero->getWSkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getWSkillAfterShake());
+			}//end W
+
+			//判断并放大
+			if (length <= YaseESkillRange && otherHero->getESkillWaitTime() <= 0.01)
+			{
+				takeYaseESkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setESkillWaitTime(otherHero->getESkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getESkillAfterShake());
+			}//end E
 		}
 		//如果AI控制妲己
 		if (this->getOtherHeroTag() == 'D')
@@ -1188,4 +1240,28 @@ void GameScene::wulawula(float dt)
 	otherJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
 	this->addChild(otherJinzhanSoldier, 200, OtherJinzhanSoldierTag);
 	otherJinzhanSoldier->scheduleUpdate();
+	//己方远程兵
+	auto meYuanchengSoldier = YuanchengSoldier::create(MeSoldier);
+	meYuanchengSoldier->setPosition(500, 500);
+	meYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
+	this->addChild(meYuanchengSoldier, 200, MeYuanchengSoldierTag);
+	meYuanchengSoldier->scheduleUpdate();
+	//敌方远程兵
+	auto otherYuanchengSoldier = YuanchengSoldier::create(OtherSoldier);
+	otherYuanchengSoldier->setPosition(900, 900);
+	otherYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+	this->addChild(otherYuanchengSoldier, 200, OtherYuanchengSoldierTag);
+	otherYuanchengSoldier->scheduleUpdate();
+	//己方炮车兵
+	auto mePaocheSoldier = PaocheSoldier::create(MeSoldier);
+	mePaocheSoldier->setPosition(500, 500);
+	mePaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
+	this->addChild(mePaocheSoldier, 200, MePaocheSoldierTag);
+	mePaocheSoldier->scheduleUpdate();
+	//敌方炮车兵
+	auto otherPaocheSoldier = PaocheSoldier::create(OtherSoldier);
+	otherPaocheSoldier->setPosition(900, 900);
+	otherPaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+	this->addChild(otherPaocheSoldier, 200, OtherPaocheSoldierTag);
+	otherPaocheSoldier->scheduleUpdate();
 }
