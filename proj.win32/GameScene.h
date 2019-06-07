@@ -7,6 +7,7 @@
 #include "cocos2d.h"
 
 #include "Hero.h"
+#include "JinzhanSoldier.h"
 
 #include "HouyiHero.h"
 #include "HouyiNormalAttack.h"
@@ -48,6 +49,9 @@
 #define PaocheSoldierMoney 100
 #define TowerMoney 100
 
+//出兵间隔
+#define WulaWulaCD 10.0
+
 typedef enum
 {
 	MeHeroTag = 1111,
@@ -64,7 +68,7 @@ typedef enum
 typedef enum
 {
 	MeJinzhanSoldierTag = 1116,
-	OtherJinzhanSodierTag = 1117,
+	OtherJinzhanSoldierTag = 1117,
 	MeYuanchengSoldierTag = 1118,
 	OtherYuanchengSoldierTag = 1119,
 	MePaocheSoldierTag = 1120,
@@ -109,7 +113,9 @@ public:
 	void takeHouyiESkill(Hero* hero,bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
 	//亚瑟技能
-	void takeYaseNormalAttack(bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeYaseNormalAttack(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeYaseWSkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeYaseESkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
 	//获取meHeroTag
 	char getMeHeroTag() { return meHeroTag; }
@@ -129,7 +135,9 @@ public:
 
 	//返回初始场景
 	void menuBackCallback(cocos2d::Ref* pSender);
+	//鼠标监听
 	void touchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+	//碰撞监听
 	bool contactBegin(cocos2d::PhysicsContact& contact);
 	virtual void onEnter();
 	virtual void onExit();
@@ -153,6 +161,9 @@ public:
 	//人机控制
 	void watchMeAndOther(float dt);
 
+	//出兵函数
+	void wulawula(float dt);
+	
 
 };
 
