@@ -4,7 +4,7 @@
 #include "Soldier.h"
 #include "Hero.h"
 
-#define YuanchengNormalAttackRange 1000.0
+#define YuanchengNormalAttackRange 100.0
 #define YuanchengNormalAttackMoveSpeed 5.0
 
 
@@ -24,16 +24,16 @@ class YuanchengSoldier : public Hero
 	//设定小兵的名字
 	//远程的名字为'C'
 	char _soldierName;
-	SoldierFlag _flag;
+	PlayerFlag _flag;
 
 public:
 
-	void setSoldierFlag(SoldierFlag flag) { _flag = flag; }
+	void setSoldierFlag(PlayerFlag flag) { _flag = flag; }
 	int getSoldierFlag() const { return _flag; }
 
 	virtual bool init();
 
-	static YuanchengSoldier* create(SoldierFlag flag);
+	static YuanchengSoldier* create(PlayerFlag flag);
 
 	virtual void update(float dt);
 

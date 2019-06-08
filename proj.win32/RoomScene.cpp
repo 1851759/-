@@ -107,6 +107,7 @@ void RoomScene::menuBackToStart(Ref* pSender)
 //Ñ¡Ôñºóôà
 void RoomScene::ChooseHero_h(cocos2d::Ref* pSender)
 {
+	cocos2d::log("HHHH");
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 

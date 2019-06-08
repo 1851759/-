@@ -4,7 +4,7 @@
 #include "YuanchengNormalAttack.h"
 
 
-YuanchengSoldier* YuanchengSoldier::create(SoldierFlag flag)
+YuanchengSoldier* YuanchengSoldier::create(PlayerFlag flag)
 {
 	YuanchengSoldier* yuancheng = new YuanchengSoldier();
 	//定义soldier的flag
@@ -21,7 +21,7 @@ YuanchengSoldier* YuanchengSoldier::create(SoldierFlag flag)
 		yuancheng->changeAttackSpeed(YuanchengAttackSpeed);
 		yuancheng->setAttackWaitTime(0);
 		yuancheng->setNormalAttackAfterShake(YuanchengNormalAttackAfterShake);
-		yuancheng->setHeroInShake(false);
+		yuancheng->setHeroInSkake(false);
 		yuancheng->setHealthPoint(YuanchengMaxHealthPoint);
 		//基础攻击力
 		yuancheng->changeAttackPoint(YuanchengAttack);
@@ -41,7 +41,7 @@ bool YuanchengSoldier::init()
 {
 	//下边的if里搞出了英雄的图片
 //	cocos2d::log("create soldier");
-	if (this->getSoldierFlag() == MeSoldier && Sprite::initWithFile("YuanchengLan.png"))
+	if (this->getSoldierFlag() == Player1 && Sprite::initWithFile("YuanchengLan.png"))
 	{
 		auto body = cocos2d::PhysicsBody::createCircle(this->getContentSize().width / 2);
 		body->setContactTestBitmask(MEUNITTEST);
@@ -52,7 +52,7 @@ bool YuanchengSoldier::init()
 		return true;
 	}
 
-	if (this->getSoldierFlag() == OtherSoldier && Sprite::initWithFile("YuanchengHong.png"))
+	if (this->getSoldierFlag() == Player2 && Sprite::initWithFile("YuanchengHong.png"))
 	{
 		auto body = cocos2d::PhysicsBody::createCircle(this->getContentSize().width / 2);
 		body->setContactTestBitmask(OTHERUNITTEST);
@@ -77,7 +77,7 @@ void YuanchengSoldier::update(float dt)
 	//小兵后摇时间
 	if (this->getHeroAfterShake() > 0, 01)
 	{
-		this->setHeroInShake(true);
+		this->setHeroInSkake(true);
 		this->cutHeroAfterShake(cuttime);
 	}
 	//小兵死亡则消失

@@ -77,6 +77,12 @@ bool DajiHero::init()
 
 
 
+
+void DajiHero::update(float dt)
+{
+	float cuttime = 1.0 / 60.0;
+}
+
 // µœ÷AI
 void DajiHero::AIcontrol(Hero* hero)
 {

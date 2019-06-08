@@ -4,7 +4,7 @@
 #include "Soldier.h"
 #include "Hero.h"
 
-#define JinzhanNormalAttackRange 1000.0
+#define JinzhanNormalAttackRange 40.0
 #define JinzhanNormalAttackMoveSpeed 5.0
 
 
@@ -24,16 +24,16 @@ class JinzhanSoldier : public Hero
 	//设定小兵的名字
 	//近战的名字为'J'
 	char _soldierName;
-	SoldierFlag _flag;
+	PlayerFlag _flag;
 
 public:
 
-	void setSoldierFlag(SoldierFlag flag) { _flag = flag; }
+	void setSoldierFlag(PlayerFlag flag) { _flag = flag; }
 	int getSoldierFlag() const { return _flag; }
 
 	virtual bool init();
 
-	static JinzhanSoldier* create(SoldierFlag flag);
+	static JinzhanSoldier* create(PlayerFlag flag);
 
 	virtual void update(float dt);
 

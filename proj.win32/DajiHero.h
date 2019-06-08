@@ -9,23 +9,23 @@
 #define DajiNormalAttackMoveSpeed 3.0
 
 
-#define DajiQSkillRange 500.0
+#define DajiQSkillRange 5.0
 #define DajiQSkillMoveSpeed 3.0
 #define DajiQSkillDamage 120
 #define DajiQSkillCD 1.0
 #define DajiQSkillAfterShake 1.0
 
-#define DajiWSkillRange 300.0
+#define DajiWSkillRange 200.0
 #define DajiWSkillMoveSpeed 3.0
 #define DajiWSkillDamage 150
-#define DajiWSkillCD 1.0
+#define DajiWSkillCD 10.0
 #define DajiWSkillAfterShake 1.0
 
 #define DajiESkillRange 200.0
 #define DajiESkillArrowNumber 6
 #define DajiESkillMoveSpeed 5.0
 #define DajiESkillDamage 80
-#define DajiESkillCD 1.0
+#define DajiESkillCD 10.0
 #define DajiESkillAfterShake 1.0
 
 //在此处定义妲己初始属性
@@ -52,6 +52,8 @@ public:
 	virtual bool init();
 
 	static DajiHero* create();
+
+	virtual void update(float dt);
 
 	void AIcontrol(Hero* hero);
 

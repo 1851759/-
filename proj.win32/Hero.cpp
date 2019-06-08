@@ -1,6 +1,6 @@
 #include "cocos2d.h"
 #include "Hero.h"
-
+USING_NS_CC;
 //定义两方英雄复活点
 //注意此处用数字表示///////////////////////////////////////////////////////////////////////////////////////////////////
 cocos2d::Vec2 Player1Reborn(250, 250);
@@ -112,12 +112,30 @@ void Hero::update(float dt)
 			this->setPosition(Player2Reborn);
 		}
 	}
-	//cocos2d::log("hp %f exp %d money %d", this->getHealthPoint(), this->getExpPoint(), this->showMeTheMoney());
+	cocos2d::log("hp %f exp %d money %d", this->getHealthPoint(), this->getExpPoint(), this->showMeTheMoney());
 }
 
+void Hero::createBlood()
+{
+	Sprite* bar = Sprite::create("Bar.png");
+	bar->setPosition(0, 100);
+	this->addChild(bar, 200);
+	Sprite* blood = Sprite::create("Blood.png");
+	ProgressTimer* pro = ProgressTimer::create(blood);
+	pro->setType(ProgressTimer::Type::BAR);
+	pro->setPosition(0, 100);
+	pro->setMidpoint(Vec2(0, 0.5));
+	pro->setBarChangeRate(Vec2(1, 0));
+	pro->setTag(bloodbar);
+	this->addChild(pro, 200);
+	this->schedule(schedule_selector(Hero::checkBlood), 0.01f);
+}
 
-
-
+void Hero::checkBlood(float dt)
+{
+	auto pro = (ProgressTimer*)this->getChildByTag(bloodbar);
+	pro->setPercentage(this->getHealthPoint() / this->getMaxHealthPoint()*100.0);
+}
 
 
 

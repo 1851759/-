@@ -4,6 +4,7 @@
 #include "HouyiNormalAttack.h"
 #include "HouyiESkill.h"
 
+USING_NS_CC;
 
 HouyiHero* HouyiHero::create()
 {
@@ -71,6 +72,7 @@ bool HouyiHero::init()
 		
 		return false;
 	}
+	this->createBlood();
 	this->setScale(0.2);
 	return true;
 }
@@ -106,7 +108,7 @@ void HouyiHero::buffUpdate(float dt)
 		houyiBuff->setAnchorPoint(cocos2d::Vec2(0,0));
 		this->addChild(houyiBuff, 200, HouyiBuffTag);
 	}
-	cocos2d::log("attackspeed %f", this->getAttackSpeed());
+//	cocos2d::log("attackspeed %f", this->getAttackSpeed());
 }
 
 //ÊµÏÖAI
@@ -139,9 +141,4 @@ void HouyiHero::AIAction(float dt)
 		//	cocos2d::log(" speed %f", this->getMoveSpeed());
 		}
 	}
-	
-	
-	
-	
-
 }

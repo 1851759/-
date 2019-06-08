@@ -4,7 +4,8 @@
 #include "GameScene.h"
 #include "RoomScene.h"
 
-
+#include "DefenceTower.h"
+#include "CrystalTower.h"
 #include "Hero.h"
 
 #include "HouyiHero.h"
@@ -17,12 +18,18 @@
 #include"YaseESkill.h"
 #include"YaseWSkill.h"
 
+#include "DajiHero.h"
+#include "DajiNormalAttack.h"
+#include "DajiQSkill.h"
+#include "DajiWSkill.h"
+#include "DajiESkill.h"
+
 #include"Soldier.h"
 #include"JinzhanSoldier.h"
 #include"YuanchengSoldier.h"
 #include"PaocheSoldier.h"
 
-#include "DajiHero.h"
+
 //修改技能范围时需要修改英雄头文件define中的参数
 
 USING_NS_CC;
@@ -32,6 +39,7 @@ Vec2 position_last = Vec2(0, 0);
 Vec2 Player1StartPosition(250, 250);
 Vec2 Player2StartPosition(1300, 800);
 
+
 GameScene* GameScene::create(char meName, char otherName, bool isAI)
 {
 //	log("create before if");
@@ -39,6 +47,7 @@ GameScene* GameScene::create(char meName, char otherName, bool isAI)
 
 	gameScene->setMeHeroTag(meName);
 	gameScene->setOtherHeroTag(otherName);
+	gameScene->setUnChecking();
 	if (isAI)
 	{
 		gameScene->setEnermyType(AIHeroTag);
@@ -132,92 +141,7 @@ void GameScene::onEnter()
 	//目前只实现了 Q W E A B P键按下时英雄做出响应
 
 	auto keyboardListener = EventListenerKeyboard::create();
-	keyboardListener->onKeyPressed = [](EventKeyboard::KeyCode keyCode, Event* event)
-	{
-		//根据tag获取英雄
-		auto target = static_cast<Hero*>(event->getCurrentTarget());
-		//当前正在按下按键，此时点击鼠标会变为类似选择攻击目标的作用
-		//不再是移动
-		target->setPressingKeyboard();
-		switch (keyCode)
-		{
-		case EventKeyboard::KeyCode::KEY_A:
-		{
-			target->thisKeyPressed('A');
-			break;
-		}
-
-		case EventKeyboard::KeyCode::KEY_Q:
-		{
-			target->thisKeyPressed('Q');
-			//在此处发动后羿Q
-			if (target->getHeroName() == 'H')
-			{
-
-				if (target->getQSkillWaitTime() <= 0.01)
-				{
-
-					//停止移动动作发动技能
-					target->stopActionByTag(HeroMove);
-					//发动q技能，持续时间内增加后羿攻击速度和移动速度
-					target->setBuff(true);
-					//持续时间5*q技能等级
-					target->setBuffTime(HouyiQSkillLastTime * target->getQSkillLevel());
-					//该技能实现效果在HouyiHero update函数中实现
-					target->setQSkillWaitTime(target->getQSkillCdTime());
-					target->setHeroAfterShake(target->getQSkillAfterShake());
-
-				}
-			}
-
-			//在此处发动亚瑟Q
-			if (target->getHeroName() == 'Y')
-			{
-				if (target->getQSkillWaitTime() <= 0.01)
-				{
-
-					//停止移动动作发动技能
-					target->stopActionByTag(HeroMove);
-					//发动q技能，持续时间内增加后羿攻击速度和移动速度
-					target->setBuff(true);
-					//持续时间5*q技能等级
-					target->setBuffTime(YaseQSkillLastTime * target->getQSkillLevel());
-					//该技能实现效果在HouyiHero update函数中实现
-					target->setQSkillWaitTime(target->getQSkillCdTime());
-					target->setHeroAfterShake(target->getQSkillAfterShake());
-				}
-			}
-			break;
-		}
-
-		case EventKeyboard::KeyCode::KEY_W:
-		{
-			target->thisKeyPressed('W');
-			break;
-		}
-
-		case EventKeyboard::KeyCode::KEY_E:
-		{
-			target->thisKeyPressed('E');
-			break;
-		}
-		//暂定按P键实现查看装备功能
-		case EventKeyboard::KeyCode::KEY_P:
-		{
-			target->thisKeyPressed('P');
-			break;
-		}
-
-		//B键打开商店
-		case EventKeyboard::KeyCode::KEY_B:
-		{
-			target->thisKeyPressed('B');
-			break;
-		}
-		default: break;
-		}
-
-	};
+	keyboardListener->onKeyPressed = CC_CALLBACK_2(GameScene::keyPressed, this);
 	keyboardListener->onKeyReleased = [](EventKeyboard::KeyCode keyCode, Event* event)
 	{
 		auto target = static_cast<Hero*>(event->getCurrentTarget());
@@ -377,6 +301,20 @@ bool GameScene::init()
 
 	case 'D':
 	{
+		auto otherHero = DajiHero::create();
+		auto body = PhysicsBody::createCircle(otherHero->getContentSize().width / 2);
+		body->setContactTestBitmask(OTHERUNITTEST);
+		body->setCategoryBitmask(OTHERUNITCATEGORY);
+		body->setCollisionBitmask(OTHERUNITCOLLISION);
+		log("otherhero test mask %d", body->getContactTestBitmask());
+		otherHero->setPhysicsBody(body);
+		otherHero->setPosition(Player2StartPosition);
+		addChild(otherHero, 100, this->getEnermyType());
+		otherHero->setAI();
+		otherHero->setFlag(Player2);
+		otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+		otherHero->scheduleUpdate();
+		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
 	}
 
@@ -404,6 +342,29 @@ bool GameScene::init()
 	default:break;
 	}
 
+	//双方防御塔
+	auto player1Tower = DefenceTower::create(Player1);
+	player1Tower->setPosition(Player1StartPosition+Vec2(100,100));
+	player1Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(this->getEnermyType())));
+	player1Tower->scheduleUpdate();
+	this->addChild(player1Tower, 200, MeTowerTag);
+
+	auto player2Tower = DefenceTower::create(Player2);
+	player2Tower->setPosition(Player2StartPosition-Vec2(100,100));
+	player2Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+	player2Tower->scheduleUpdate();
+	this->addChild(player2Tower, 200, OtherTowerTag);
+
+	//双方水晶
+	auto player1Crystal = CrystalTower::create(Player1);
+	player1Crystal->setPosition(Player1StartPosition);
+	player1Crystal->scheduleUpdate();
+	this->addChild(player1Crystal, 200, MeCrystalTag);
+
+	auto player2Crystal = CrystalTower::create(Player2);
+	player2Crystal->setPosition(Player2StartPosition);
+	player2Crystal->scheduleUpdate();
+	this->addChild(player2Crystal, 200, OtherCrystalTag);
 	//设置返回初始场景的菜单
 	MenuItemFont::setFontName("Arial");
 	MenuItemFont::setFontSize(20);
@@ -431,25 +392,8 @@ shop_lanshuijing->setPosition(Vec2(0,-75));
 Menu *menu = Menu::create(shop_xie, shop_shoutao,shop_changgong,shop_kaijia,shop_hongshuijing,shop_lanshuijing, NULL);
 this->addChild(menu,1);*/
 
-//水晶
-	Sprite *shuijing1 = Sprite::create("shuijing.png");
-	shuijing1->setPosition(Vec2(50, 30));
-	this->addChild(shuijing1);
-
-	Sprite *shuijing2 = Sprite::create("shuijing2.png");
-	shuijing2->setPosition(Vec2(430, 300));
-	this->addChild(shuijing2);
-
-	//防御塔
-	Sprite *tower1 = Sprite::create("tower.png");
-	tower1->setPosition(Vec2(155, 105));
-	this->addChild(tower1);
-
-	Sprite *tower2 = Sprite::create("tower.png");
-	tower2->setPosition(Vec2(370, 270));
-	this->addChild(tower2);
 	this->schedule(schedule_selector(GameScene::watchMeAndOther), 1.0 / 60.0);
-//	this->schedule(schedule_selector(GameScene::wulawula), WulaWulaCD);
+	this->schedule(schedule_selector(GameScene::wulawula), WulaWulaCD);
 	return true;
 }
 
@@ -536,18 +480,6 @@ void GameScene::watchMeAndOther(float dt)
 				otherHero->setHeroAfterShake(otherHero->getNormalAttackAfterShake());
 			}//end 普攻
 
-			//判断并Q技能开buff
-			if (length <= 200.0 && otherHero->getQSkillWaitTime() <= 0.01)
-			{
-				//发动q技能，持续时间内增加后羿攻击速度
-				otherHero->setBuff(true);
-				//持续时间k*q技能等级
-				otherHero->setBuffTime(YaseQSkillLastTime * otherHero->getQSkillLevel());
-				//该技能实现效果在update函数中实现
-				otherHero->setQSkillWaitTime(otherHero->getQSkillCdTime());
-				otherHero->setHeroAfterShake(otherHero->getQSkillAfterShake());
-			}//end buff
-
 			//判断并W技能
 			if (length <= YaseWSkillRange - 20 && otherHero->getWSkillWaitTime() <= 0.01)
 			{
@@ -567,13 +499,123 @@ void GameScene::watchMeAndOther(float dt)
 		//如果AI控制妲己
 		if (this->getOtherHeroTag() == 'D')
 		{
-
+			//判断并进行普攻
+			if (length <= DajiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
+			{
+				takeDajiNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
+				otherHero->setHeroAfterShake(otherHero->getNormalAttackAfterShake());
+			}//end 普攻
+			//判断并Q技能
+			if (length <= DajiQSkillRange && otherHero->getQSkillWaitTime() <= 0.01)
+			{
+				takeDajiQSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setQSkillWaitTime(otherHero->getQSkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getQSkillAfterShake());
+			}//end Q
+			//判断并W技能
+			if (length <= DajiWSkillRange && otherHero->getWSkillWaitTime() <= 0.01)
+			{
+				takeDajiWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setWSkillWaitTime(otherHero->getWSkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getWSkillAfterShake());
+			}//end W
+			//判断并放大
+			if (length <= DajiESkillRange && otherHero->getESkillWaitTime() <= 0.01)
+			{
+				takeDajiESkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setESkillWaitTime(otherHero->getESkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getESkillAfterShake());
+			}//end E
 		}
 	}
 }
 
 //by 王文政 2019年5月20日
-//λ表达式无法使用this，故单独把touchEnded函数拿出来写
+//λ表达式无法使用this，故单独把touchEnded函数 keypressed拿出来写
+void GameScene::keyPressed(EventKeyboard::KeyCode keyCode, Event* event)
+{
+	//根据tag获取英雄
+	auto target = static_cast<Hero*>(event->getCurrentTarget());
+	//当前正在按下按键，此时点击鼠标会变为类似选择攻击目标的作用
+	//不再是移动
+	target->setPressingKeyboard();
+	switch (keyCode)
+	{
+	case EventKeyboard::KeyCode::KEY_A:
+	{
+		target->thisKeyPressed('A');
+		break;
+	}
+
+	case EventKeyboard::KeyCode::KEY_Q:
+	{
+		target->thisKeyPressed('Q');
+		//在此处发动后羿Q
+		if (target->getHeroName() == 'H')
+		{
+
+			if (target->getQSkillWaitTime() <= 0.01)
+			{
+
+				//停止移动动作发动技能
+				target->stopActionByTag(HeroMove);
+				//发动q技能，持续时间内增加后羿攻击速度和移动速度
+				target->setBuff(true);
+				//持续时间5*q技能等级
+				target->setBuffTime(HouyiQSkillLastTime * target->getQSkillLevel());
+				//该技能实现效果在HouyiHero update函数中实现
+				target->setQSkillWaitTime(target->getQSkillCdTime());
+				target->setHeroAfterShake(target->getQSkillAfterShake());
+
+			}
+		}
+		//在此处发动亚瑟Q
+		if (target->getHeroName() == 'Y')
+		{
+			if (target->getQSkillWaitTime() <= 0.01)
+			{
+
+				//停止移动动作发动技能
+				target->stopActionByTag(HeroMove);
+				//发动q技能，持续时间内增加后羿攻击速度和移动速度
+				target->setBuff(true);
+				//持续时间5*q技能等级
+				target->setBuffTime(YaseQSkillLastTime * target->getQSkillLevel());
+				//该技能实现效果在YaseHero update函数中实现
+				target->setQSkillWaitTime(target->getQSkillCdTime());
+				target->setHeroAfterShake(target->getQSkillAfterShake());
+			}
+		}
+		break;
+	}
+	case EventKeyboard::KeyCode::KEY_W:
+	{
+		target->thisKeyPressed('W');
+		break;
+	}
+
+	case EventKeyboard::KeyCode::KEY_E:
+	{
+		target->thisKeyPressed('E');
+		break;
+	}
+	//暂定按P键实现查看装备功能
+	case EventKeyboard::KeyCode::KEY_P:
+	{
+		target->thisKeyPressed('P');
+		this->equipmentCheck();
+		break;
+	}
+	//B键打开商店
+	case EventKeyboard::KeyCode::KEY_B:
+	{
+		target->thisKeyPressed('B');
+		break;
+	}
+	default: break;
+	}
+}
 void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 {
 	//通过给英雄设置的标签获取英雄
@@ -778,7 +820,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
-					takeHouyiNormalAttack(target, true, heroPosition, touchPosition);
+					takeDajiNormalAttack(target, true, heroPosition, touchPosition);
 					//重置普攻间隔和攻击后摇
 					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
 					target->setHeroAfterShake(target->getNormalAttackAfterShake());
@@ -788,8 +830,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 
 			case 'Q':
 			{
-				//后羿的q技能为未点击鼠标时使用
-				//在键盘监听中定义
+				if (target->getQSkillWaitTime() <= 0.01)
+				{
+					//停止当前的移动进行Q
+					target->stopActionByTag(HeroMove);
+					takeDajiQSkill(target, true, heroPosition, touchPosition);
+					//重置Q CD和技能后摇
+					target->setQSkillWaitTime(target->getQSkillCdTime());
+					target->setHeroAfterShake(target->getQSkillAfterShake());
+				}
 				break;
 			}
 			case 'W':
@@ -798,7 +847,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行W
 					target->stopActionByTag(HeroMove);
-					takeHouyiWSkill(target, true, heroPosition, touchPosition);
+					takeDajiWSkill(target, true, heroPosition, touchPosition);
 					//重置W CD和技能后摇
 					target->setWSkillWaitTime(target->getWSkillCdTime());
 					target->setHeroAfterShake(target->getWSkillAfterShake());
@@ -811,7 +860,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
-					takeHouyiESkill(target, true, heroPosition, touchPosition);
+					takeDajiESkill(target, true, heroPosition, touchPosition);
 					//重置大招等待时间
 					target->setESkillWaitTime(target->getESkillCdTime());
 					target->setHeroAfterShake(target->getESkillAfterShake());
@@ -919,7 +968,7 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		auto otherSkill = static_cast<BasicSkill*>(spriteA);
 		auto meHero = static_cast<Hero*>(spriteB);
 		//己方单位受到伤害
-		meHero->sufferDamage(otherSkill->getDamagePoint());
+		meHero->sufferDamage(otherSkill->getDamagePoint() / (1 + meHero->getDefensePoint()/100));
 		//如果己方单位死亡
 		//给对面英雄加经验和金币
 		if (meHero->getHealthPoint() <= 0)
@@ -939,7 +988,7 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		//此时B是敌方技能 A是我方单位
 		auto otherSkill = static_cast<BasicSkill*>(spriteB);
 		auto meHero = static_cast<Hero*>(spriteA);
-		meHero->sufferDamage(otherSkill->getDamagePoint());
+		meHero->sufferDamage(otherSkill->getDamagePoint() / (1 + meHero->getDefensePoint() / 100));
 		//如果己方单位死亡
 		//给对面英雄加经验和金币
 		if (meHero->getHealthPoint() <= 0)
@@ -959,7 +1008,7 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		//此时A是我方技能 B是敌方单位
 		auto meSkill = static_cast<BasicSkill*>(spriteA);
 		auto otherHero = static_cast<Hero*>(spriteB);
-		otherHero->sufferDamage(meSkill->getDamagePoint());
+		otherHero->sufferDamage(meSkill->getDamagePoint() / (1 + otherHero->getDefensePoint() / 100));
 		//如果敌方单位死亡
 		//给我方英雄加经验和金币
 		if (otherHero->getHealthPoint() <= 0)
@@ -982,7 +1031,7 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		log("B is Meskill");
 		auto otherHero = static_cast<Hero*>(spriteA);
 		log("A is other hero");
-		otherHero->sufferDamage(meSkill->getDamagePoint());
+		otherHero->sufferDamage(meSkill->getDamagePoint() / (1 + otherHero->getDefensePoint() / 100));
 		//如果敌方单位死亡
 		//给我方英雄加经验和金币
 		if (otherHero->getHealthPoint() <= 0)
@@ -1226,42 +1275,173 @@ void GameScene::takeYaseESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targ
 	yaseESkill->takeYaseESkill(startPoint, targetPoint);
 }
 
+void GameScene::takeDajiNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+{
+	DajiNormalAttack* dajiNormalAttack = DajiNormalAttack::createTheAttack(hero);
+	auto body = PhysicsBody::createBox(dajiNormalAttack->getContentSize());
+	dajiNormalAttack->setPhysicsBody(body);
+	//停止当前的移动进行普攻
+	if (isMe)
+	{
+		this->addChild(dajiNormalAttack, 200, MeSkillTag);
+		body->setContactTestBitmask(MESKILLTEST);
+		body->setCategoryBitmask(MESKILLCATEGORY);
+		body->setCollisionBitmask(MESKILLCOLLISION);
+	}
+	else
+	{
+		this->addChild(dajiNormalAttack, 200, OtherSkillTag);
+		body->setContactTestBitmask(OTHERSKILLTEST);
+		body->setCategoryBitmask(OTHERSKILLCATEGORY);
+		body->setCollisionBitmask(OTHERSKILLCOLLISION);
+	}
+	dajiNormalAttack->takeDajiNormalAttack(startPoint, targetPoint);
+	//把普攻显示在gamescene场景中
+	//当普攻精灵运动一定距离时删除，该功能在DajiNormalAttack类的update函数中实现
+	//重置平A等待时间
+}
+
+void GameScene::takeDajiQSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+{
+	DajiQSkill* bigMoon = DajiQSkill::createDajiQSkill(hero);
+	auto body = PhysicsBody::createCircle(bigMoon->getContentSize().height / 2);
+
+	bigMoon->setPhysicsBody(body);
+	bigMoon->takeDajiQSkill(startPoint, targetPoint);
+	if (isMe)
+	{
+		this->addChild(bigMoon, 200, MeSkillTag);
+		body->setContactTestBitmask(MESKILLTEST);
+		body->setCategoryBitmask(MESKILLCATEGORY);
+		body->setCollisionBitmask(MESKILLCOLLISION);
+	}
+	else
+	{
+		this->addChild(bigMoon, 200, OtherSkillTag);
+		body->setContactTestBitmask(OTHERSKILLTEST);
+		body->setCategoryBitmask(OTHERSKILLCATEGORY);
+		body->setCollisionBitmask(OTHERSKILLCOLLISION);
+	}
+	log("%d", bigMoon->getTag());
+	log("%d", body->getContactTestBitmask());
+	//把大招显示在gamescene场景中
+
+	//当Q精灵运动一定距离时删除，该功能在DajiQSkill类的update函数中实现
+}
+
+void GameScene::takeDajiWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+{
+	DajiWSkill* bigLove = DajiWSkill::createDajiWSkill(hero);
+	auto body = PhysicsBody::createCircle(bigLove->getContentSize().height / 2);
+
+	bigLove->setPhysicsBody(body);
+	bigLove->takeDajiWSkill(startPoint, targetPoint);
+	if (isMe)
+	{
+		this->addChild(bigLove, 200, MeSkillTag);
+		body->setContactTestBitmask(MESKILLTEST);
+		body->setCategoryBitmask(MESKILLCATEGORY);
+		body->setCollisionBitmask(MESKILLCOLLISION);
+	}
+	else
+	{
+		this->addChild(bigLove, 200, OtherSkillTag);
+		body->setContactTestBitmask(OTHERSKILLTEST);
+		body->setCategoryBitmask(OTHERSKILLCATEGORY);
+		body->setCollisionBitmask(OTHERSKILLCOLLISION);
+	}
+	log("%d", bigLove->getTag());
+	log("%d", body->getContactTestBitmask());
+	//把大招显示在gamescene场景中
+
+	//当W精灵运动一定距离时删除，该功能在DajiWSkill类的update函数中实现
+}
+
+void GameScene::takeDajiESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+{
+	DajiESkill* bigBall = DajiESkill::createDajiESkill(hero);
+	auto body = PhysicsBody::createCircle(bigBall->getContentSize().height / 2);
+
+	bigBall->setPhysicsBody(body);
+	bigBall->takeDajiESkill(startPoint, targetPoint);
+	if (isMe)
+	{
+		this->addChild(bigBall, 200, MeSkillTag);
+		body->setContactTestBitmask(MESKILLTEST);
+		body->setCategoryBitmask(MESKILLCATEGORY);
+		body->setCollisionBitmask(MESKILLCOLLISION);
+	}
+	else
+	{
+		this->addChild(bigBall, 200, OtherSkillTag);
+		body->setContactTestBitmask(OTHERSKILLTEST);
+		body->setCategoryBitmask(OTHERSKILLCATEGORY);
+		body->setCollisionBitmask(OTHERSKILLCOLLISION);
+	}
+	log("%d", bigBall->getTag());
+	log("%d", body->getContactTestBitmask());
+	//把大招显示在gamescene场景中
+
+	//当大招精灵运动一定距离时删除，该功能在HouyiESkill类的update函数中实现
+}
+
 void GameScene::wulawula(float dt)
 {
-	//己方近战兵
-	auto meJinzhanSoldier = JinzhanSoldier::create(MeSoldier);
+	//player1方近战兵
+	auto meJinzhanSoldier = JinzhanSoldier::create(Player1);
 	meJinzhanSoldier->setPosition(500, 500);
-	meJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
+	meJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(this->getEnermyType())));
 	this->addChild(meJinzhanSoldier, 200, MeJinzhanSoldierTag);
 	meJinzhanSoldier->scheduleUpdate();
-	//敌方近战兵
-	auto otherJinzhanSoldier = JinzhanSoldier::create(OtherSoldier);
+	//player2方近战兵
+	auto otherJinzhanSoldier = JinzhanSoldier::create(Player2);
 	otherJinzhanSoldier->setPosition(900, 900);
 	otherJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
 	this->addChild(otherJinzhanSoldier, 200, OtherJinzhanSoldierTag);
 	otherJinzhanSoldier->scheduleUpdate();
-	//己方远程兵
-	auto meYuanchengSoldier = YuanchengSoldier::create(MeSoldier);
+	//player1方远程兵
+	auto meYuanchengSoldier = YuanchengSoldier::create(Player1);
 	meYuanchengSoldier->setPosition(500, 500);
-	meYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
+	meYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(this->getEnermyType())));
 	this->addChild(meYuanchengSoldier, 200, MeYuanchengSoldierTag);
 	meYuanchengSoldier->scheduleUpdate();
-	//敌方远程兵
-	auto otherYuanchengSoldier = YuanchengSoldier::create(OtherSoldier);
+	//player2方远程兵
+	auto otherYuanchengSoldier = YuanchengSoldier::create(Player2);
 	otherYuanchengSoldier->setPosition(900, 900);
 	otherYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
 	this->addChild(otherYuanchengSoldier, 200, OtherYuanchengSoldierTag);
 	otherYuanchengSoldier->scheduleUpdate();
-	//己方炮车兵
-	auto mePaocheSoldier = PaocheSoldier::create(MeSoldier);
+	//player1方炮车兵
+	auto mePaocheSoldier = PaocheSoldier::create(Player1);
 	mePaocheSoldier->setPosition(500, 500);
-	mePaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
+	mePaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(this->getEnermyType())));
 	this->addChild(mePaocheSoldier, 200, MePaocheSoldierTag);
 	mePaocheSoldier->scheduleUpdate();
-	//敌方炮车兵
-	auto otherPaocheSoldier = PaocheSoldier::create(OtherSoldier);
+	//player2方炮车兵
+	auto otherPaocheSoldier = PaocheSoldier::create(Player2);
 	otherPaocheSoldier->setPosition(900, 900);
 	otherPaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
 	this->addChild(otherPaocheSoldier, 200, OtherPaocheSoldierTag);
 	otherPaocheSoldier->scheduleUpdate();
+}
+
+
+///////////////在此处定义装备查看/////////////////////////////////////////////////////////////////////////////
+void GameScene::equipmentCheck()
+{
+	log("check equipment");
+	if (this->isChecking())
+	{
+		this->setUnChecking();
+		//此时按p时已经在查看装备
+		//按p的作用为关闭面板
+		//设置面板为不可见
+	}
+
+	if (!this->isChecking())
+	{
+		this->setChecking();
+		//此时按p为开启面板
+		//设置面板为可见
+	}
 }

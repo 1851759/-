@@ -56,7 +56,6 @@ class HouyiHero : public Hero
 	//后羿的名字为'H'
 	char _heroName;
 
-
 public:
 
 	virtual bool init();
@@ -68,6 +67,7 @@ public:
 	void AIcontrol(Hero* hero);
 
 	void AIAction(float dt);
+
 };
 
 

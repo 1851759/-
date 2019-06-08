@@ -10,12 +10,10 @@
 #include "JinzhanSoldier.h"
 
 #include "HouyiHero.h"
-#include "HouyiNormalAttack.h"
-#include "HouyiESkill.h"
-#include "HouyiWSkill.h"
-
 #include "YaseHero.h"
-#include "YaseNormalAttack.h"
+#include "DajiHero.h"
+
+USING_NS_CC;
 
 //定义碰撞测试掩码
 #define MEUNITTEST 0x08
@@ -88,11 +86,12 @@ class GameScene :public cocos2d::Layer
 	int _meExp;
 	int _otherMoney;
 	int _otherExp;
-
+	bool _ischecking;
 	cocos2d::TMXTiledMap *_tileMap;
 	cocos2d::TMXLayer *_collidable;
 	cocos2d::Vec2 position_now;
 public:
+
 
 	//获取敌我金币和经验
 	int getMeMoney() const { return _meMoney; }
@@ -117,6 +116,12 @@ public:
 	void takeYaseWSkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 	void takeYaseESkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
+	//妲己技能
+	void takeDajiNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint);
+	void takeDajiQSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint);
+	void takeDajiWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint);
+	void takeDajiESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint);
+
 	//获取meHeroTag
 	char getMeHeroTag() { return meHeroTag; }
 	//设置gamescene的herotag，在roomscece中调用
@@ -137,6 +142,8 @@ public:
 	void menuBackCallback(cocos2d::Ref* pSender);
 	//鼠标监听
 	void touchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+	//键盘监听
+	void keyPressed(EventKeyboard::KeyCode keyCode, Event* event);
 	//碰撞监听
 	bool contactBegin(cocos2d::PhysicsContact& contact);
 	virtual void onEnter();
@@ -163,8 +170,12 @@ public:
 
 	//出兵函数
 	void wulawula(float dt);
-	
 
+	//装备面板
+	void equipmentCheck();
+	bool isChecking() const { return _ischecking; }
+	void setChecking() { _ischecking = true; }
+	void setUnChecking() { _ischecking = false; }
 };
 
 #endif

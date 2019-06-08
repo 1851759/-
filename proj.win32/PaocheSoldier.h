@@ -4,7 +4,7 @@
 #include "Soldier.h"
 #include "Hero.h"
 
-#define PaocheNormalAttackRange 1000.0
+#define PaocheNormalAttackRange 100.0
 #define PaocheNormalAttackMoveSpeed 5.0
 
 
@@ -24,16 +24,16 @@ class PaocheSoldier : public Hero
 	//设定小兵的名字
 	//炮车的名字为'P'
 	char _soldierName;
-	SoldierFlag _flag;
+	PlayerFlag _flag;
 
 public:
 
-	void setSoldierFlag(SoldierFlag flag) { _flag = flag; }
+	void setSoldierFlag(PlayerFlag flag) { _flag = flag; }
 	int getSoldierFlag() const { return _flag; }
 
 	virtual bool init();
 
-	static PaocheSoldier* create(SoldierFlag flag);
+	static PaocheSoldier* create(PlayerFlag flag);
 
 	virtual void update(float dt);
 

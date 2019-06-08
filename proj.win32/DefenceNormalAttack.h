@@ -1,13 +1,13 @@
-#ifndef __YUANCHENGNORMALATTACK__
-#define __YUANCHENGNORMALATTACK__
+#ifndef __DEFENCENORMALATTACK__
+#define __DEFENCENORMALATTACK__
 
 #include "cocos2d.h"
-#include "YuanchengSoldier.h"
+#include "DefenceTower.h"
 #include "BasicSkill.h"
 
 
 
-class YuanchengNormalAttack : public BasicSkill
+class DefenceNormalAttack : public BasicSkill
 {
 	cocos2d::Vec2 _arrowMoveDirection;
 	cocos2d::Vec2 _originPosition;
@@ -19,9 +19,9 @@ public:
 	virtual void update(float dt);
 
 	//触发平A
-	static YuanchengNormalAttack* createTheAttack(Hero* hero);
+	static DefenceNormalAttack* createTheAttack(Hero* hero);
 	//重载take函数
-	void takeYuanchengNormalAttack(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeDefenceNormalAttack(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
 	//设置平A箭头移动方向
 	//需要设置一个模长为1的二维向量
@@ -40,4 +40,4 @@ public:
 
 
 
-#endif // __YUANCHENGNORMALATTACK__
+#endif // __DEFENCENORMALATTACK__

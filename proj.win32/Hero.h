@@ -30,6 +30,10 @@ typedef enum
 	Player2 = 301
 } PlayerFlag;
 
+typedef enum
+{
+	bloodbar = 400
+} BloodBar;
 
 
 
@@ -125,6 +129,10 @@ class Hero : public BasicSprite
 	bool _heroInShake;
 	
 public:
+	//血条
+	void createBlood();
+
+	void checkBlood(float dt);
 
 	int getFlag() const { return _flag; }
 	void setFlag(PlayerFlag flag) { _flag = flag; }
@@ -281,6 +289,7 @@ public:
 	//人机控制相关
 	void setOtherHeroPoint(cocos2d::Vec2 heroPoint) { _otherHeroPoint = heroPoint; }
 	cocos2d::Vec2 getOtherHeroPoint() { return _otherHeroPoint; }
+
 };
 
 

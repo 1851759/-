@@ -4,7 +4,7 @@
 #include "PaocheNormalAttack.h"
 
 
-PaocheSoldier* PaocheSoldier::create(SoldierFlag flag)
+PaocheSoldier* PaocheSoldier::create(PlayerFlag flag)
 {
 	PaocheSoldier* paoche = new PaocheSoldier();
 	//定义soldier的flag
@@ -21,7 +21,7 @@ PaocheSoldier* PaocheSoldier::create(SoldierFlag flag)
 		paoche->changeAttackSpeed(PaocheAttackSpeed);
 		paoche->setAttackWaitTime(0);
 		paoche->setNormalAttackAfterShake(PaocheNormalAttackAfterShake);
-		paoche->setHeroInShake(false);
+		paoche->setHeroInSkake(false);
 		paoche->setHealthPoint(PaocheMaxHealthPoint);
 		//基础攻击力
 		paoche->changeAttackPoint(PaocheAttack);
@@ -41,7 +41,7 @@ bool PaocheSoldier::init()
 {
 	//下边的if里搞出了英雄的图片
 //	cocos2d::log("create soldier");
-	if (this->getSoldierFlag() == MeSoldier && Sprite::initWithFile("PaocheLan.png"))
+	if (this->getSoldierFlag() == Player1 && Sprite::initWithFile("PaocheLan.png"))
 	{
 		auto body = cocos2d::PhysicsBody::createCircle(this->getContentSize().width / 2);
 		body->setContactTestBitmask(MEUNITTEST);
@@ -52,7 +52,7 @@ bool PaocheSoldier::init()
 		return true;
 	}
 
-	if (this->getSoldierFlag() == OtherSoldier && Sprite::initWithFile("PaocheHong.png"))
+	if (this->getSoldierFlag() == Player2 && Sprite::initWithFile("PaocheHong.png"))
 	{
 		auto body = cocos2d::PhysicsBody::createCircle(this->getContentSize().width / 2);
 		body->setContactTestBitmask(OTHERUNITTEST);
@@ -77,7 +77,7 @@ void PaocheSoldier::update(float dt)
 	//小兵后摇时间
 	if (this->getHeroAfterShake() > 0, 01)
 	{
-		this->setHeroInShake(true);
+		this->setHeroInSkake(true);
 		this->cutHeroAfterShake(cuttime);
 	}
 	//小兵死亡则消失

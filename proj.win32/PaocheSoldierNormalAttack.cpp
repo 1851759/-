@@ -1,12 +1,12 @@
 #include "cocos2d.h"
 
-#include "YuanchengSoldier.h"
-#include "YuanchengNormalAttack.h"
+#include "PaocheSoldier.h"
+#include "PaocheNormalAttack.h"
 
 
-YuanchengNormalAttack* YuanchengNormalAttack::createTheAttack(Hero* hero)
+PaocheNormalAttack* PaocheNormalAttack::createTheAttack(Hero* hero)
 {
-	YuanchengNormalAttack* normalAttack = new YuanchengNormalAttack();
+	PaocheNormalAttack* normalAttack = new PaocheNormalAttack();
 	if (normalAttack&&normalAttack->initWithFile("HouyiNormalAttack.png"))
 	{
 		normalAttack->setDamagePoint(hero->getAttackPoint());
@@ -22,7 +22,7 @@ YuanchengNormalAttack* YuanchengNormalAttack::createTheAttack(Hero* hero)
 
 
 
-void YuanchengNormalAttack::takeYuanchengNormalAttack(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint)
+void PaocheNormalAttack::takePaocheNormalAttack(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint)
 {
 	this->setPosition(startPoint);
 	this->setOriginPosition(startPoint);
@@ -47,11 +47,11 @@ void YuanchengNormalAttack::takeYuanchengNormalAttack(cocos2d::Vec2 startPoint, 
 	this->scheduleUpdate();
 }
 
-void YuanchengNormalAttack::update(float dt)
+void PaocheNormalAttack::update(float dt)
 {
 	///这个是箭头移动速度//////////////////// ↓
 	/////////////////////////////////////// ↓
-	this->setPosition(this->getPosition() + YuanchengNormalAttackMoveSpeed * this->getArrowMoveDirection());
+	this->setPosition(this->getPosition() + PaocheNormalAttackMoveSpeed * this->getArrowMoveDirection());
 
 	/////////////////////////////////////////
 	cocos2d::Vec2 distance = this->getPosition() - this->getOriginPosition();
@@ -60,7 +60,7 @@ void YuanchengNormalAttack::update(float dt)
 
 	//这个是箭头移动的最大距离////////// ↓
 	////////////////////////////////  ↓
-	cocos2d::Vec2 standardAttackRange(YuanchengNormalAttackRange, 0);
+	cocos2d::Vec2 standardAttackRange(PaocheNormalAttackRange, 0);
 	float standardLength = standardAttackRange.x;
 
 
@@ -68,4 +68,6 @@ void YuanchengNormalAttack::update(float dt)
 	{
 		this->removeFromParent();
 	}
+
+	//未添加碰撞检测
 }
