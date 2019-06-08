@@ -28,7 +28,7 @@ public:
 	/*void setArrowMoveDirection(cocos2d::Vec2 moveDir) { _swordMoveDirection = moveDir; }
 	cocos2d::Vec2 getArrowMoveDirection() { return _swordMoveDirection; }
 */
-	//当运动一定距离时将该箭头删除
+//当运动一定距离时将该箭头删除
 	cocos2d::Vec2 getOriginPosition() { return _originPosition; };
 	void setOriginPosition(cocos2d::Vec2 position) { _originPosition = position; }
 	void stop(float dt);//旋转技能结束停止

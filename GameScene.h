@@ -1,5 +1,5 @@
-//å£°æ˜æ¸¸æˆåœºæ™¯
-//by ç‹æ–‡æ”¿ 2019å¹´5æœˆ24æ—¥
+//ÉùÃ÷ÓÎÏ·³¡¾°
+//by ÍõÎÄÕş 2019Äê5ÔÂ24ÈÕ
 
 #ifndef __GAMESCENE__
 #define __GAMESCENE__
@@ -7,6 +7,7 @@
 #include "cocos2d.h"
 
 #include "Hero.h"
+#include "JinzhanSoldier.h"
 
 #include "HouyiHero.h"
 #include "HouyiNormalAttack.h"
@@ -16,37 +17,40 @@
 #include "YaseHero.h"
 #include "YaseNormalAttack.h"
 
-//å®šä¹‰ç¢°æ’æµ‹è¯•æ©ç 
+//¶¨ÒåÅö×²²âÊÔÑÚÂë
 #define MEUNITTEST 0x08
 #define MESKILLTEST 0x04
 #define OTHERUNITTEST 0x02
 #define OTHERSKILLTEST 0x01
 
-//ç±»åˆ«æ©ç 
+//Àà±ğÑÚÂë
 #define MEUNITCATEGORY 0x01
 #define MESKILLCATEGORY 0x02
 #define OTHERUNITCATEGORY 0x04
 #define OTHERSKILLCATEGORY 0x08
 
-//ç¢°æ’æ©ç 
+//Åö×²ÑÚÂë
 #define MEUNITCOLLISION 0x04
 #define MESKILLCOLLISION 0x02
 #define OTHERUNITCOLLISION 0x01
 #define OTHERSKILLCOLLISION 0x08
 
-//è¢«æ€åç»™å¯¹é¢è‹±é›„åŠ çš„ç»éªŒ
+//±»É±ºó¸ø¶ÔÃæÓ¢ĞÛ¼ÓµÄ¾­Ñé
 #define HeroExp 100
 #define JinzhanSoldierExp 100
 #define YuanchengSoldierExp 100
 #define PaocheSoldierExp 100
 #define TowerExp 100
 
-//è¢«æ€åç»™å¯¹é¢è‹±é›„åŠ çš„é‡‘å¸
+//±»É±ºó¸ø¶ÔÃæÓ¢ĞÛ¼ÓµÄ½ğ±Ò
 #define HeroMoney 100
 #define JinzhanSoldierMoney 100
 #define YuanchengSoldierMoney 100
 #define PaocheSoldierMoney 100
 #define TowerMoney 100
+
+//³ö±ø¼ä¸ô
+#define WulaWulaCD 10.0
 
 typedef enum
 {
@@ -64,7 +68,7 @@ typedef enum
 typedef enum
 {
 	MeJinzhanSoldierTag = 1116,
-	OtherJinzhanSodierTag = 1117,
+	OtherJinzhanSoldierTag = 1117,
 	MeYuanchengSoldierTag = 1118,
 	OtherYuanchengSoldierTag = 1119,
 	MePaocheSoldierTag = 1120,
@@ -88,10 +92,9 @@ class GameScene :public cocos2d::Layer
 	cocos2d::TMXTiledMap *_tileMap;
 	cocos2d::TMXLayer *_collidable;
 	cocos2d::Vec2 position_now;
-	int BlueScore = 0, RedScore = 0;//è“æ–¹æ€äººæ•°å’Œçº¢æ–¹æ€äººæ•°
 public:
 
-	//è·å–æ•Œæˆ‘é‡‘å¸å’Œç»éªŒ
+	//»ñÈ¡µĞÎÒ½ğ±ÒºÍ¾­Ñé
 	int getMeMoney() const { return _meMoney; }
 	void changeMeMoney(int money) { _meMoney += money; }
 	int getMeExp() const { return _meExp; }
@@ -102,37 +105,39 @@ public:
 	int getOtherExp() const { return _otherExp; }
 	void changeOtherExp(int exp) { _otherExp += exp; }
 
-	//è‹±é›„æ“æ§å‡½æ•°
+	//Ó¢ĞÛ²Ù¿Øº¯Êı
 	void heroMove(Hero* target);
-	//åç¾¿æŠ€èƒ½
+	//ºóôà¼¼ÄÜ
 	void takeHouyiNormalAttack(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 	void takeHouyiWSkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 	void takeHouyiESkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
-	//äºšç‘ŸæŠ€èƒ½
-	void takeYaseNormalAttack(Hero* hero,bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	//ÑÇÉª¼¼ÄÜ
+	void takeYaseNormalAttack(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 	void takeYaseWSkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 	void takeYaseESkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
-	//è·å–meHeroTag
+	//»ñÈ¡meHeroTag
 	char getMeHeroTag() { return meHeroTag; }
-	//è®¾ç½®gamesceneçš„herotagï¼Œåœ¨roomsceceä¸­è°ƒç”¨
+	//ÉèÖÃgamesceneµÄherotag£¬ÔÚroomsceceÖĞµ÷ÓÃ
 	void setMeHeroTag(char heroType) { meHeroTag = heroType; }
 
-	//è·å–otherHeroTag
+	//»ñÈ¡otherHeroTag
 	char getOtherHeroTag() { return otherHeroTag; }
 	void setOtherHeroTag(char heroType) { otherHeroTag = heroType; }
 
-	//è·å–å’Œè®¾å®šæ•Œæ–¹ç±»å‹ä¸ºaiæˆ–ç©å®¶
+	//»ñÈ¡ºÍÉè¶¨µĞ·½ÀàĞÍÎªai»òÍæ¼Ò
 	int getEnermyType() const { return _enermyType; }
 	void setEnermyType(int type) { _enermyType = type; }
 
 	static cocos2d::Scene* createScene(char meHero, char otherHero, bool isAI);
 	virtual bool init();
 
-	//è¿”å›åˆå§‹åœºæ™¯
+	//·µ»Ø³õÊ¼³¡¾°
 	void menuBackCallback(cocos2d::Ref* pSender);
+	//Êó±ê¼àÌı
 	void touchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+	//Åö×²¼àÌı
 	bool contactBegin(cocos2d::PhysicsContact& contact);
 	virtual void onEnter();
 	virtual void onExit();
@@ -145,21 +150,19 @@ public:
 	void shop_hongshuijing(cocos2d::Ref *pSender);
 	void shop_lanshuijing(cocos2d::Ref *pSender);
 	virtual void update(float dt);
-	void Score(float dt);
-	void updateBlueScore();//æ›´æ–°è“æ–¹æˆ˜ç»©
-	void updateRedScore();//æ›´æ–°çº¢æ–¹æˆ˜ç»©
+
 
 	bool setPlayerPosition(cocos2d::Vec2 position);
 	cocos2d::Vec2 tileCoordFromPosition(cocos2d::Vec2 position);
 	void collision(float dt);
 
-	//é¼ æ ‡ç›‘å¬å™¨å’Œé”®ç›˜ç›‘å¬å™¨åœ¨onEnterå‡½æ•°ä¸­é€šè¿‡Î»è¡¨è¾¾å¼å®šä¹‰
+	//Êó±ê¼àÌıÆ÷ºÍ¼üÅÌ¼àÌıÆ÷ÔÚonEnterº¯ÊıÖĞÍ¨¹ı¦Ë±í´ïÊ½¶¨Òå
 
-	//äººæœºæ§åˆ¶
+	//ÈË»ú¿ØÖÆ
 	void watchMeAndOther(float dt);
-	
-   	//å‡ºå…µ
-	void GameScene::wulawula(float dt);
+
+	//³ö±øº¯Êı
+	//void wulawula(float dt);
 
 
 };

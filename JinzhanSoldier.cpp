@@ -21,12 +21,12 @@ JinzhanSoldier* JinzhanSoldier::create(SoldierFlag flag)
 		jinzhan->changeAttackSpeed(JinzhanAttackSpeed);
 		jinzhan->setAttackWaitTime(0);
 		jinzhan->setNormalAttackAfterShake(JinzhanNormalAttackAfterShake);
-		jinzhan->setHeroInSkake(false);
+		jinzhan->setHeroInShake(false);
 		jinzhan->setHealthPoint(JinzhanMaxHealthPoint);
 		//基础攻击力
 		jinzhan->changeAttackPoint(JinzhanAttack);
 		//基础防御力
-		cocos2d::log("%f,%f,%f", jinzhan->getAttackSpeed(), jinzhan->getHealthPoint(), jinzhan->getAttackPoint());
+		//cocos2d::log("%f,%f,%f", jinzhan->getAttackSpeed(), jinzhan->getHealthPoint(), jinzhan->getAttackPoint());
 	}
 	else
 	{
@@ -41,25 +41,25 @@ bool JinzhanSoldier::init()
 {
 	//下边的if里搞出了英雄的图片
 //	cocos2d::log("create soldier");
-	if (this->getSoldierFlag() == MeSoldier && Sprite::initWithFile("HouyiHero.png"))
+	if (this->getSoldierFlag() == MeSoldier && Sprite::initWithFile("JinzhanLan.png"))
 	{
 		auto body = cocos2d::PhysicsBody::createCircle(this->getContentSize().width / 2);
 		body->setContactTestBitmask(MEUNITTEST);
 		body->setCategoryBitmask(MEUNITCATEGORY);
 		body->setCollisionBitmask(MEUNITCOLLISION);
 		this->setPhysicsBody(body);
-		this->setScale(0.5);
+		this->setScale(0.2);
 		return true;
 	}
-	
-	if (this->getSoldierFlag() == OtherSoldier && Sprite::initWithFile("YaseHero.png"))
+
+	if (this->getSoldierFlag() == OtherSoldier && Sprite::initWithFile("JinzhanHong.png"))
 	{
 		auto body = cocos2d::PhysicsBody::createCircle(this->getContentSize().width / 2);
 		body->setContactTestBitmask(OTHERUNITTEST);
 		body->setCategoryBitmask(OTHERUNITCATEGORY);
 		body->setCollisionBitmask(OTHERUNITCOLLISION);
 		this->setPhysicsBody(body);
-		this->setScale(0.5);
+		this->setScale(0.2);
 		return true;
 	}
 	return false;
@@ -77,7 +77,7 @@ void JinzhanSoldier::update(float dt)
 	//小兵后摇时间
 	if (this->getHeroAfterShake() > 0, 01)
 	{
-		this->setHeroInSkake(true);
+		this->setHeroInShake(true);
 		this->cutHeroAfterShake(cuttime);
 	}
 	//小兵死亡则消失
@@ -108,19 +108,19 @@ void JinzhanSoldier::AIAction(float dt)
 	{
 		this->setPosition(this->getPosition() + this->getMoveSpeed() / 60 * standardDistance);
 	}
-	if (length <= JinzhanNormalAttackRange && this->getHeroAfterShake()<=0.01)
+	if (length <= JinzhanNormalAttackRange && this->getHeroAfterShake() <= 0.01)
 	{
 		//cocos2d::log("asdad");
 		if (this->getTag() == MeJinzhanSoldierTag)
 		{
 			takeNormalAttack(this, true, this->getHeroPoint(), this->getOtherHeroPoint());
-			
+
 		}
 		else //if (this->getTag() == OtherJinzhanSoldierTag)
 		{
 			takeNormalAttack(this, false, this->getHeroPoint(), this->getOtherHeroPoint());
 		}
-		this->setAttackWaitTime(1.0/this->getAttackSpeed());
+		this->setAttackWaitTime(1.0 / this->getAttackSpeed());
 		this->setHeroAfterShake(this->getNormalAttackAfterShake());
 	}
 
@@ -151,6 +151,9 @@ void JinzhanSoldier::takeNormalAttack(Hero* hero, bool isMe, cocos2d::Vec2 start
 	}
 	jinzhanNormalAttack->takeJinzhanNormalAttack(startPoint, targetPoint);
 }
+
+
+
 
 
 

@@ -21,12 +21,14 @@
 #include"JinzhanSoldier.h"
 #include"YuanchengSoldier.h"
 #include"PaocheSoldier.h"
-//ä¿®æ”¹æŠ€èƒ½èŒƒå›´æ—¶éœ€è¦ä¿®æ”¹è‹±é›„å¤´æ–‡ä»¶defineä¸­çš„å‚æ•°
+
+#include "DajiHero.h"
+//ĞŞ¸Ä¼¼ÄÜ·¶Î§Ê±ĞèÒªĞŞ¸ÄÓ¢ĞÛÍ·ÎÄ¼şdefineÖĞµÄ²ÎÊı
 
 USING_NS_CC;
 Vec2 position_last = Vec2(0, 0);
-//è‹±é›„èµ·å§‹ä½ç½®
-//æ³¨æ„æ­¤å¤„ç”¨æ•°å­—è¡¨ç¤º////////////////////////////////////////////////////////////////////////////////////////////////////
+//Ó¢ĞÛÆğÊ¼Î»ÖÃ
+//×¢Òâ´Ë´¦ÓÃÊı×Ö±íÊ¾////////////////////////////////////////////////////////////////////////////////////////////////////
 Vec2 Player1StartPosition(250, 250);
 Vec2 Player2StartPosition(1300, 800);
 
@@ -62,13 +64,13 @@ Scene* GameScene::createScene(char meHero, char otherHero, bool isAI)
 {
 	Scene* scene = Scene::createWithPhysics();
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-	//å°†ç‰©ç†ä¸–ç•Œçš„é‡åŠ›è®¾ä¸º0
+	//½«ÎïÀíÊÀ½çµÄÖØÁ¦ÉèÎª0
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto gs = GameScene::create(meHero, otherHero, isAI);
 	scene->addChild(gs);
 	return scene;
 }
-//è¿”å›åˆå§‹åœºæ™¯å‡½æ•°
+//·µ»Ø³õÊ¼³¡¾°º¯Êı
 void GameScene::menuBackCallback(cocos2d::Ref* pSender)
 {
 
@@ -76,79 +78,66 @@ void GameScene::menuBackCallback(cocos2d::Ref* pSender)
 	Director::getInstance()->replaceScene(sc);
 }
 
-//onEnterå‡½æ•°
-//åœ¨è¯¥å‡½æ•°ä¸­æ³¨å†Œç›‘å¬å™¨
-//åœ¨è¯¥å‡½æ•°å®šä¹‰èƒŒæ™¯ä¹‹ç±»ä¸éœ€è¦è¿›è¡Œæ“ä½œå’Œåªéœ€åŠ è½½ä¸€æ¬¡çš„ç²¾çµ
+//onEnterº¯Êı
+//ÔÚ¸Ãº¯ÊıÖĞ×¢²á¼àÌıÆ÷
+//ÔÚ¸Ãº¯Êı¶¨Òå±³¾°Ö®Àà²»ĞèÒª½øĞĞ²Ù×÷ºÍÖ»Ğè¼ÓÔØÒ»´ÎµÄ¾«Áé
 
-//by ç‹æ–‡æ”¿ 2019å¹´5æœˆ27æ—¥
+//by ÍõÎÄÕş 2019Äê5ÔÂ27ÈÕ
 void GameScene::onEnter()
 {
-	//è¯¥onEnterå‡½æ•°é‡å†™äº†Sceneç±»çš„onEnterå‡½æ•°
-	//onExitå‡½æ•°ä¹Ÿæ˜¯ä¸€ä¸ªé“ç†
-	//onEnterå‡½æ•°ç¬¬ä¸€è¡Œä¸€å®šè¦åŠ è¿™å¥
+	//¸ÃonEnterº¯ÊıÖØĞ´ÁËSceneÀàµÄonEnterº¯Êı
+	//onExitº¯ÊıÒ²ÊÇÒ»¸öµÀÀí
+	//onEnterº¯ÊıµÚÒ»ĞĞÒ»¶¨Òª¼ÓÕâ¾ä
 	Layer::onEnter();
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	//æ¸¸æˆåœ°å›¾
+	//ÓÎÏ·µØÍ¼
 	_tileMap = TMXTiledMap::create("Map.tmx");
 	addChild(_tileMap, 0, 100);
 
-	//åˆå§‹åŒ–ç¢°æ’å±‚
+	//³õÊ¼»¯Åö×²²ã
 	_collidable = _tileMap->getLayer("Collidable");
 
-	//å·¦ä¸Šè§’æˆ˜ç»©
-	auto score_blue = LabelTTF::create("0 ", "Arial", 36);
-	this->addChild(score_blue, 2);
-	score_blue->setPosition(origin.x + 100, visibleSize.height - 50);
-	score_blue->setTag(BlueScore);
-	auto vs = LabelTTF::create("vs", "Arial", 24);
-	this->addChild(vs, 2);
-	vs->setPosition(origin.x + 122, visibleSize.height - 50);
-	auto score_red = LabelTTF::create("0 ", "Arial", 36);
-	this->addChild(score_red, 2);
-	score_red->setPosition(origin.x + 150, visibleSize.height - 50);
-	score_red->setTag(RedScore);
-
-	//æ³¨å†Œé¼ æ ‡ç›‘å¬å™¨
-	//ä½¿ç”¨Î»è¡¨è¾¾å¼
-	//ç›®å‰åªå®ç°äº†ä½¿è‹±é›„åœ¨é¼ æ ‡æ¾å¼€æ—¶  æ ¹æ®ç§»åŠ¨é€Ÿåº¦ ç§»åŠ¨åˆ°é¼ æ ‡ä½ç½®çš„åŠŸèƒ½
-	//æ ¹æ®å·¦é”®å“åº”ï¼Œå³é”®æˆ‘ä¸ä¼š
+	//×¢²áÊó±ê¼àÌıÆ÷
+	//Ê¹ÓÃ¦Ë±í´ïÊ½
+	//Ä¿Ç°Ö»ÊµÏÖÁËÊ¹Ó¢ĞÛÔÚÊó±êËÉ¿ªÊ±  ¸ù¾İÒÆ¶¯ËÙ¶È ÒÆ¶¯µ½Êó±êÎ»ÖÃµÄ¹¦ÄÜ
+	//¸ù¾İ×ó¼üÏìÓ¦£¬ÓÒ¼üÎÒ²»»á
 	auto mouseListener = EventListenerTouchOneByOne::create();
-	//ç‚¹å‡»æ—¶
-	//æ³¨æ„è¯¥å‡½æ•°æ˜¯ä¸€ä¸ªboolç±»å‹
+	//µã»÷Ê±
+	//×¢Òâ¸Ãº¯ÊıÊÇÒ»¸öboolÀàĞÍ
 	mouseListener->onTouchBegan = [](Touch* touch, Event* event)
 	{
 		return true;
 	};
 
-	//ç‚¹å‡»åæœªæ¾å¼€å¹¶ç§»åŠ¨é¼ æ ‡æ—¶
+	//µã»÷ºóÎ´ËÉ¿ª²¢ÒÆ¶¯Êó±êÊ±
 	mouseListener->onTouchMoved = [](Touch* touch, Event* event)
 	{
 
 	};
 
-	//æ¾å¼€æ—¶
+	//ËÉ¿ªÊ±
 	mouseListener->onTouchEnded = CC_CALLBACK_2(GameScene::touchEnded, this);
 
-	//åæ²¡äº‹ä»¶ï¼Œä½¿é¼ æ ‡çš„æ“ä½œä¸ä¼ ç»™ä¸‹ä¸€å±‚
+	//ÍÌÃ»ÊÂ¼ş£¬Ê¹Êó±êµÄ²Ù×÷²»´«¸øÏÂÒ»²ã
 	mouseListener->setSwallowTouches(true);
-	//åˆæ˜¯çœ‹ä¸æ‡‚çš„ç„å­¦ä¸€æ­¥ï¼Œé€šè¿‡è¿™æ­¥ç»™é¼ æ ‡ç›‘å¬å™¨ç»‘å®šè‹±é›„çš„tag/////////////////////////////////    â†“è¿™ä¸ªå°±æ˜¯tag
-	EventDispatcher *mouseDispatcher = Director::getInstance()->getEventDispatcher(); //     â†“
+	//ÓÖÊÇ¿´²»¶®µÄĞşÑ§Ò»²½£¬Í¨¹ıÕâ²½¸øÊó±ê¼àÌıÆ÷°ó¶¨Ó¢ĞÛµÄtag/////////////////////////////////    ¡ıÕâ¸ö¾ÍÊÇtag
+	EventDispatcher *mouseDispatcher = Director::getInstance()->getEventDispatcher(); //     ¡ı
 	mouseDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, getChildByTag(MeHeroTag));
 
-	//æ³¨å†Œé”®ç›˜ç›‘å¬å™¨
-	//ä½¿ç”¨Î»è¡¨è¾¾å¼
-	//ç›®å‰åªå®ç°äº† Q W E A B Pé”®æŒ‰ä¸‹æ—¶è‹±é›„åšå‡ºå“åº”
+	//×¢²á¼üÅÌ¼àÌıÆ÷
+	//Ê¹ÓÃ¦Ë±í´ïÊ½
+	//Ä¿Ç°Ö»ÊµÏÖÁË Q W E A B P¼ü°´ÏÂÊ±Ó¢ĞÛ×ö³öÏìÓ¦
 
 	auto keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = [](EventKeyboard::KeyCode keyCode, Event* event)
 	{
-		//æ ¹æ®tagè·å–è‹±é›„
+		//¸ù¾İtag»ñÈ¡Ó¢ĞÛ
 		auto target = static_cast<Hero*>(event->getCurrentTarget());
-		//å½“å‰æ­£åœ¨æŒ‰ä¸‹æŒ‰é”®ï¼Œæ­¤æ—¶ç‚¹å‡»é¼ æ ‡ä¼šå˜ä¸ºç±»ä¼¼é€‰æ‹©æ”»å‡»ç›®æ ‡çš„ä½œç”¨
-		//ä¸å†æ˜¯ç§»åŠ¨
+		//µ±Ç°ÕıÔÚ°´ÏÂ°´¼ü£¬´ËÊ±µã»÷Êó±ê»á±äÎªÀàËÆÑ¡Ôñ¹¥»÷Ä¿±êµÄ×÷ÓÃ
+		//²»ÔÙÊÇÒÆ¶¯
 		target->setPressingKeyboard();
 		switch (keyCode)
 		{
@@ -161,39 +150,39 @@ void GameScene::onEnter()
 		case EventKeyboard::KeyCode::KEY_Q:
 		{
 			target->thisKeyPressed('Q');
-			//åœ¨æ­¤å¤„å‘åŠ¨åç¾¿Q
+			//ÔÚ´Ë´¦·¢¶¯ºóôàQ
 			if (target->getHeroName() == 'H')
 			{
 
 				if (target->getQSkillWaitTime() <= 0.01)
 				{
 
-					//åœæ­¢ç§»åŠ¨åŠ¨ä½œå‘åŠ¨æŠ€èƒ½
+					//Í£Ö¹ÒÆ¶¯¶¯×÷·¢¶¯¼¼ÄÜ
 					target->stopActionByTag(HeroMove);
-					//å‘åŠ¨qæŠ€èƒ½ï¼ŒæŒç»­æ—¶é—´å†…å¢åŠ åç¾¿æ”»å‡»é€Ÿåº¦å’Œç§»åŠ¨é€Ÿåº¦
+					//·¢¶¯q¼¼ÄÜ£¬³ÖĞøÊ±¼äÄÚÔö¼Óºóôà¹¥»÷ËÙ¶ÈºÍÒÆ¶¯ËÙ¶È
 					target->setBuff(true);
-					//æŒç»­æ—¶é—´5*qæŠ€èƒ½ç­‰çº§
+					//³ÖĞøÊ±¼ä5*q¼¼ÄÜµÈ¼¶
 					target->setBuffTime(HouyiQSkillLastTime * target->getQSkillLevel());
-					//è¯¥æŠ€èƒ½å®ç°æ•ˆæœåœ¨HouyiHero updateå‡½æ•°ä¸­å®ç°
+					//¸Ã¼¼ÄÜÊµÏÖĞ§¹ûÔÚHouyiHero updateº¯ÊıÖĞÊµÏÖ
 					target->setQSkillWaitTime(target->getQSkillCdTime());
 					target->setHeroAfterShake(target->getQSkillAfterShake());
 
 				}
 			}
 
-			//åœ¨æ­¤å¤„å‘åŠ¨äºšç‘ŸQ
+			//ÔÚ´Ë´¦·¢¶¯ÑÇÉªQ
 			if (target->getHeroName() == 'Y')
 			{
 				if (target->getQSkillWaitTime() <= 0.01)
 				{
-					log("bb");
-					//åœæ­¢ç§»åŠ¨åŠ¨ä½œå‘åŠ¨æŠ€èƒ½
+
+					//Í£Ö¹ÒÆ¶¯¶¯×÷·¢¶¯¼¼ÄÜ
 					target->stopActionByTag(HeroMove);
-					//å‘åŠ¨qæŠ€èƒ½ï¼ŒæŒç»­æ—¶é—´å†…å¢åŠ äºšç‘Ÿé˜²å¾¡åŠ›
+					//·¢¶¯q¼¼ÄÜ£¬³ÖĞøÊ±¼äÄÚÔö¼Óºóôà¹¥»÷ËÙ¶ÈºÍÒÆ¶¯ËÙ¶È
 					target->setBuff(true);
-					//æŒç»­æ—¶é—´5*qæŠ€èƒ½ç­‰çº§
+					//³ÖĞøÊ±¼ä5*q¼¼ÄÜµÈ¼¶
 					target->setBuffTime(YaseQSkillLastTime * target->getQSkillLevel());
-					//è¯¥æŠ€èƒ½å®ç°æ•ˆæœåœ¨HouyiHero updateå‡½æ•°ä¸­å®ç°
+					//¸Ã¼¼ÄÜÊµÏÖĞ§¹ûÔÚHouyiHero updateº¯ÊıÖĞÊµÏÖ
 					target->setQSkillWaitTime(target->getQSkillCdTime());
 					target->setHeroAfterShake(target->getQSkillAfterShake());
 				}
@@ -212,14 +201,14 @@ void GameScene::onEnter()
 			target->thisKeyPressed('E');
 			break;
 		}
-		//æš‚å®šæŒ‰Pé”®å®ç°æŸ¥çœ‹è£…å¤‡åŠŸèƒ½
+		//Ôİ¶¨°´P¼üÊµÏÖ²é¿´×°±¸¹¦ÄÜ
 		case EventKeyboard::KeyCode::KEY_P:
 		{
 			target->thisKeyPressed('P');
 			break;
 		}
 
-		//Bé”®æ‰“å¼€å•†åº—
+		//B¼ü´ò¿ªÉÌµê
 		case EventKeyboard::KeyCode::KEY_B:
 		{
 			target->thisKeyPressed('B');
@@ -236,37 +225,30 @@ void GameScene::onEnter()
 		target->setUnPressingKeyboard();
 		target->thisKeyPressed('\0');
 	};
-	//ä¸çŸ¥é“è¯¥ä¸è¯¥åæ²¡äº‹ä»¶ï¼Œä¹Ÿä¸çŸ¥é“æ€ä¹ˆè®¾ç½®é”®ç›˜åæ²¡
-	//ä¹¦ä¸Šæ²¡å†™
-	//å’±ä¹Ÿä¸çŸ¥é“ï¼Œå’±ä¹Ÿä¸æ•¢é—®
+	//²»ÖªµÀ¸Ã²»¸ÃÍÌÃ»ÊÂ¼ş£¬Ò²²»ÖªµÀÔõÃ´ÉèÖÃ¼üÅÌÍÌÃ»
+	//ÊéÉÏÃ»Ğ´
+	//ÔÛÒ²²»ÖªµÀ£¬ÔÛÒ²²»¸ÒÎÊ
 
-	//è·Ÿé¼ æ ‡ç›‘å¬çœ‹ä¸æ‡‚çš„ç„å­¦ä¸€æ­¥ä¸€æ ·ï¼Œé€šè¿‡è¿™æ­¥ç»™é¼ æ ‡ç›‘å¬å™¨ç»‘å®šè‹±é›„çš„tag/////////////////////////////    â†“è¿™ä¸ªå°±æ˜¯tag
-	EventDispatcher *keyboardDispatcher = Director::getInstance()->getEventDispatcher();//       â†“
+	//¸úÊó±ê¼àÌı¿´²»¶®µÄĞşÑ§Ò»²½Ò»Ñù£¬Í¨¹ıÕâ²½¸øÊó±ê¼àÌıÆ÷°ó¶¨Ó¢ĞÛµÄtag/////////////////////////////    ¡ıÕâ¸ö¾ÍÊÇtag
+	EventDispatcher *keyboardDispatcher = Director::getInstance()->getEventDispatcher();//       ¡ı
 	keyboardDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, getChildByTag(MeHeroTag));
 
-	//æ³¨å†Œç‰©ç†ç¢°æ’ç›‘å¬å™¨
+	//×¢²áÎïÀíÅö×²¼àÌıÆ÷
 	auto contactListener = EventListenerPhysicsContact::create();
-
-
-
 	contactListener->onContactBegin = CC_CALLBACK_1(GameScene::contactBegin, this);
-
-
 	contactListener->onContactPreSolve = [](PhysicsContact& contact, const PhysicsContactPreSolve& solve)
 	{
+		log("asdaaaaaaaaaa");
 		return true;
 	};
-
 	contactListener->onContactPostSolve = [](PhysicsContact& contact, const PhysicsContactPostSolve& solve)
 	{
 
 	};
-
 	contactListener->onContactSeparate = [](PhysicsContact& contact)
 	{
-
+		log("DSDSD");
 	};
-
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(contactListener, 1);
 
 
@@ -274,13 +256,13 @@ void GameScene::onEnter()
 
 void GameScene::onExit()
 {
-	//åæ­£ä¸€å®šè¦åŠ ä¸‹è¾¹è¿™å¥
+	//·´ÕıÒ»¶¨Òª¼ÓÏÂ±ßÕâ¾ä
 	Layer::onExit();
 
-	//åœ¨onExitå‡½æ•°ä¸­æ³¨é”€ç›‘å¬å™¨
-	//ä¸ä¼šå‘
-	//ä¸çŸ¥é“ä¼šå¼„å‡ºä»€ä¹ˆbug//////////////////////////////////////////////////////////////////////////////////////////////////
-	//ä½†æ˜¯ç›®å‰ä¸æ³¨é”€æ²¡äº‹
+	//ÔÚonExitº¯ÊıÖĞ×¢Ïú¼àÌıÆ÷
+	//²»»áÄÅ
+	//²»ÖªµÀ»áÅª³öÊ²Ã´bug//////////////////////////////////////////////////////////////////////////////////////////////////
+	//µ«ÊÇÄ¿Ç°²»×¢ÏúÃ»ÊÂ
 
 }
 
@@ -290,8 +272,8 @@ bool GameScene::init()
 
 	/////////////////////////////
 	// 1. super init first
-	//ä¸çŸ¥é“ä¸ºä»€ä¹ˆè¦åŠ ä½†æ˜¯è¿˜æ˜¯åŠ ä¸Š
-	//å¯èƒ½è·Ÿåœºæ™¯æ²¡æœ‰æˆåŠŸåˆ›å»ºæœ‰å…³
+	//²»ÖªµÀÎªÊ²Ã´Òª¼Óµ«ÊÇ»¹ÊÇ¼ÓÉÏ
+	//¿ÉÄÜ¸ú³¡¾°Ã»ÓĞ³É¹¦´´½¨ÓĞ¹Ø
 	if (!Layer::init())
 	{
 		return false;
@@ -300,15 +282,15 @@ bool GameScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	//æ¸¸æˆåœ°å›¾
+	//ÓÎÏ·µØÍ¼
 	_tileMap = TMXTiledMap::create("Map.tmx");
 	addChild(_tileMap, 0, 100);
 
-	//åˆå§‹åŒ–ç¢°æ’å±‚
+	//³õÊ¼»¯Åö×²²ã
 	_collidable = _tileMap->getLayer("Collidable");
 
 
-	//æ ¹æ®meHeroTagè®¾ç½®å·±æ–¹è‹±é›„ç²¾çµ
+	//¸ù¾İmeHeroTagÉèÖÃ¼º·½Ó¢ĞÛ¾«Áé
 	switch (this->getMeHeroTag())
 	{
 
@@ -326,7 +308,7 @@ bool GameScene::init()
 		hero->setFlag(Player1);
 		addChild(hero, 100, MeHeroTag);
 
-		//è¯¥å‡½æ•°ä¸ºè®¡ç®—å†·å´æ—¶é—´å’Œæ”»å‡»é—´éš”çš„å‡½æ•°
+		//¸Ãº¯ÊıÎª¼ÆËãÀäÈ´Ê±¼äºÍ¹¥»÷¼ä¸ôµÄº¯Êı
 		hero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		hero->scheduleUpdate();
 		break;
@@ -344,20 +326,34 @@ bool GameScene::init()
 		hero->setFlag(Player1);
 		hero->setHuman();
 		addChild(hero, 100, MeHeroTag);
-		//è¯¥å‡½æ•°ä¸ºè®¡ç®—å†·å´æ—¶é—´å’Œæ”»å‡»é—´éš”çš„å‡½æ•°
+		//¸Ãº¯ÊıÎª¼ÆËãÀäÈ´Ê±¼äºÍ¹¥»÷¼ä¸ôµÄº¯Êı
+		hero->schedule(schedule_selector(YaseHero::buffUpdate), 1.0 / 60.0);
 		hero->scheduleUpdate();
 		break;
 	}
 
 	case 'D':
 	{
+		static auto hero = DajiHero::create();
+		auto body = PhysicsBody::createCircle(hero->getContentSize().width / 2);
+		body->setContactTestBitmask(MEUNITTEST);
+		//log("mehero test mask %d", body->getContactTestBitmask());
+		body->setCategoryBitmask(MEUNITCATEGORY);
+		body->setCollisionBitmask(MEUNITCOLLISION);
+		hero->setPhysicsBody(body);
+		hero->setPosition(Player1StartPosition);
+		hero->setHuman();
+		hero->setFlag(Player1);
+		addChild(hero, 100, MeHeroTag);
+		//¸Ãº¯ÊıÎª¼ÆËãÀäÈ´Ê±¼äºÍ¹¥»÷¼ä¸ôµÄº¯Êı
+		hero->scheduleUpdate();
 		break;
 	}
 
 	default:break;
 	}
 
-	//è®¾ç½®æ•Œæ–¹è‹±é›„
+	//ÉèÖÃµĞ·½Ó¢ĞÛ
 	switch (this->getOtherHeroTag())
 	{
 	case 'H':
@@ -381,11 +377,39 @@ bool GameScene::init()
 
 	case 'D':
 	{
+		auto otherHero = DajiHero::create();
+		auto body = PhysicsBody::createCircle(otherHero->getContentSize().width / 2);
+		body->setContactTestBitmask(OTHERUNITTEST);
+		body->setCategoryBitmask(OTHERUNITCATEGORY);
+		body->setCollisionBitmask(OTHERUNITCOLLISION);
+		log("otherhero test mask %d", body->getContactTestBitmask());
+		otherHero->setPhysicsBody(body);
+		otherHero->setPosition(Player2StartPosition);
+		addChild(otherHero, 100, this->getEnermyType());
+		otherHero->setAI();
+		otherHero->setFlag(Player2);
+		otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+		otherHero->scheduleUpdate();
+		break;
 		break;
 	}
 
 	case 'Y':
 	{
+		auto otherHero = YaseHero::create();
+		auto body = PhysicsBody::createCircle(otherHero->getContentSize().width / 2);
+		body->setContactTestBitmask(OTHERUNITTEST);
+		body->setCategoryBitmask(OTHERUNITCATEGORY);
+		body->setCollisionBitmask(OTHERUNITCOLLISION);
+		//	log("otherhero test mask %d", body->getContactTestBitmask());
+		otherHero->setPhysicsBody(body);
+		otherHero->setPosition(Player2StartPosition);
+		addChild(otherHero, 100, this->getEnermyType());
+		otherHero->setAI();
+		otherHero->setFlag(Player2);
+		otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+		otherHero->scheduleUpdate();
+		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
 	}
 
@@ -394,7 +418,7 @@ bool GameScene::init()
 	default:break;
 	}
 
-	//è®¾ç½®è¿”å›åˆå§‹åœºæ™¯çš„èœå•
+	//ÉèÖÃ·µ»Ø³õÊ¼³¡¾°µÄ²Ëµ¥
 	MenuItemFont::setFontName("Arial");
 	MenuItemFont::setFontSize(20);
 	MenuItemFont* backItem = MenuItemFont::create("back", CC_CALLBACK_1(GameScene::menuBackCallback, this));
@@ -405,7 +429,7 @@ bool GameScene::init()
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 200);
 
-	//è£…å¤‡å•†åº—
+	//×°±¸ÉÌµê
 /*MenuItemImage *shop_xie = MenuItemImage::create("shop_xie.png", "shop_xie.png", CC_CALLBACK_1(GameScene::shop_xie, this));
 shop_xie->setPosition(Vec2(0,75));
 MenuItemImage *shop_shoutao = MenuItemImage::create("shop_shoutao.png", "shop_shoutao.png", CC_CALLBACK_1(GameScene::shop_shoutao, this));
@@ -421,7 +445,7 @@ shop_lanshuijing->setPosition(Vec2(0,-75));
 Menu *menu = Menu::create(shop_xie, shop_shoutao,shop_changgong,shop_kaijia,shop_hongshuijing,shop_lanshuijing, NULL);
 this->addChild(menu,1);*/
 
-//æ°´æ™¶
+//Ë®¾§
 	Sprite *shuijing1 = Sprite::create("shuijing.png");
 	shuijing1->setPosition(Vec2(50, 30));
 	this->addChild(shuijing1);
@@ -430,7 +454,7 @@ this->addChild(menu,1);*/
 	shuijing2->setPosition(Vec2(430, 300));
 	this->addChild(shuijing2);
 
-	//é˜²å¾¡å¡”
+	//·ÀÓùËş
 	Sprite *tower1 = Sprite::create("tower.png");
 	tower1->setPosition(Vec2(155, 105));
 	this->addChild(tower1);
@@ -439,24 +463,24 @@ this->addChild(menu,1);*/
 	tower2->setPosition(Vec2(370, 270));
 	this->addChild(tower2);
 	this->schedule(schedule_selector(GameScene::watchMeAndOther), 1.0 / 60.0);
-	this->schedule(schedule_selector(GameScene::Score));
+	//	this->schedule(schedule_selector(GameScene::wulawula), WulaWulaCD);
 	return true;
 }
 
-//æ§åˆ¶AIçš„å‡½æ•°
-//by ç‹æ–‡æ”¿ 2019å¹´6æœˆ2æ—¥
+//¿ØÖÆAIµÄº¯Êı
+//by ÍõÎÄÕş 2019Äê6ÔÂ2ÈÕ
 void GameScene::watchMeAndOther(float dt)
 {
 	Hero* meHero = dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag));
 	Hero* otherHero = dynamic_cast<Hero*>(this->getChildByTag(this->getEnermyType()));
-	//ç›‘æ§æˆ‘æ–¹ç»éªŒé‡‘å¸
+	//¼à¿ØÎÒ·½¾­Ñé½ğ±Ò
 	meHero->setMoney(this->getMeMoney());
 	meHero->setExpPoint(this->getMeExp());
 	if (this->getMeExp() >= ExpPerLevel)
 	{
 		this->changeMeExp(-ExpPerLevel);
 	}
-	//ç›‘æ§æ•Œæ–¹ç»éªŒé‡‘å¸
+	//¼à¿ØµĞ·½¾­Ñé½ğ±Ò
 	otherHero->setMoney(this->getOtherMoney());
 	otherHero->setExpPoint(this->getOtherExp());
 	if (this->getOtherExp() >= ExpPerLevel)
@@ -464,40 +488,40 @@ void GameScene::watchMeAndOther(float dt)
 		this->changeOtherExp(-ExpPerLevel);
 	}
 
-	//è·å–åŒæ–¹è‹±é›„çš„ä½ç½®
+	//»ñÈ¡Ë«·½Ó¢ĞÛµÄÎ»ÖÃ
 	Vec2 meHeroPoint = meHero->getPosition();
 	Vec2 otherHeroPoint = otherHero->getPosition();
 
-	//å¦‚æœæ˜¯AI å¯¹AIè¿›è¡Œæ§åˆ¶
+	//Èç¹ûÊÇAI ¶ÔAI½øĞĞ¿ØÖÆ
 	if (this->getEnermyType() == AIHeroTag)
 	{
 		Vec2 distance = otherHeroPoint - meHeroPoint;
-		//è·å–åŒæ–¹è·ç¦»
+		//»ñÈ¡Ë«·½¾àÀë
 		float length = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
-		//å¦‚æœAIæ§åˆ¶åç¾¿
+		//Èç¹ûAI¿ØÖÆºóôà
 		if (this->getOtherHeroTag() == 'H')
 		{
-			//åˆ¤æ–­å¹¶è¿›è¡Œæ™®æ”»
+			//ÅĞ¶Ï²¢½øĞĞÆÕ¹¥
 			if (length <= HouyiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
 			{
 				takeHouyiNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
 				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
 				otherHero->setHeroAfterShake(otherHero->getNormalAttackAfterShake());
-			}//end æ™®æ”»
+			}//end ÆÕ¹¥
 
-			//åˆ¤æ–­å¹¶QæŠ€èƒ½å¼€buff
+			//ÅĞ¶Ï²¢Q¼¼ÄÜ¿ªbuff
 			if (length <= 200.0 && otherHero->getQSkillWaitTime() <= 0.01)
 			{
-				//å‘åŠ¨qæŠ€èƒ½ï¼ŒæŒç»­æ—¶é—´å†…å¢åŠ åç¾¿æ”»å‡»é€Ÿåº¦
+				//·¢¶¯q¼¼ÄÜ£¬³ÖĞøÊ±¼äÄÚÔö¼Óºóôà¹¥»÷ËÙ¶È
 				otherHero->setBuff(true);
-				//æŒç»­æ—¶é—´k*qæŠ€èƒ½ç­‰çº§
+				//³ÖĞøÊ±¼äk*q¼¼ÄÜµÈ¼¶
 				otherHero->setBuffTime(HouyiQSkillLastTime * otherHero->getQSkillLevel());
-				//è¯¥æŠ€èƒ½å®ç°æ•ˆæœåœ¨updateå‡½æ•°ä¸­å®ç°
+				//¸Ã¼¼ÄÜÊµÏÖĞ§¹ûÔÚupdateº¯ÊıÖĞÊµÏÖ
 				otherHero->setQSkillWaitTime(otherHero->getQSkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getQSkillAfterShake());
 			}//end buff
 
-			//åˆ¤æ–­å¹¶WæŠ€èƒ½
+			//ÅĞ¶Ï²¢W¼¼ÄÜ
 			if (length <= HouyiWSkillRange - 20 && otherHero->getWSkillWaitTime() <= 0.01)
 			{
 				takeHouyiWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
@@ -505,7 +529,7 @@ void GameScene::watchMeAndOther(float dt)
 				otherHero->setHeroAfterShake(otherHero->getWSkillAfterShake());
 			}//end W
 
-			//åˆ¤æ–­å¹¶æ”¾å¤§
+			//ÅĞ¶Ï²¢·Å´ó
 			if (length <= HouyiESkillRange && otherHero->getESkillWaitTime() <= 0.01)
 			{
 				takeHouyiESkill(otherHero, false, otherHeroPoint, meHeroPoint);
@@ -515,12 +539,46 @@ void GameScene::watchMeAndOther(float dt)
 
 		}
 
-		//å¦‚æœAIæ§åˆ¶äºšç‘Ÿ
+		//Èç¹ûAI¿ØÖÆÑÇÉª
 		if (this->getOtherHeroTag() == 'Y')
 		{
+			//ÅĞ¶Ï²¢½øĞĞÆÕ¹¥
+			if (length <= YaseNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
+			{
+				takeYaseNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
+				otherHero->setHeroAfterShake(otherHero->getNormalAttackAfterShake());
+			}//end ÆÕ¹¥
 
+			//ÅĞ¶Ï²¢Q¼¼ÄÜ¿ªbuff
+			if (length <= 200.0 && otherHero->getQSkillWaitTime() <= 0.01)
+			{
+				//·¢¶¯q¼¼ÄÜ£¬³ÖĞøÊ±¼äÄÚÔö¼Óºóôà¹¥»÷ËÙ¶È
+				otherHero->setBuff(true);
+				//³ÖĞøÊ±¼äk*q¼¼ÄÜµÈ¼¶
+				otherHero->setBuffTime(YaseQSkillLastTime * otherHero->getQSkillLevel());
+				//¸Ã¼¼ÄÜÊµÏÖĞ§¹ûÔÚupdateº¯ÊıÖĞÊµÏÖ
+				otherHero->setQSkillWaitTime(otherHero->getQSkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getQSkillAfterShake());
+			}//end buff
+
+			//ÅĞ¶Ï²¢W¼¼ÄÜ
+			if (length <= YaseWSkillRange - 20 && otherHero->getWSkillWaitTime() <= 0.01)
+			{
+				takeYaseWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setWSkillWaitTime(otherHero->getWSkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getWSkillAfterShake());
+			}//end W
+
+			//ÅĞ¶Ï²¢·Å´ó
+			if (length <= YaseESkillRange && otherHero->getESkillWaitTime() <= 0.01)
+			{
+				takeYaseESkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				otherHero->setESkillWaitTime(otherHero->getESkillCdTime());
+				otherHero->setHeroAfterShake(otherHero->getESkillAfterShake());
+			}//end E
 		}
-		//å¦‚æœAIæ§åˆ¶å¦²å·±
+		//Èç¹ûAI¿ØÖÆæ§¼º
 		if (this->getOtherHeroTag() == 'D')
 		{
 
@@ -528,34 +586,33 @@ void GameScene::watchMeAndOther(float dt)
 	}
 }
 
-//by ç‹æ–‡æ”¿ 2019å¹´5æœˆ20æ—¥
-//Î»è¡¨è¾¾å¼æ— æ³•ä½¿ç”¨thisï¼Œæ•…å•ç‹¬æŠŠtouchEndedå‡½æ•°æ‹¿å‡ºæ¥å†™
+//by ÍõÎÄÕş 2019Äê5ÔÂ20ÈÕ
+//¦Ë±í´ïÊ½ÎŞ·¨Ê¹ÓÃthis£¬¹Êµ¥¶À°ÑtouchEndedº¯ÊıÄÃ³öÀ´Ğ´
 void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 {
-	//é€šè¿‡ç»™è‹±é›„è®¾ç½®çš„æ ‡ç­¾è·å–è‹±é›„
-	//ä¹¦ä¸ŠåŸè¯æ˜¯è·å–äº‹ä»¶æ‰€ç»‘å®šçš„ç²¾çµ
-	//å¾ˆç„å­¦çš„ä¸€æ­¥æˆ‘ä¹Ÿä¸çŸ¥é“æ˜¯ä»€ä¹ˆåŸç†
-	//initå‡½æ•°ä¸­addChild(hero,20,tag),å…¶ä¸­çš„tagå°±æ˜¯è¯¥è‹±é›„çš„æ ‡ç­¾
+	//Í¨¹ı¸øÓ¢ĞÛÉèÖÃµÄ±êÇ©»ñÈ¡Ó¢ĞÛ
+	//ÊéÉÏÔ­»°ÊÇ»ñÈ¡ÊÂ¼şËù°ó¶¨µÄ¾«Áé
+	//ºÜĞşÑ§µÄÒ»²½ÎÒÒ²²»ÖªµÀÊÇÊ²Ã´Ô­Àí
+	//initº¯ÊıÖĞaddChild(hero,20,tag),ÆäÖĞµÄtag¾ÍÊÇ¸ÃÓ¢ĞÛµÄ±êÇ©
 
-	//è·å–æ¾å¼€é¼ æ ‡æ—¶çš„é¼ æ ‡ä½ç½®
+	//»ñÈ¡ËÉ¿ªÊó±êÊ±µÄÊó±êÎ»ÖÃ
 	Vec2 touchPosition = touch->getLocation();
-
-	//å¦‚æœå½“å‰è‹±é›„ä¸ºåç¾¿
+	//Èç¹ûµ±Ç°Ó¢ĞÛÎªºóôà
 	if (this->meHeroTag == 'H')
 	{
 		auto target = static_cast<HouyiHero*>(event->getCurrentTarget());
-		//å°†è‹±é›„çš„æˆå‘˜å˜é‡touchPointèµ‹å€¼ä¸ºtouchPosition
+		//½«Ó¢ĞÛµÄ³ÉÔ±±äÁ¿touchPoint¸³ÖµÎªtouchPosition
 		target->setTouchPoint(touchPosition);
-		//è·å–è‹±é›„å½“å‰ä½ç½®
+		//»ñÈ¡Ó¢ĞÛµ±Ç°Î»ÖÃ
 		Vec2 heroPosition = target->getPosition();
 
-		//å¦‚æœç‚¹å‡»é¼ æ ‡æ—¶æœªæŒ‰é”®ï¼Œåˆ™æŠŠé¼ æ ‡ç‚¹å‡»ä½œä¸ºå‘è¯¥ç‚¹ç§»åŠ¨
+		//Èç¹ûµã»÷Êó±êÊ±Î´°´¼ü£¬Ôò°ÑÊó±êµã»÷×÷ÎªÏò¸ÃµãÒÆ¶¯
 		if (!target->isPressingKeyboard() && target->getHeroAfterShake() <= 0.01)
 		{
 			heroMove(target);
 		}
-		//å¦‚æœç‚¹å‡»é¼ æ ‡æ—¶æŒ‰é”®ï¼Œåˆ™æ ¹æ®æŒ‰é”®è¿›è¡ŒæŠ€èƒ½é‡Šæ”¾
-		//æ­¤æ—¶é¼ æ ‡çš„ç‚¹å¯¹åº”äºæŠ€èƒ½é‡Šæ”¾çš„ç‚¹
+		//Èç¹ûµã»÷Êó±êÊ±°´¼ü£¬Ôò¸ù¾İ°´¼ü½øĞĞ¼¼ÄÜÊÍ·Å
+		//´ËÊ±Êó±êµÄµã¶ÔÓ¦ÓÚ¼¼ÄÜÊÍ·ÅµÄµã
 		if (target->isPressingKeyboard())
 		{
 
@@ -566,10 +623,10 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 				if (target->getAttackWaitTime() <= 0.01)
 				{
-					//åœæ­¢å½“å‰çš„ç§»åŠ¨è¿›è¡Œæ™®æ”»
+					//Í£Ö¹µ±Ç°µÄÒÆ¶¯½øĞĞÆÕ¹¥
 					target->stopActionByTag(HeroMove);
 					takeHouyiNormalAttack(target, true, heroPosition, touchPosition);
-					//é‡ç½®æ™®æ”»é—´éš”å’Œæ”»å‡»åæ‘‡
+					//ÖØÖÃÆÕ¹¥¼ä¸ôºÍ¹¥»÷ºóÒ¡
 					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
 					target->setHeroAfterShake(target->getNormalAttackAfterShake());
 				}
@@ -578,18 +635,18 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 
 			case 'Q':
 			{
-				//åç¾¿çš„qæŠ€èƒ½ä¸ºæœªç‚¹å‡»é¼ æ ‡æ—¶ä½¿ç”¨
-				//åœ¨é”®ç›˜ç›‘å¬ä¸­å®šä¹‰
+				//ºóôàµÄq¼¼ÄÜÎªÎ´µã»÷Êó±êÊ±Ê¹ÓÃ
+				//ÔÚ¼üÅÌ¼àÌıÖĞ¶¨Òå
 				break;
 			}
 			case 'W':
 			{
 				if (target->getWSkillWaitTime() <= 0.01)
 				{
-					//åœæ­¢å½“å‰çš„ç§»åŠ¨è¿›è¡ŒW
+					//Í£Ö¹µ±Ç°µÄÒÆ¶¯½øĞĞW
 					target->stopActionByTag(HeroMove);
 					takeHouyiWSkill(target, true, heroPosition, touchPosition);
-					//é‡ç½®W CDå’ŒæŠ€èƒ½åæ‘‡
+					//ÖØÖÃW CDºÍ¼¼ÄÜºóÒ¡
 					target->setWSkillWaitTime(target->getWSkillCdTime());
 					target->setHeroAfterShake(target->getWSkillAfterShake());
 				}
@@ -599,10 +656,10 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 				if (target->getESkillWaitTime() <= 0.01)
 				{
-					//åœæ­¢å½“å‰çš„ç§»åŠ¨è¿›è¡Œå¤§æ‹›
+					//Í£Ö¹µ±Ç°µÄÒÆ¶¯½øĞĞ´óÕĞ
 					target->stopActionByTag(HeroMove);
 					takeHouyiESkill(target, true, heroPosition, touchPosition);
-					//é‡ç½®å¤§æ‹›ç­‰å¾…æ—¶é—´
+					//ÖØÖÃ´óÕĞµÈ´ıÊ±¼ä
 					target->setESkillWaitTime(target->getESkillCdTime());
 					target->setHeroAfterShake(target->getESkillAfterShake());
 				}
@@ -624,23 +681,23 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 		}
 	}
 
-	//å¦‚æœå½“å‰è‹±é›„ä¸ºäºšç‘Ÿ
+	//Èç¹ûµ±Ç°Ó¢ĞÛÎªÑÇÉª
 	if (this->meHeroTag == 'Y')
 	{
 		auto target = static_cast<YaseHero*>(event->getCurrentTarget());
-		//å°†è‹±é›„çš„æˆå‘˜å˜é‡touchPointèµ‹å€¼ä¸ºtouchPosition
+		//½«Ó¢ĞÛµÄ³ÉÔ±±äÁ¿touchPoint¸³ÖµÎªtouchPosition
 		target->setTouchPoint(touchPosition);
-		//è·å–è‹±é›„å½“å‰ä½ç½®
+		//»ñÈ¡Ó¢ĞÛµ±Ç°Î»ÖÃ
 		Vec2 heroPosition = target->getPosition();
 
-		//å¦‚æœç‚¹å‡»é¼ æ ‡æ—¶æœªæŒ‰é”®ï¼Œåˆ™æŠŠé¼ æ ‡ç‚¹å‡»ä½œä¸ºå‘è¯¥ç‚¹ç§»åŠ¨
+		//Èç¹ûµã»÷Êó±êÊ±Î´°´¼ü£¬Ôò°ÑÊó±êµã»÷×÷ÎªÏò¸ÃµãÒÆ¶¯
 		if (!target->isPressingKeyboard())
 		{
 			heroMove(target);
 		}
 
-		//å¦‚æœç‚¹å‡»é¼ æ ‡æ—¶æŒ‰é”®ï¼Œåˆ™æ ¹æ®æŒ‰é”®è¿›è¡ŒæŠ€èƒ½é‡Šæ”¾
-		//æ­¤æ—¶é¼ æ ‡çš„ç‚¹å¯¹åº”äºæŠ€èƒ½é‡Šæ”¾çš„ç‚¹
+		//Èç¹ûµã»÷Êó±êÊ±°´¼ü£¬Ôò¸ù¾İ°´¼ü½øĞĞ¼¼ÄÜÊÍ·Å
+		//´ËÊ±Êó±êµÄµã¶ÔÓ¦ÓÚ¼¼ÄÜÊÍ·ÅµÄµã
 		if (target->isPressingKeyboard())
 		{
 
@@ -651,14 +708,13 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 				if (target->getAttackWaitTime() <= 0.01)
 				{
-					//åœæ­¢å½“å‰çš„ç§»åŠ¨è¿›è¡Œæ™®æ”»
+					//Í£Ö¹µ±Ç°µÄÒÆ¶¯½øĞĞÆÕ¹¥
 					target->stopActionByTag(HeroMove);
 					takeYaseNormalAttack(target, true, heroPosition, touchPosition);
-					//é‡ç½®å¹³Aç­‰å¾…æ—¶é—´
+					//ÖØÖÃÆ½AµÈ´ıÊ±¼ä
 					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
 					target->setHeroAfterShake(target->getNormalAttackAfterShake());
 				}
-
 				break;
 			}
 
@@ -671,9 +727,9 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 				if (target->getWSkillWaitTime() <= 0.01)
 				{
-					//è¾¹ç§»åŠ¨è¾¹æ—‹è½¬
+					//±ßÒÆ¶¯±ßĞı×ª
 					takeYaseWSkill(target, true, heroPosition, touchPosition);
-					//é‡ç½®CDå’ŒæŠ€èƒ½åæ‘‡
+					//ÖØÖÃCDºÍ¼¼ÄÜºóÒ¡
 					target->setWSkillWaitTime(target->getWSkillCdTime());
 					target->setHeroAfterShake(target->getWSkillAfterShake());
 				}
@@ -684,14 +740,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 				if (target->getESkillWaitTime() <= 0.01)
 				{
-					//åœæ­¢å½“å‰çš„ç§»åŠ¨è¿›è¡Œå¤§æ‹›
+					//Í£Ö¹µ±Ç°µÄÒÆ¶¯½øĞĞ´óÕĞ
 					target->stopActionByTag(HeroMove);
 					takeYaseESkill(target, true, heroPosition, touchPosition);
-					//é‡ç½®å¤§æ‹›ç­‰å¾…æ—¶é—´
+					//ÖØÖÃ´óÕĞµÈ´ıÊ±¼ä
 					target->setESkillWaitTime(target->getESkillCdTime());
 					target->setHeroAfterShake(target->getESkillAfterShake());
-					break;
 				}
+				break;
+			}
 
 			case 'P':
 			{
@@ -704,13 +761,90 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			}
 			default:break;
 			}
-			}
 		}
+	}
 
-		//å¦‚æœå½“å‰è‹±é›„ä¸ºå¦²å·±
-		if (this->meHeroTag == 'D')
+	//Èç¹ûµ±Ç°Ó¢ĞÛÎªæ§¼º
+	if (this->meHeroTag == 'D')
+	{
+		auto target = static_cast<DajiHero*>(event->getCurrentTarget());
+		//½«Ó¢ĞÛµÄ³ÉÔ±±äÁ¿touchPoint¸³ÖµÎªtouchPosition
+		target->setTouchPoint(touchPosition);
+		//»ñÈ¡Ó¢ĞÛµ±Ç°Î»ÖÃ
+		Vec2 heroPosition = target->getPosition();
+
+		//Èç¹ûµã»÷Êó±êÊ±Î´°´¼ü£¬Ôò°ÑÊó±êµã»÷×÷ÎªÏò¸ÃµãÒÆ¶¯
+		if (!target->isPressingKeyboard() && target->getHeroAfterShake() <= 0.01)
+		{
+			heroMove(target);
+		}
+		//Èç¹ûµã»÷Êó±êÊ±°´¼ü£¬Ôò¸ù¾İ°´¼ü½øĞĞ¼¼ÄÜÊÍ·Å
+		//´ËÊ±Êó±êµÄµã¶ÔÓ¦ÓÚ¼¼ÄÜÊÍ·ÅµÄµã
+		if (target->isPressingKeyboard())
 		{
 
+			char key = target->pressThisKey();
+			switch (key)
+			{
+			case 'A':
+			{
+				if (target->getAttackWaitTime() <= 0.01)
+				{
+					//Í£Ö¹µ±Ç°µÄÒÆ¶¯½øĞĞÆÕ¹¥
+					target->stopActionByTag(HeroMove);
+					takeHouyiNormalAttack(target, true, heroPosition, touchPosition);
+					//ÖØÖÃÆÕ¹¥¼ä¸ôºÍ¹¥»÷ºóÒ¡
+					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
+					target->setHeroAfterShake(target->getNormalAttackAfterShake());
+				}
+				break;
+			}
+
+			case 'Q':
+			{
+				//ºóôàµÄq¼¼ÄÜÎªÎ´µã»÷Êó±êÊ±Ê¹ÓÃ
+				//ÔÚ¼üÅÌ¼àÌıÖĞ¶¨Òå
+				break;
+			}
+			case 'W':
+			{
+				if (target->getWSkillWaitTime() <= 0.01)
+				{
+					//Í£Ö¹µ±Ç°µÄÒÆ¶¯½øĞĞW
+					target->stopActionByTag(HeroMove);
+					takeHouyiWSkill(target, true, heroPosition, touchPosition);
+					//ÖØÖÃW CDºÍ¼¼ÄÜºóÒ¡
+					target->setWSkillWaitTime(target->getWSkillCdTime());
+					target->setHeroAfterShake(target->getWSkillAfterShake());
+				}
+				break;
+			}
+			case 'E':
+			{
+				if (target->getESkillWaitTime() <= 0.01)
+				{
+					//Í£Ö¹µ±Ç°µÄÒÆ¶¯½øĞĞ´óÕĞ
+					target->stopActionByTag(HeroMove);
+					takeHouyiESkill(target, true, heroPosition, touchPosition);
+					//ÖØÖÃ´óÕĞµÈ´ıÊ±¼ä
+					target->setESkillWaitTime(target->getESkillCdTime());
+					target->setHeroAfterShake(target->getESkillAfterShake());
+				}
+				break;
+
+			}
+
+			case 'P':
+			{
+				break;
+			}
+
+			case 'B':
+			{
+				break;
+			}
+			default:break;
+			}
 		}
 	}
 	this->schedule(schedule_selector(GameScene::collision), 0.001f);
@@ -750,7 +884,7 @@ void GameScene::update(float dt)
 {
 
 }
-//åˆ¤æ–­ç¢°æ’
+//ÅĞ¶ÏÅö×²
 void GameScene::collision(float dt)
 {
 	position_now = (this->getChildByTag(MeHeroTag))->getPosition();
@@ -761,11 +895,11 @@ void GameScene::collision(float dt)
 	else position_last = position_now;
 }
 
-//åˆ¤æ–­ç¢°æ’
+//ÅĞ¶ÏÅö×²
 bool GameScene::setPlayerPosition(Vec2 position)
 {
-	Vec2 tileCoord = this->tileCoordFromPosition(position);//ä»åƒç´ åæ ‡è½¬æ¢ä¸ºç“¦ç‰‡åæ ‡
-	int tileGid = _collidable->getTileGIDAt(tileCoord);//è·å¾—è¯¥ç“¦ç‰‡çš„GID
+	Vec2 tileCoord = this->tileCoordFromPosition(position);//´ÓÏñËØ×ø±ê×ª»»ÎªÍßÆ¬×ø±ê
+	int tileGid = _collidable->getTileGIDAt(tileCoord);//»ñµÃ¸ÃÍßÆ¬µÄGID
 	if (tileGid > 0)
 	{
 		return true;
@@ -774,7 +908,8 @@ bool GameScene::setPlayerPosition(Vec2 position)
 }
 
 
-//æ¢ç®—åæ ‡
+
+//»»Ëã×ø±ê
 Vec2 GameScene::tileCoordFromPosition(Vec2 pos)
 {
 	int x = pos.x / _tileMap->getTileSize().width;
@@ -782,54 +917,7 @@ Vec2 GameScene::tileCoordFromPosition(Vec2 pos)
 	return Vec2(x, y);
 }
 
-
-void GameScene::Score(float dt)//åˆ¤æ–­æˆ˜ç»©
-{
-//	log("aaaa");
-	//å¦‚æœçº¢æ–¹æ­»äº¡
-	auto other = static_cast<Hero*>(this->getChildByTag(MeHeroTag));
-	log("other hp %d", other->getHealthPoint());
-
-	if (other->getHealthPoint() <= 0)
-	{
-		log("AI dead");
-		updateBlueScore();
-	}
-	
-	//å¦‚æœè“æ–¹æ­»äº¡
-	if (static_cast<Hero*>(this->getChildByTag(MeHeroTag))->getHealthPoint() <= 0)
-	{
-		log("me dead");
-		updateRedScore();
-	}
-}
-
-void GameScene::updateBlueScore()//åˆ¤æ–­è“æ–¹æˆ˜ç»©
-{
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Node *ssc = this->getChildByTag(BlueScore);
-	this->removeChildByTag(BlueScore);
-	BlueScore++;
-	cocos2d::__String *score = cocos2d::__String::createWithFormat("%d", BlueScore);
-	auto score_new = LabelTTF::create(score->getCString(), "Arial", 36);
-	score_new->setPosition(Vec2(100, visibleSize.height - 50));
-	this->addChild(score_new, 20, BlueScore);
-}
-
-void GameScene::updateRedScore()//åˆ¤æ–­çº¢æ–¹æˆ˜ç»©
-{
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Node *ssc = this->getChildByTag(RedScore);
-	this->removeChildByTag(RedScore);
-	RedScore++;
-	cocos2d::__String *score = cocos2d::__String::createWithFormat("%d", RedScore);
-	auto score_new = LabelTTF::create(score->getCString(), "Arial", 36);
-	score_new->setPosition(Vec2(150, visibleSize.height - 50));
-	this->addChild(score_new, 20, RedScore);
-}
-
-
-//åˆ¤æ–­ç²¾çµç¢°æ’
+//ÅĞ¶Ï¾«ÁéÅö×²
 bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 {
 
@@ -839,69 +927,61 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 
 	//	log("A %d ,B %d", spriteA->getTag(), spriteB->getTag());
 
-	if (spriteA->getTag() == OtherSkillTag)
+	if (spriteA && spriteA->getTag() == OtherSkillTag)
 	{
-		//æ­¤æ—¶Aæ˜¯æ•Œæ–¹æŠ€èƒ½ Bæ˜¯æˆ‘æ–¹å•ä½
+		//´ËÊ±AÊÇµĞ·½¼¼ÄÜ BÊÇÎÒ·½µ¥Î»
 		auto otherSkill = static_cast<BasicSkill*>(spriteA);
 		auto meHero = static_cast<Hero*>(spriteB);
-		//å·±æ–¹å•ä½å—åˆ°ä¼¤å®³
+		//¼º·½µ¥Î»ÊÜµ½ÉËº¦
 		meHero->sufferDamage(otherSkill->getDamagePoint());
-		//å¦‚æœå·±æ–¹å•ä½æ­»äº¡
-		//ç»™å¯¹é¢è‹±é›„åŠ ç»éªŒå’Œé‡‘å¸
+		//Èç¹û¼º·½µ¥Î»ËÀÍö
+		//¸ø¶ÔÃæÓ¢ĞÛ¼Ó¾­ÑéºÍ½ğ±Ò
 		if (meHero->getHealthPoint() <= 0)
 		{
-			/*if (meHero->getTag() == MeHeroTag)
-			{
-				this->updateBlueScore();
-			}*/
 			this->changeOtherExp(HeroExp);
 			this->changeOtherMoney(HeroMoney);
 		}
-		//å¦‚æœæŠ€èƒ½ä¸ºæ‰“ä¸­å°±æ¶ˆå¤±ï¼Œåˆ™è®©æŠ€èƒ½æ¶ˆå¤±
+		//Èç¹û¼¼ÄÜÎª´òÖĞ¾ÍÏûÊ§£¬ÔòÈÃ¼¼ÄÜÏûÊ§
 		if (otherSkill->shouldRemove())
 		{
 			otherSkill->removeFromParent();
 			return false;
 		}
 	}
-	if (spriteB->getTag() == OtherSkillTag)
+	if (spriteB && spriteB->getTag() == OtherSkillTag)
 	{
-		//æ­¤æ—¶Bæ˜¯æ•Œæ–¹æŠ€èƒ½ Aæ˜¯æˆ‘æ–¹å•ä½
+		//´ËÊ±BÊÇµĞ·½¼¼ÄÜ AÊÇÎÒ·½µ¥Î»
 		auto otherSkill = static_cast<BasicSkill*>(spriteB);
 		auto meHero = static_cast<Hero*>(spriteA);
 		meHero->sufferDamage(otherSkill->getDamagePoint());
-		//å¦‚æœå·±æ–¹å•ä½æ­»äº¡
-		//ç»™å¯¹é¢è‹±é›„åŠ ç»éªŒå’Œé‡‘å¸
+		//Èç¹û¼º·½µ¥Î»ËÀÍö
+		//¸ø¶ÔÃæÓ¢ĞÛ¼Ó¾­ÑéºÍ½ğ±Ò
 		if (meHero->getHealthPoint() <= 0)
 		{
-			/*if (meHero->getTag() == MeHeroTag)
-			{
-				this->updateBlueScore();
-			}*/
 			this->changeOtherExp(HeroExp);
 			this->changeOtherMoney(HeroMoney);
 		}
-		//å¦‚æœæŠ€èƒ½ä¸ºæ‰“ä¸­å°±æ¶ˆå¤±ï¼Œåˆ™è®©æŠ€èƒ½æ¶ˆå¤±
+		//Èç¹û¼¼ÄÜÎª´òÖĞ¾ÍÏûÊ§£¬ÔòÈÃ¼¼ÄÜÏûÊ§
 		if (otherSkill->shouldRemove())
 		{
 			otherSkill->removeFromParent();
 			return false;
 		}
 	}
-	if (spriteA->getTag() == MeSkillTag)
+	if (spriteA && spriteA->getTag() == MeSkillTag)
 	{
-		//æ­¤æ—¶Aæ˜¯æˆ‘æ–¹æŠ€èƒ½ Bæ˜¯æ•Œæ–¹å•ä½
+		//´ËÊ±AÊÇÎÒ·½¼¼ÄÜ BÊÇµĞ·½µ¥Î»
 		auto meSkill = static_cast<BasicSkill*>(spriteA);
 		auto otherHero = static_cast<Hero*>(spriteB);
 		otherHero->sufferDamage(meSkill->getDamagePoint());
-		//å¦‚æœæ•Œæ–¹å•ä½æ­»äº¡
-		//ç»™æˆ‘æ–¹è‹±é›„åŠ ç»éªŒå’Œé‡‘å¸
+		//Èç¹ûµĞ·½µ¥Î»ËÀÍö
+		//¸øÎÒ·½Ó¢ĞÛ¼Ó¾­ÑéºÍ½ğ±Ò
 		if (otherHero->getHealthPoint() <= 0)
 		{
 			this->changeMeExp(HeroExp);
 			this->changeMeMoney(HeroMoney);
 		}
-		//å¦‚æœæŠ€èƒ½ä¸ºæ‰“ä¸­å°±æ¶ˆå¤±ï¼Œåˆ™è®©æŠ€èƒ½æ¶ˆå¤±
+		//Èç¹û¼¼ÄÜÎª´òÖĞ¾ÍÏûÊ§£¬ÔòÈÃ¼¼ÄÜÏûÊ§
 		if (meSkill->shouldRemove())
 		{
 			meSkill->removeFromParent();
@@ -909,51 +989,54 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		}
 	}
 
-	if (spriteB->getTag() == MeSkillTag)
+	if (spriteB && spriteB->getTag() == MeSkillTag)
 	{
-		//æ­¤æ—¶Bæ˜¯æˆ‘æ–¹æŠ€èƒ½ Aæ˜¯æ•Œæ–¹å•ä½
+		//´ËÊ±BÊÇÎÒ·½¼¼ÄÜ AÊÇµĞ·½µ¥Î»
 		auto meSkill = static_cast<BasicSkill*>(spriteB);
 		log("B is Meskill");
 		auto otherHero = static_cast<Hero*>(spriteA);
 		log("A is other hero");
 		otherHero->sufferDamage(meSkill->getDamagePoint());
-		//å¦‚æœæ•Œæ–¹å•ä½æ­»äº¡
-		//ç»™æˆ‘æ–¹è‹±é›„åŠ ç»éªŒå’Œé‡‘å¸
+		//Èç¹ûµĞ·½µ¥Î»ËÀÍö
+		//¸øÎÒ·½Ó¢ĞÛ¼Ó¾­ÑéºÍ½ğ±Ò
 		if (otherHero->getHealthPoint() <= 0)
 		{
 			this->changeMeExp(HeroExp);
 			this->changeMeMoney(HeroMoney);
 		}
-		//å¦‚æœæŠ€èƒ½ä¸ºæ‰“ä¸­å°±æ¶ˆå¤±ï¼Œåˆ™è®©æŠ€èƒ½æ¶ˆå¤±
+		//Èç¹û¼¼ÄÜÎª´òÖĞ¾ÍÏûÊ§£¬ÔòÈÃ¼¼ÄÜÏûÊ§
 		if (meSkill->shouldRemove())
 		{
 			meSkill->removeFromParent();
 			return false;
 		}
 	}
+
+
 	return true;
 }
+
 void GameScene::heroMove(Hero* target)
 {
 	Vec2 touchPosition = target->getTouchPoint();
 	Vec2 heroPosition = target->getPosition();
-	//è‹±é›„å‘è¯¥ç‚¹è¿åŠ¨
-	//è·å–è‹±é›„ç›®å‰çš„é€Ÿåº¦
+	//Ó¢ĞÛÏò¸ÃµãÔË¶¯
+	//»ñÈ¡Ó¢ĞÛÄ¿Ç°µÄËÙ¶È
 	float heroSpeed = target->getMoveSpeed();
 	//10
 	Vec2 relativePosition = heroPosition - touchPosition;
-	//è·å–ç›¸å¯¹ä½ç½®çš„æ¨¡é•¿
+	//»ñÈ¡Ïà¶ÔÎ»ÖÃµÄÄ£³¤
 	float distanceSquare = relativePosition.x*relativePosition.x + relativePosition.y*relativePosition.y;
 	float distance = sqrt(distanceSquare);
-	//è®¡ç®—è¿åŠ¨åˆ°è¯¥ç‚¹æ‰€éœ€çš„æ—¶é—´
+	//¼ÆËãÔË¶¯µ½¸ÃµãËùĞèµÄÊ±¼ä
 	float timeNeeded = distance / heroSpeed;
 
-	//å…ˆåœæ­¢å½“å‰çš„è¿åŠ¨åŠ¨ä½œï¼Œå¦åˆ™ä¼šé€ æˆè¿åŠ¨çš„å åŠ 
+	//ÏÈÍ£Ö¹µ±Ç°µÄÔË¶¯¶¯×÷£¬·ñÔò»áÔì³ÉÔË¶¯µÄµş¼Ó
 	target->stopActionByTag(HeroMove);
 
-	//å®šä¹‰ä¸€ä¸ªè¿åŠ¨åŠ¨ä½œmoveActionï¼Œè¿åŠ¨åˆ°æŒ‡å®šåæ ‡touchPosition
+	//¶¨ÒåÒ»¸öÔË¶¯¶¯×÷moveAction£¬ÔË¶¯µ½Ö¸¶¨×ø±êtouchPosition
 	FiniteTimeAction * moveAction = (FiniteTimeAction*)target->runAction(MoveTo::create(timeNeeded, touchPosition));
-	//ç»™è¿™ä¸ªåŠ¨ä½œè®¾ç½®tag ----> HeroMove
+	//¸øÕâ¸ö¶¯×÷ÉèÖÃtag ----> HeroMove
 	moveAction->setTag(HeroMove);
 }
 
@@ -962,7 +1045,7 @@ void GameScene::takeHouyiNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Ve
 	HouyiNormalAttack* houyiNormalAttack = HouyiNormalAttack::createTheAttack(hero);
 	auto body = PhysicsBody::createBox(houyiNormalAttack->getContentSize());
 	houyiNormalAttack->setPhysicsBody(body);
-	//åœæ­¢å½“å‰çš„ç§»åŠ¨è¿›è¡Œæ™®æ”»
+	//Í£Ö¹µ±Ç°µÄÒÆ¶¯½øĞĞÆÕ¹¥
 	if (isMe)
 	{
 		this->addChild(houyiNormalAttack, 200, MeSkillTag);
@@ -978,17 +1061,17 @@ void GameScene::takeHouyiNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Ve
 		body->setCollisionBitmask(OTHERSKILLCOLLISION);
 	}
 	houyiNormalAttack->takeHouyiNormalAttack(startPoint, targetPoint);
-	//æŠŠæ™®æ”»æ˜¾ç¤ºåœ¨gamesceneåœºæ™¯ä¸­
-	//å½“æ™®æ”»ç²¾çµè¿åŠ¨ä¸€å®šè·ç¦»æ—¶åˆ é™¤ï¼Œè¯¥åŠŸèƒ½åœ¨HouyiNormalAttackç±»çš„updateå‡½æ•°ä¸­å®ç°
-	//é‡ç½®å¹³Aç­‰å¾…æ—¶é—´
+	//°ÑÆÕ¹¥ÏÔÊ¾ÔÚgamescene³¡¾°ÖĞ
+	//µ±ÆÕ¹¥¾«ÁéÔË¶¯Ò»¶¨¾àÀëÊ±É¾³ı£¬¸Ã¹¦ÄÜÔÚHouyiNormalAttackÀàµÄupdateº¯ÊıÖĞÊµÏÖ
+	//ÖØÖÃÆ½AµÈ´ıÊ±¼ä
 }
 
 void GameScene::takeHouyiWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
 {
-	//å…ˆå¼„ä»–åä¸ªç®­å¤´
-					//ä¿®æ”¹ç®­å¤´æ•°è®°å¾—ä¿®æ”¹forå¾ªç¯
+	//ÏÈÅªËûÊ®¸ö¼ıÍ·
+					//ĞŞ¸Ä¼ıÍ·Êı¼ÇµÃĞŞ¸ÄforÑ­»·
 	HouyiWSkill* houyiWSkill[HouyiWSkillArrowNumber];
-	//ä¸­é—´çš„ç®­å¤´å•ç‹¬åˆ›å»º
+	//ÖĞ¼äµÄ¼ıÍ·µ¥¶À´´½¨
 	houyiWSkill[0] = HouyiWSkill::createHouyiWSkill(hero);
 	houyiWSkill[0]->takeHouyiWSkill(startPoint, targetPoint, 0);
 	PhysicsBody* body[HouyiWSkillArrowNumber];
@@ -1009,7 +1092,7 @@ void GameScene::takeHouyiWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 tar
 		body[0]->setCollisionBitmask(OTHERSKILLCOLLISION);
 	}
 
-	//ä¸¤è¾¹çš„ç®­å¤´æˆå¯¹åˆ›å»º
+	//Á½±ßµÄ¼ıÍ·³É¶Ô´´½¨
 	for (int i = 1; i < HouyiWSkillArrowNumber; i += 2)
 	{
 		houyiWSkill[i] = HouyiWSkill::createHouyiWSkill(hero);
@@ -1029,7 +1112,7 @@ void GameScene::takeHouyiWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 tar
 			body[i]->setCategoryBitmask(OTHERSKILLCATEGORY);
 			body[i]->setCollisionBitmask(OTHERSKILLCOLLISION);
 		}
-		houyiWSkill[i]->takeHouyiWSkill(startPoint, targetPoint, i * 3.14 / 30);//æ ¹æ®å¼§åº¦åˆ¶
+		houyiWSkill[i]->takeHouyiWSkill(startPoint, targetPoint, i * 3.14 / 30);//¸ù¾İ»¡¶ÈÖÆ
 
 		houyiWSkill[i + 1] = HouyiWSkill::createHouyiWSkill(hero);
 		body[i + 1] = PhysicsBody::createBox(houyiWSkill[i + 1]->getContentSize());
@@ -1048,10 +1131,10 @@ void GameScene::takeHouyiWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 tar
 			body[i + 1]->setCategoryBitmask(OTHERSKILLCATEGORY);
 			body[i + 1]->setCollisionBitmask(OTHERSKILLCOLLISION);
 		}
-		houyiWSkill[i + 1]->takeHouyiWSkill(startPoint, targetPoint, -i * 3.14 / 30);//æ ¹æ®å¼§åº¦åˆ¶
+		houyiWSkill[i + 1]->takeHouyiWSkill(startPoint, targetPoint, -i * 3.14 / 30);//¸ù¾İ»¡¶ÈÖÆ
 	}
 
-	//å½“ç²¾çµè¿åŠ¨ä¸€å®šè·ç¦»æ—¶åˆ é™¤ï¼Œè¯¥åŠŸèƒ½åœ¨HouyiNormalAttackç±»çš„updateå‡½æ•°ä¸­å®ç°
+	//µ±¾«ÁéÔË¶¯Ò»¶¨¾àÀëÊ±É¾³ı£¬¸Ã¹¦ÄÜÔÚHouyiNormalAttackÀàµÄupdateº¯ÊıÖĞÊµÏÖ
 }
 
 void GameScene::takeHouyiESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
@@ -1077,12 +1160,12 @@ void GameScene::takeHouyiESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 tar
 	}
 	log("%d", bigBird->getTag());
 	log("%d", body->getContactTestBitmask());
-	//æŠŠå¤§æ‹›æ˜¾ç¤ºåœ¨gamesceneåœºæ™¯ä¸­
+	//°Ñ´óÕĞÏÔÊ¾ÔÚgamescene³¡¾°ÖĞ
 
-	//å½“å¤§æ‹›ç²¾çµè¿åŠ¨ä¸€å®šè·ç¦»æ—¶åˆ é™¤ï¼Œè¯¥åŠŸèƒ½åœ¨HouyiESkillç±»çš„updateå‡½æ•°ä¸­å®ç°
+	//µ±´óÕĞ¾«ÁéÔË¶¯Ò»¶¨¾àÀëÊ±É¾³ı£¬¸Ã¹¦ÄÜÔÚHouyiESkillÀàµÄupdateº¯ÊıÖĞÊµÏÖ
 }
 
-void GameScene::takeYaseNormalAttack(Hero* hero,bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeYaseNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
 {
 	YaseNormalAttack* yaseNormalAttack = YaseNormalAttack::createTheAttack(hero);
 	auto body = PhysicsBody::createBox(yaseNormalAttack->getContentSize());
@@ -1100,27 +1183,34 @@ void GameScene::takeYaseNormalAttack(Hero* hero,bool isMe, Vec2 startPoint, Vec2
 		body->setContactTestBitmask(OTHERSKILLTEST);
 		body->setCategoryBitmask(OTHERSKILLCATEGORY);
 		body->setCollisionBitmask(OTHERSKILLCOLLISION);
-	}	
+	}
 	yaseNormalAttack->takeYaseNormalAttack(startPoint, targetPoint);
-	//æŠŠæ™®æ”»æ˜¾ç¤ºåœ¨gamesceneåœºæ™¯ä¸­
-	//å½“æ™®æ”»ç²¾çµè¿åŠ¨ä¸€å®šè·ç¦»æ—¶åˆ é™¤ï¼Œè¯¥åŠŸèƒ½åœ¨HouyiNormalAttackç±»çš„updateå‡½æ•°ä¸­å®ç°
+	//°ÑÆÕ¹¥ÏÔÊ¾ÔÚgamescene³¡¾°ÖĞ
+	//µ±ÆÕ¹¥¾«ÁéÔË¶¯Ò»¶¨¾àÀëÊ±É¾³ı£¬¸Ã¹¦ÄÜÔÚHouyiNormalAttackÀàµÄupdateº¯ÊıÖĞÊµÏÖ
 }
 
 void GameScene::takeYaseWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
 {
 	YaseWSkill* yaseWSkill = YaseWSkill::createYaseWSkill(hero);
-	auto body = PhysicsBody::createBox(yaseWSkill->getContentSize());
+	Vec2 verts[] = {
+		Vec2(0,0),
+		Vec2(YaseWSkillRange,0),
+		Vec2(YaseWSkillRange,-2),
+		Vec2(0,-2)
+	};
+	auto body = PhysicsBody::create();
+	body->addShape(PhysicsShapePolygon::create(verts, 4));
 	yaseWSkill->setPhysicsBody(body);
 	if (isMe)
 	{
-		this->addChild(yaseWSkill, 200, MeSkillTag);
+		this->getChildByTag(MeHeroTag)->addChild(yaseWSkill, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
 		body->setCategoryBitmask(MESKILLCATEGORY);
 		body->setCollisionBitmask(MESKILLCOLLISION);
 	}
 	else
 	{
-		this->addChild(yaseWSkill, 200, OtherSkillTag);
+		this->getChildByTag(this->getEnermyType())->addChild(yaseWSkill, 200, OtherSkillTag);
 		body->setContactTestBitmask(OTHERSKILLTEST);
 		body->setCategoryBitmask(OTHERSKILLCATEGORY);
 		body->setCollisionBitmask(OTHERSKILLCOLLISION);
@@ -1147,44 +1237,45 @@ void GameScene::takeYaseESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targ
 		body->setCategoryBitmask(OTHERSKILLCATEGORY);
 		body->setCollisionBitmask(OTHERSKILLCOLLISION);
 	}
-	yaseESkill->takeYaseESkill(startPoint,targetPoint);
+	yaseESkill->takeYaseESkill(startPoint, targetPoint);
 }
-void GameScene::wulawula(float dt)
-{
-	//å·±æ–¹è¿‘æˆ˜å…µ
-	auto meJinzhanSoldier = JinzhanSoldier::create(MeSoldier);
-	meJinzhanSoldier->setPosition(500, 500);
-	meJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
-	this->addChild(meJinzhanSoldier, 200, MeJinzhanSoldierTag);
-	meJinzhanSoldier->scheduleUpdate();
-	//æ•Œæ–¹è¿‘æˆ˜å…µ
-	auto otherJinzhanSoldier = JinzhanSoldier::create(OtherSoldier);
-	otherJinzhanSoldier->setPosition(900, 900);
-	otherJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
-	this->addChild(otherJinzhanSoldier, 200, OtherJinzhanSoldierTag);
-	otherJinzhanSoldier->scheduleUpdate();
-	//å·±æ–¹è¿œç¨‹å…µ
-	auto meYuanchengSoldier = YuanchengSoldier::create(MeSoldier);
-	meYuanchengSoldier->setPosition(500, 500);
-	meYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
-	this->addChild(meYuanchengSoldier, 200, MeYuanchengSoldierTag);
-	meYuanchengSoldier->scheduleUpdate();
-	//æ•Œæ–¹è¿œç¨‹å…µ
-	auto otherYuanchengSoldier = YuanchengSoldier::create(OtherSoldier);
-	otherYuanchengSoldier->setPosition(900, 900);
-	otherYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
-	this->addChild(otherYuanchengSoldier, 200, OtherYuanchengSoldierTag);
-	otherYuanchengSoldier->scheduleUpdate();
-	//å·±æ–¹ç‚®è½¦å…µ
-	auto mePaocheSoldier = PaocheSoldier::create(MeSoldier);
-	mePaocheSoldier->setPosition(500, 500);
-	mePaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
-	this->addChild(mePaocheSoldier, 200, MePaocheSoldierTag);
-	mePaocheSoldier->scheduleUpdate();
-	//æ•Œæ–¹ç‚®è½¦å…µ
-	auto otherPaocheSoldier = PaocheSoldier::create(OtherSoldier);
-	otherPaocheSoldier->setPosition(900, 900);
-	otherPaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
-	this->addChild(otherPaocheSoldier, 200, OtherPaocheSoldierTag);
-	otherPaocheSoldier->scheduleUpdate();
-}
+
+//void GameScene::wulawula(float dt)
+//{
+//	//¼º·½½üÕ½±ø
+//	auto meJinzhanSoldier = JinzhanSoldier::create(MeSoldier);
+//	meJinzhanSoldier->setPosition(500, 500);
+//	meJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
+//	this->addChild(meJinzhanSoldier, 200, MeJinzhanSoldierTag);
+//	meJinzhanSoldier->scheduleUpdate();
+//	//µĞ·½½üÕ½±ø
+//	auto otherJinzhanSoldier = JinzhanSoldier::create(OtherSoldier);
+//	otherJinzhanSoldier->setPosition(900, 900);
+//	otherJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+//	this->addChild(otherJinzhanSoldier, 200, OtherJinzhanSoldierTag);
+//	otherJinzhanSoldier->scheduleUpdate();
+//	//¼º·½Ô¶³Ì±ø
+//	auto meYuanchengSoldier = YuanchengSoldier::create(MeSoldier);
+//	meYuanchengSoldier->setPosition(500, 500);
+//	meYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
+//	this->addChild(meYuanchengSoldier, 200, MeYuanchengSoldierTag);
+//	meYuanchengSoldier->scheduleUpdate();
+//	//µĞ·½Ô¶³Ì±ø
+//	auto otherYuanchengSoldier = YuanchengSoldier::create(OtherSoldier);
+//	otherYuanchengSoldier->setPosition(900, 900);
+//	otherYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+//	this->addChild(otherYuanchengSoldier, 200, OtherYuanchengSoldierTag);
+//	otherYuanchengSoldier->scheduleUpdate();
+//	//¼º·½ÅÚ³µ±ø
+//	auto mePaocheSoldier = PaocheSoldier::create(MeSoldier);
+//	mePaocheSoldier->setPosition(500, 500);
+//	mePaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(AIHeroTag)));
+//	this->addChild(mePaocheSoldier, 200, MePaocheSoldierTag);
+//	mePaocheSoldier->scheduleUpdate();
+//	//µĞ·½ÅÚ³µ±ø
+//	auto otherPaocheSoldier = PaocheSoldier::create(OtherSoldier);
+//	otherPaocheSoldier->setPosition(900, 900);
+//	otherPaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+//	this->addChild(otherPaocheSoldier, 200, OtherPaocheSoldierTag);
+//	otherPaocheSoldier->scheduleUpdate();
+//}

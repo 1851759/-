@@ -3,6 +3,7 @@
 #include "YaseHero.h"
 #include"YaseNormalAttack.h"
 #include"YaseESkill.h"
+USING_NS_CC;
 
 YaseHero* YaseHero::create()
 {
@@ -70,6 +71,7 @@ bool YaseHero::init()
 		return false;
 	}
 	this->setScale(0.5);
+	this->createBlood();
 	return true;
 }
 
@@ -127,4 +129,26 @@ void YaseHero::AIAction(float dt)
 			this->setPosition(this->getPosition() + this->getMoveSpeed() / 60 * standardDistance);
 		}
 	}
+}
+
+void YaseHero::createBlood()
+{
+	Sprite* bar = Sprite::create("Bar.png");
+	bar->setPosition(0, 100);
+	this->addChild(bar, 200);
+	Sprite* blood = Sprite::create("Blood.png");
+	ProgressTimer* pro = ProgressTimer::create(blood);
+	pro->setType(ProgressTimer::Type::BAR);
+	pro->setPosition(0, 100);
+	pro->setMidpoint(Vec2(0, 0.5));
+	pro->setBarChangeRate(Vec2(1, 0));
+	pro->setTag(bloodbar);
+	this->addChild(pro, 200);
+	this->schedule(schedule_selector(YaseHero::checkBlood), 0.01f);
+}
+
+void YaseHero::checkBlood(float dt)
+{
+	auto pro = (ProgressTimer*)this->getChildByTag(bloodbar);
+	pro->setPercentage(this->getHealthPoint()/this->getMaxHealthPoint()*100.0);
 }

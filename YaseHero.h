@@ -20,6 +20,7 @@
 
 #define YaseWSkillRange 200.0
 #define YaseWSkillRollSpeed 3.0
+#define YaseWSkillRollNumber 3.0
 #define YaseWSkillDamage 30
 #define YaseWSkillCD 10.0
 #define YaseWSkillLastTime 3.0
@@ -55,6 +56,7 @@ class YaseHero : public Hero
 	//设定英雄的名字
 	//亚瑟的名字为'Y'
 	char _heroName;
+	int bloodbar;
 
 public:
 
@@ -67,6 +69,10 @@ public:
 	void AIcontrol(Hero* hero);
 
 	void AIAction(float dt);
+
+	void createBlood();
+
+	void checkBlood(float dt);
 };
 
 

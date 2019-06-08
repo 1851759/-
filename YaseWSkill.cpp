@@ -3,8 +3,6 @@
 #include"YaseHero.h"
 #include"YaseWSkill.h"
 #include"GameScene.h"
-#include"SimpleAudioEngine.h"
-
 
 YaseWSkill* YaseWSkill::createYaseWSkill(Hero* hero)
 {
@@ -15,7 +13,7 @@ YaseWSkill* YaseWSkill::createYaseWSkill(Hero* hero)
 		roll->setCanTakeDamage(true);
 		roll->setIfRemoveWhenDamage(false);
 		roll->autorelease();
-		roll->setScale(0.8);
+		roll->setScale(2.8);
 		return roll;
 	}
 	CC_SAFE_DELETE(roll);
@@ -25,13 +23,13 @@ YaseWSkill* YaseWSkill::createYaseWSkill(Hero* hero)
 void YaseWSkill::takeYaseWSkill(Hero* hero)
 {
 	isRoll = true;
-	this->setPosition(hero->getPosition());
+	this->setPosition(cocos2d::Vec2::ZERO);
 	/*this->setOriginPosition(hero->getPosition());*/
-	cocos2d::RotateTo* rotateTo = cocos2d::RotateTo::create(2.0, 1080);
+	cocos2d::RotateTo* rotateTo = cocos2d::RotateTo::create(YaseWSkillLastTime, YaseWSkillRollNumber * 360);
 	this->runAction(rotateTo);
 	this->unscheduleUpdate();
 	this->scheduleUpdate();
-	this->scheduleOnce(schedule_selector(YaseWSkill::stop), 2);
+	this->scheduleOnce(schedule_selector(YaseWSkill::stop), YaseWSkillLastTime);
 }
 
 void YaseWSkill::update(float dt)

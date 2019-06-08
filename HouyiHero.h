@@ -55,7 +55,7 @@ class HouyiHero : public Hero
 	//设定英雄的名字
 	//后羿的名字为'H'
 	char _heroName;
-
+	int bloodbar;
 
 public:
 
@@ -68,6 +68,10 @@ public:
 	void AIcontrol(Hero* hero);
 
 	void AIAction(float dt);
+
+	void createBlood();
+
+	void checkBlood(float dt);
 };
 
 

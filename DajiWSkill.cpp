@@ -1,32 +1,32 @@
 #include "cocos2d.h"
 
-#include "HouyiHero.h"
-#include "HouyiESkill.h"
+#include "DajiHero.h"
+#include "DajiWSkill.h"
 
 #include "SimpleAudioEngine.h"
 
-HouyiESkill* HouyiESkill::createHouyiESkill(Hero* hero)
+DajiWSkill* DajiWSkill::createDajiWSkill(Hero* hero)
 {
-	HouyiESkill* bigBird = new HouyiESkill();
-	if (bigBird&&bigBird->initWithFile("HouyiESkill.png"))
+	DajiWSkill* bigLove = new DajiWSkill();
+	if (bigLove&&bigLove->initWithFile("DajiWSkill.png"))
 	{
-		bigBird->setCanTakeDamage(true);
-		bigBird->setIfRemoveWhenDamage(true);
-		bigBird->setDamagePoint(HouyiESkillDamage * hero->getESkillLevel());
-		bigBird->autorelease();
-		bigBird->setScale(0.2);
-		return bigBird;
+		bigLove->setCanTakeDamage(true);
+		bigLove->setIfRemoveWhenDamage(true);
+		bigLove->setDamagePoint(DajiWSkillDamage * hero->getWSkillLevel());
+		bigLove->autorelease();
+		bigLove->setScale(0.05);
+		return bigLove;
 	}
-	CC_SAFE_DELETE(bigBird);
+	CC_SAFE_DELETE(bigLove);
 	return nullptr;
 }
 
-void HouyiESkill::takeHouyiESkill(HouyiHero* hero)
+void DajiWSkill::takeDajiWSkill(DajiHero* hero)
 {
 	cocos2d::Vec2 touchPoint = hero->getTouchPoint();
 	cocos2d::Vec2 heroPoint = hero->getPosition();
-	//	cocos2d::log("toouchPoint %f %f ", touchPoint.x, touchPoint.y);
-	//	cocos2d::log("heroPoint %f %f ", heroPoint.x, heroPoint.y);
+	//cocos2d::log("toouchPoint %f %f ", touchPoint.x, touchPoint.y);
+	//cocos2d::log("heroPoint %f %f ", heroPoint.x, heroPoint.y);
 	this->setPosition(heroPoint);
 	this->setOriginPosition(heroPoint);
 	//获取模长不为1的方向向量
@@ -48,7 +48,7 @@ void HouyiESkill::takeHouyiESkill(HouyiHero* hero)
 	this->scheduleUpdate();
 }
 
-void HouyiESkill::takeHouyiESkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint)
+void DajiWSkill::takeDajiWSkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint)
 {
 	this->setPosition(startPoint);
 	this->setOriginPosition(startPoint);
@@ -72,11 +72,11 @@ void HouyiESkill::takeHouyiESkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 target
 }
 
 
-void HouyiESkill::update(float dt)
+void DajiWSkill::update(float dt)
 {
 	///这个是箭头移动速度//////////////////// ↓
 	/////////////////////////////////////// ↓
-	this->setPosition(this->getPosition() + HouyiESkillMoveSpeed * this->getArrowMoveDirection());
+	this->setPosition(this->getPosition() + DajiWSkillMoveSpeed * this->getArrowMoveDirection());
 
 	/////////////////////////////////////////
 	cocos2d::Vec2 distance = this->getPosition() - this->getOriginPosition();
@@ -85,7 +85,7 @@ void HouyiESkill::update(float dt)
 
 	//这个是箭头移动的最大距离////////// ↓
 	////////////////////////////////  ↓
-	cocos2d::Vec2 standardAttackRange(HouyiESkillRange, 0);
+	cocos2d::Vec2 standardAttackRange(DajiWSkillRange, 0);
 	float standardLength = standardAttackRange.x;
 
 

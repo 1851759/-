@@ -3,7 +3,7 @@
 #include "HouyiHero.h"
 #include "HouyiNormalAttack.h"
 #include "HouyiESkill.h"
-
+USING_NS_CC;
 
 HouyiHero* HouyiHero::create()
 {
@@ -72,6 +72,7 @@ bool HouyiHero::init()
 		return false;
 	}
 	this->setScale(0.2);
+	this->createBlood();
 	return true;
 }
 
@@ -106,7 +107,7 @@ void HouyiHero::buffUpdate(float dt)
 		houyiBuff->setAnchorPoint(cocos2d::Vec2(0, 0));
 		this->addChild(houyiBuff, 200, HouyiBuffTag);
 	}
-	//cocos2d::log("attackspeed %f", this->getAttackSpeed());
+	cocos2d::log("attackspeed %f", this->getAttackSpeed());
 }
 
 //ÊµÏÖAI
@@ -146,7 +147,27 @@ void HouyiHero::AIAction(float dt)
 
 }
 
+void HouyiHero::createBlood()
+{
+	Sprite* bar = Sprite::create("Bar.png");
+	bar->setPosition(0, 100);
+	this->addChild(bar, 200);
+	Sprite* blood = Sprite::create("Blood.png");
+	ProgressTimer* pro = ProgressTimer::create(blood);
+	pro->setType(ProgressTimer::Type::BAR);
+	pro->setPosition(0, 100);
+	pro->setMidpoint(Vec2(0, 0.5));
+	pro->setBarChangeRate(Vec2(1, 0));
+	pro->setTag(bloodbar);
+	this->addChild(pro, 200);
+	this->schedule(schedule_selector(HouyiHero::checkBlood), 0.01f);
+}
 
+void HouyiHero::checkBlood(float dt)
+{
+	auto pro = (ProgressTimer*)this->getChildByTag(bloodbar);
+	pro->setPercentage(this->getHealthPoint()/this->getMaxHealthPoint()*100.0);
+}
 
 
 
