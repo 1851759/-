@@ -72,7 +72,7 @@ bool YaseHero::init()
 		return false;
 	}
 	this->createBlood();
-	this->setScale(0.5);
+	this->setScale(0.3);
 	return true;
 }
 

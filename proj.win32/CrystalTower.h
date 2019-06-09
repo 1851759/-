@@ -1,7 +1,6 @@
 #ifndef __CRYSTALTOWER__
 #define __CRYSTALTOWER__
 #include "cocos2d.h"
-#include "Tower.h"
 #include "Hero.h"
 #include "GameScene.h"
 #include "HelloWorldScene.h"

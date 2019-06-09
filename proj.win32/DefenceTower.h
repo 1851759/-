@@ -1,7 +1,6 @@
 #ifndef __DEFENCETOWER__
 #define __DEFENCETOWER__
 #include "cocos2d.h"
-#include "Tower.h"
 #include"Hero.h"
 
 

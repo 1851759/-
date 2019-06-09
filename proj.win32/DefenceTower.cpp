@@ -81,7 +81,6 @@ void DefenceTower::update(float dt)
 //ÊµÏÖAI
 void DefenceTower::AIcontrol(Hero* hero)
 {
-
 	this->setOtherHero(hero);
 	this->schedule(schedule_selector(DefenceTower::AIAction), 1.0 / 60.0f);
 }

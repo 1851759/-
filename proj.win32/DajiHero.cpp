@@ -71,6 +71,7 @@ bool DajiHero::init()
 		return false;
 	}
 	this->setScale(0.2);
+	this->createBlood();
 	return true;
 }
 

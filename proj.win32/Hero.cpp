@@ -3,9 +3,10 @@
 USING_NS_CC;
 //定义两方英雄复活点
 //注意此处用数字表示///////////////////////////////////////////////////////////////////////////////////////////////////
-cocos2d::Vec2 Player1Reborn(250, 250);
-cocos2d::Vec2 Player2Reborn(1300, 800);
+cocos2d::Vec2 Player1Reborn(650, 350);
+cocos2d::Vec2 Player2Reborn(1050, 650);
 
+int n_RedDeath = 0, n_BlueDeath = 0;
 bool Hero::init()
 {
 	//下边的if里搞出了英雄的图片
@@ -105,10 +106,12 @@ void Hero::update(float dt)
 		this->setHealthPoint(this->getMaxHealthPoint());
 		if (this->getFlag() == Player1)
 		{
+			n_RedDeath++;
 			this->setPosition(Player1Reborn);
 		}
 		if (this->getFlag() == Player2)
 		{
+			n_BlueDeath++;
 			this->setPosition(Player2Reborn);
 		}
 	}
@@ -134,6 +137,7 @@ void Hero::createBlood()
 void Hero::checkBlood(float dt)
 {
 	auto pro = (ProgressTimer*)this->getChildByTag(bloodbar);
+	log("HP %f", this->getHealthPoint());
 	pro->setPercentage(this->getHealthPoint() / this->getMaxHealthPoint()*100.0);
 }
 

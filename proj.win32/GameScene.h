@@ -83,7 +83,7 @@ class GameScene :public cocos2d::Layer
 	int _enermyType;
 	int _meFlag;
 
-	int _meMoney;
+	int _meMoney,_meMoney_moment;
 	int _meExp;
 	int _otherMoney;
 	int _otherExp;
@@ -91,7 +91,8 @@ class GameScene :public cocos2d::Layer
 	cocos2d::TMXTiledMap *_tileMap;
 	cocos2d::TMXLayer *_collidable;
 	cocos2d::Vec2 position_now;
-
+	int RedScore=9999, BlueScore=9998;                 //Tag
+	int moneytag = 8888;
 	
 public:
 
@@ -193,7 +194,8 @@ public:
 	//敌方装备更新
 	void EnemyEquipUpdate(float dt);
 
-	
+	//判断战绩
+	void Zhanji(float dt);
 };
 
 #endif

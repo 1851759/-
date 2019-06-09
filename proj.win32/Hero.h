@@ -293,7 +293,7 @@ public:
 };
 
 
-
+extern int n_RedDeath, n_BlueDeath;
 
 
 #endif // !__HERO__

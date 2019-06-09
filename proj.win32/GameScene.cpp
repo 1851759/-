@@ -36,11 +36,11 @@ USING_NS_CC;
 Vec2 position_last = Vec2(0, 0);
 //英雄起始位置
 //注意此处用数字表示////////////////////////////////////////////////////////////////////////////////////////////////////
-Vec2 Player1StartPosition(250, 250);
-Vec2 Player2StartPosition(1350, 850);
+Vec2 Player1StartPosition(650, 350);
+Vec2 Player2StartPosition(1050, 650);
 Vec2 HeroPosition;
 char *AboutKeyboardMessage;
-char JustAboutKeyboard[SIZE] = "Q";
+char JustAboutKeyboard[SIZE] = "Q0/0/";
 
 GameScene* GameScene::create(char meName, char otherName, bool isAI)
 {
@@ -481,28 +481,32 @@ bool GameScene::init()
 
 	//双方防御塔
 	auto player1Tower = DefenceTower::create(Player1);
-	player1Tower->setPosition(Player1StartPosition + Vec2(100, 100));
+	player1Tower->setPosition(560,310);
 	////////////////////////////////////////////////////playerflag之和是601
 	player1Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(Player2)));
 	player1Tower->scheduleUpdate();
 	this->addChild(player1Tower, 200, MeTowerTag);
+	player1Tower->setScale(0.8);
 
 	auto player2Tower = DefenceTower::create(Player2);
-	player2Tower->setPosition(Player2StartPosition - Vec2(100, 100));
+	player2Tower->setPosition(1160,695);
 	player2Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(Player1)));
 	player2Tower->scheduleUpdate();
 	this->addChild(player2Tower, 200, OtherTowerTag);
+	player2Tower->setScale(0.8);
 
 	//双方水晶
 	auto player1Crystal = CrystalTower::create(Player1);
-	player1Crystal->setPosition(Player1StartPosition);
+	player1Crystal->setPosition(380,165);
 	player1Crystal->scheduleUpdate();
 	this->addChild(player1Crystal, 200, MeCrystalTag);
+	player1Crystal->setScale(0.8);
 
 	auto player2Crystal = CrystalTower::create(Player2);
-	player2Crystal->setPosition(Player2StartPosition);
+	player2Crystal->setPosition(1285,795);
 	player2Crystal->scheduleUpdate();
 	this->addChild(player2Crystal, 200, OtherCrystalTag);
+	player2Crystal->setScale(0.8);
 	//设置返回初始场景的菜单
 	MenuItemFont::setFontName("Arial");
 	MenuItemFont::setFontSize(20);
@@ -529,6 +533,31 @@ MenuItemImage *shop_lanshuijing = MenuItemImage::create("shop_lanshuijing.png", 
 shop_lanshuijing->setPosition(Vec2(0,-75));
 Menu *menu = Menu::create(shop_xie, shop_shoutao,shop_changgong,shop_kaijia,shop_hongshuijing,shop_lanshuijing, NULL);
 this->addChild(menu,1);*/
+
+//左上角战绩
+	auto score_blue = LabelTTF::create("0 ", "Arial", 36);
+	this->addChild(score_blue, 2);
+	score_blue->setPosition(80, 850);
+	score_blue->setTag(BlueScore);
+	auto vs = LabelTTF::create("vs", "Arial", 24);
+	this->addChild(vs, 2);
+	vs->setPosition(122, 850);
+	auto score_red = LabelTTF::create("0 ", "Arial", 36);
+	this->addChild(score_red, 2);
+	score_red->setPosition(150, 850);
+	score_red->setTag(RedScore);
+
+	this->schedule(schedule_selector(GameScene::Zhanji), 0.001f);
+
+	//金币
+	auto gold = LabelTTF::create("Gold:", "Arial", 18);
+	gold->setPosition(Vec2(1290, 20));
+	this->addChild(gold, 2);
+	auto num = LabelTTF::create(" ", "Arial", 18);
+	num->setPosition(Vec2(1330, 20));
+	this->addChild(num, 2);
+	//_meMoney_moment = _meMoney*100;
+	this->setTag(moneytag);
 
 	this->schedule(schedule_selector(GameScene::watchMeAndOther), 1.0 / 60.0);
 	this->schedule(schedule_selector(GameScene::wulawula), WulaWulaCD);
@@ -757,6 +786,12 @@ void GameScene::watchMeAndOther(float dt)
 			n--;
 		}
 	}
+	this->removeChildByTag(moneytag);
+	//_meMoney_moment = _meMoney*100;
+	cocos2d::__String* m = cocos2d::__String::createWithFormat("%d", _meMoney);
+	auto mm = LabelTTF::create(m->getCString(), "Arial", 18);
+	mm->setPosition(1330, 20);
+	this->addChild(mm, 2, moneytag);
 }
 
 //by 王文政 2019年5月20日
@@ -1802,5 +1837,21 @@ void GameScene::GetAndMove(float dt)
 	}
 }
 
+void GameScene::Zhanji(float dt)
+{
+	//蓝色方战绩
+	this->removeChildByTag(BlueScore);
+	cocos2d::__String* m1 = cocos2d::__String::createWithFormat("%d", n_BlueDeath);
+	auto mm1 = LabelTTF::create(m1->getCString(), "Arial", 36);
+	mm1->setPosition(80, 850);
+	this->addChild(mm1, 2, BlueScore);
+
+	//红色方战绩
+	this->removeChildByTag(RedScore);
+	cocos2d::__String* m2 = cocos2d::__String::createWithFormat("%d", n_RedDeath);
+	auto mm2 = LabelTTF::create(m2->getCString(), "Arial", 36);
+	mm2->setPosition(150, 850);
+	this->addChild(mm2, 2, RedScore);
+}
 
 

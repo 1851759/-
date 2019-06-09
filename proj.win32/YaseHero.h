@@ -19,11 +19,11 @@
 #define YaseQSkillAfterShake 1.0
 
 #define YaseWSkillRange 200.0
-#define YaseWSkillRollSpeed 3.0
+#define YaseWSkillRollSpeed 1.0//3.0
 #define YaseWSkillDamage 30
 #define YaseWSkillCD 10.0
-#define YaseWSkillLastTime 3.0
-#define YaseWSkillRollNumber 20
+#define YaseWSkillLastTime 5.0//3.0
+#define YaseWSkillRollNumber 10//20
 #define YaseWSkillAfterShake 1.0
 
 #define YaseESkillRange 50.0
