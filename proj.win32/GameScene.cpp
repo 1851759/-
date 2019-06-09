@@ -44,7 +44,7 @@ char JustAboutKeyboard[SIZE] = "Q";
 
 GameScene* GameScene::create(char meName, char otherName, bool isAI)
 {
-//	log("create before if");
+	//	log("create before if");
 	GameScene* gameScene = new GameScene();
 
 	gameScene->setMeHeroTag(meName);
@@ -110,7 +110,7 @@ void GameScene::onEnter()
 
 	//初始化碰撞层
 	_collidable = _tileMap->getLayer("Collidable");
-  
+
 
 	//注册鼠标监听器
 	//使用λ表达式
@@ -137,7 +137,7 @@ void GameScene::onEnter()
 	mouseListener->setSwallowTouches(true);
 	//又是看不懂的玄学一步，通过这步给鼠标监听器绑定英雄的tag/////////////////////////////////    ↓这个就是tag
 	EventDispatcher *mouseDispatcher = Director::getInstance()->getEventDispatcher(); //     ↓
-	mouseDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, getChildByTag(MeHeroTag));
+	mouseDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, getChildByTag(this->getMeFlag()));
 
 	//注册键盘监听器
 	//使用λ表达式
@@ -158,7 +158,7 @@ void GameScene::onEnter()
 
 	//跟鼠标监听看不懂的玄学一步一样，通过这步给鼠标监听器绑定英雄的tag/////////////////////////////    ↓这个就是tag
 	EventDispatcher *keyboardDispatcher = Director::getInstance()->getEventDispatcher();//       ↓
-	keyboardDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, getChildByTag(MeHeroTag));
+	keyboardDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, getChildByTag(this->getMeFlag()));
 
 	//注册物理碰撞监听器
 	auto contactListener = EventListenerPhysicsContact::create();
@@ -225,32 +225,37 @@ bool GameScene::init()
 	{
 		static auto hero = HouyiHero::create();
 		auto body = PhysicsBody::createCircle(hero->getContentSize().width / 2);
-		body->setContactTestBitmask(MEUNITTEST);
-		//log("mehero test mask %d", body->getContactTestBitmask());
-		body->setCategoryBitmask(MEUNITCATEGORY);
-		body->setCollisionBitmask(MEUNITCOLLISION);
 		hero->setPhysicsBody(body);
 		if (!IfAI)
 		{
 			if (ID == 1)
 			{
+				body->setContactTestBitmask(MEUNITTEST);
+				body->setCategoryBitmask(MEUNITCATEGORY);
+				body->setCollisionBitmask(MEUNITCOLLISION);
 				hero->setPosition(Player1StartPosition);
 				hero->setFlag(Player1);
 			}
 			else
 			{
+				body->setContactTestBitmask(OTHERUNITTEST);
+				body->setCategoryBitmask(OTHERUNITCATEGORY);
+				body->setCollisionBitmask(OTHERUNITCOLLISION);
 				hero->setPosition(Player2StartPosition);
 				hero->setFlag(Player2);
 			}
 		}
 		else
 		{
+			body->setContactTestBitmask(MEUNITTEST);
+			body->setCategoryBitmask(MEUNITCATEGORY);
+			body->setCollisionBitmask(MEUNITCOLLISION);
 			hero->setPosition(Player1StartPosition);
 			hero->setFlag(Player1);
 		}
 		hero->setHuman();
-		addChild(hero, 100, MeHeroTag);
-
+		addChild(hero, 100, hero->getFlag());
+		this->setMeFlag(hero->getFlag());
 		//该函数为计算冷却时间和攻击间隔的函数
 		hero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		hero->scheduleUpdate();
@@ -261,7 +266,6 @@ bool GameScene::init()
 		auto hero = YaseHero::create();
 		auto body = PhysicsBody::createCircle(hero->getContentSize().width / 2);
 		body->setContactTestBitmask(MEUNITTEST);
-		log("mehero test mask %d", body->getContactTestBitmask());
 		body->setCategoryBitmask(MEUNITCATEGORY);
 		body->setCollisionBitmask(MEUNITCOLLISION);
 		hero->setPhysicsBody(body);
@@ -269,22 +273,32 @@ bool GameScene::init()
 		{
 			if (ID == 1)
 			{
+				body->setContactTestBitmask(MEUNITTEST);
+				body->setCategoryBitmask(MEUNITCATEGORY);
+				body->setCollisionBitmask(MEUNITCOLLISION);
 				hero->setPosition(Player1StartPosition);
 				hero->setFlag(Player1);
 			}
 			else
 			{
+				body->setContactTestBitmask(OTHERUNITTEST);
+				body->setCategoryBitmask(OTHERUNITCATEGORY);
+				body->setCollisionBitmask(OTHERUNITCOLLISION);
 				hero->setPosition(Player2StartPosition);
 				hero->setFlag(Player2);
 			}
 		}
 		else
 		{
+			body->setContactTestBitmask(MEUNITTEST);
+			body->setCategoryBitmask(MEUNITCATEGORY);
+			body->setCollisionBitmask(MEUNITCOLLISION);
 			hero->setPosition(Player1StartPosition);
 			hero->setFlag(Player1);
 		}
 		hero->setHuman();
-		addChild(hero, 100, MeHeroTag);
+		addChild(hero, 100, hero->getFlag());
+		this->setMeFlag(hero->getFlag());
 		//该函数为计算冷却时间和攻击间隔的函数
 		hero->schedule(schedule_selector(YaseHero::buffUpdate), 1.0 / 60.0);
 		hero->scheduleUpdate();
@@ -295,31 +309,37 @@ bool GameScene::init()
 	{
 		static auto hero = DajiHero::create();
 		auto body = PhysicsBody::createCircle(hero->getContentSize().width / 2);
-		body->setContactTestBitmask(MEUNITTEST);
-		//log("mehero test mask %d", body->getContactTestBitmask());
-		body->setCategoryBitmask(MEUNITCATEGORY);
-		body->setCollisionBitmask(MEUNITCOLLISION);
 		hero->setPhysicsBody(body);
 		if (!IfAI)
 		{
 			if (ID == 1)
 			{
+				body->setContactTestBitmask(MEUNITTEST);
+				body->setCategoryBitmask(MEUNITCATEGORY);
+				body->setCollisionBitmask(MEUNITCOLLISION);
 				hero->setPosition(Player1StartPosition);
 				hero->setFlag(Player1);
 			}
 			else
 			{
+				body->setContactTestBitmask(OTHERUNITTEST);
+				body->setCategoryBitmask(OTHERUNITCATEGORY);
+				body->setCollisionBitmask(OTHERUNITCOLLISION);
 				hero->setPosition(Player2StartPosition);
 				hero->setFlag(Player2);
 			}
 		}
 		else
 		{
+			body->setContactTestBitmask(MEUNITTEST);
+			body->setCategoryBitmask(MEUNITCATEGORY);
+			body->setCollisionBitmask(MEUNITCOLLISION);
 			hero->setPosition(Player1StartPosition);
 			hero->setFlag(Player1);
 		}
 		hero->setHuman();
-		addChild(hero, 100, MeHeroTag);
+		addChild(hero, 100, hero->getFlag());
+		this->setMeFlag(hero->getFlag());
 		//该函数为计算冷却时间和攻击间隔的函数
 		hero->scheduleUpdate();
 		break;
@@ -335,33 +355,38 @@ bool GameScene::init()
 	{
 		auto otherHero = HouyiHero::create();
 		auto body = PhysicsBody::createCircle(otherHero->getContentSize().width / 2);
-		body->setContactTestBitmask(OTHERUNITTEST);
-		body->setCategoryBitmask(OTHERUNITCATEGORY);
-		body->setCollisionBitmask(OTHERUNITCOLLISION);
-		log("otherhero test mask %d", body->getContactTestBitmask());
 		otherHero->setPhysicsBody(body);
 		if (IfAI)
 		{
+			body->setContactTestBitmask(OTHERUNITTEST);
+			body->setCategoryBitmask(OTHERUNITCATEGORY);
+			body->setCollisionBitmask(OTHERUNITCOLLISION);
 			otherHero->setPosition(Player2StartPosition);
 			otherHero->setAI();
 			otherHero->setFlag(Player2);
-			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(this->getMeFlag())));
 		}
 		else
 		{
 			otherHero->setHuman();
 			if (ID == 1)
 			{
+				body->setContactTestBitmask(OTHERUNITTEST);
+				body->setCategoryBitmask(OTHERUNITCATEGORY);
+				body->setCollisionBitmask(OTHERUNITCOLLISION);
 				otherHero->setPosition(Player2StartPosition);
 				otherHero->setFlag(Player2);
 			}
 			else
 			{
+				body->setContactTestBitmask(MEUNITTEST);
+				body->setCategoryBitmask(MEUNITCATEGORY);
+				body->setCollisionBitmask(MEUNITCOLLISION);
 				otherHero->setPosition(Player1StartPosition);
 				otherHero->setFlag(Player1);
 			}
 		}
-		addChild(otherHero, 100, this->getEnermyType());
+		addChild(otherHero, 100, otherHero->getFlag());
 		otherHero->scheduleUpdate();
 		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
@@ -371,33 +396,38 @@ bool GameScene::init()
 	{
 		auto otherHero = DajiHero::create();
 		auto body = PhysicsBody::createCircle(otherHero->getContentSize().width / 2);
-		body->setContactTestBitmask(OTHERUNITTEST);
-		body->setCategoryBitmask(OTHERUNITCATEGORY);
-		body->setCollisionBitmask(OTHERUNITCOLLISION);
-		log("otherhero test mask %d", body->getContactTestBitmask());
 		otherHero->setPhysicsBody(body);
 		if (IfAI)
 		{
+			body->setContactTestBitmask(OTHERUNITTEST);
+			body->setCategoryBitmask(OTHERUNITCATEGORY);
+			body->setCollisionBitmask(OTHERUNITCOLLISION);
 			otherHero->setPosition(Player2StartPosition);
 			otherHero->setAI();
 			otherHero->setFlag(Player2);
-			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(this->getMeFlag())));
 		}
 		else
 		{
 			otherHero->setHuman();
 			if (ID == 1)
 			{
+				body->setContactTestBitmask(OTHERUNITTEST);
+				body->setCategoryBitmask(OTHERUNITCATEGORY);
+				body->setCollisionBitmask(OTHERUNITCOLLISION);
 				otherHero->setPosition(Player2StartPosition);
 				otherHero->setFlag(Player2);
 			}
 			else
 			{
+				body->setContactTestBitmask(MEUNITTEST);
+				body->setCategoryBitmask(MEUNITCATEGORY);
+				body->setCollisionBitmask(MEUNITCOLLISION);
 				otherHero->setPosition(Player1StartPosition);
 				otherHero->setFlag(Player1);
 			}
 		}
-		addChild(otherHero, 100, this->getEnermyType());
+		addChild(otherHero, 100, otherHero->getFlag());
 		otherHero->scheduleUpdate();
 		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
@@ -407,33 +437,38 @@ bool GameScene::init()
 	{
 		auto otherHero = YaseHero::create();
 		auto body = PhysicsBody::createCircle(otherHero->getContentSize().width / 2);
-		body->setContactTestBitmask(OTHERUNITTEST);
-		body->setCategoryBitmask(OTHERUNITCATEGORY);
-		body->setCollisionBitmask(OTHERUNITCOLLISION);
-	//	log("otherhero test mask %d", body->getContactTestBitmask());
 		otherHero->setPhysicsBody(body);
 		if (IfAI)
 		{
+			body->setContactTestBitmask(OTHERUNITTEST);
+			body->setCategoryBitmask(OTHERUNITCATEGORY);
+			body->setCollisionBitmask(OTHERUNITCOLLISION);
 			otherHero->setPosition(Player2StartPosition);
 			otherHero->setAI();
 			otherHero->setFlag(Player2);
-			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(this->getMeFlag())));
 		}
 		else
 		{
 			otherHero->setHuman();
 			if (ID == 1)
 			{
+				body->setContactTestBitmask(OTHERUNITTEST);
+				body->setCategoryBitmask(OTHERUNITCATEGORY);
+				body->setCollisionBitmask(OTHERUNITCOLLISION);
 				otherHero->setPosition(Player2StartPosition);
 				otherHero->setFlag(Player2);
 			}
 			else
 			{
+				body->setContactTestBitmask(MEUNITTEST);
+				body->setCategoryBitmask(MEUNITCATEGORY);
+				body->setCollisionBitmask(MEUNITCOLLISION);
 				otherHero->setPosition(Player1StartPosition);
 				otherHero->setFlag(Player1);
 			}
 		}
-		addChild(otherHero, 100, this->getEnermyType());
+		addChild(otherHero, 100, otherHero->getFlag());
 		otherHero->scheduleUpdate();
 		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
@@ -446,14 +481,15 @@ bool GameScene::init()
 
 	//双方防御塔
 	auto player1Tower = DefenceTower::create(Player1);
-	player1Tower->setPosition(Player1StartPosition+Vec2(100,100));
-	player1Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(this->getEnermyType())));
+	player1Tower->setPosition(Player1StartPosition + Vec2(100, 100));
+	////////////////////////////////////////////////////playerflag之和是601
+	player1Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(Player2)));
 	player1Tower->scheduleUpdate();
 	this->addChild(player1Tower, 200, MeTowerTag);
 
 	auto player2Tower = DefenceTower::create(Player2);
-	player2Tower->setPosition(Player2StartPosition-Vec2(100,100));
-	player2Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+	player2Tower->setPosition(Player2StartPosition - Vec2(100, 100));
+	player2Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(Player1)));
 	player2Tower->scheduleUpdate();
 	this->addChild(player2Tower, 200, OtherTowerTag);
 
@@ -508,8 +544,8 @@ this->addChild(menu,1);*/
 //by 王文政 2019年6月2日
 void GameScene::watchMeAndOther(float dt)
 {
-	Hero* meHero = dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag));
-	Hero* otherHero = dynamic_cast<Hero*>(this->getChildByTag(this->getEnermyType()));
+	Hero* meHero = dynamic_cast<Hero*>(this->getChildByTag(this->getMeFlag()));
+	Hero* otherHero = dynamic_cast<Hero*>(this->getChildByTag(601 - this->getMeFlag()));
 	//监控我方经验金币
 	meHero->setMoney(this->getMeMoney());
 	meHero->setExpPoint(this->getMeExp());
@@ -528,7 +564,7 @@ void GameScene::watchMeAndOther(float dt)
 	//获取双方英雄的位置
 	Vec2 meHeroPoint = meHero->getPosition();
 	Vec2 otherHeroPoint = otherHero->getPosition();
-	
+
 	//如果是AI 对AI进行控制
 	if (this->getEnermyType() == AIHeroTag)
 	{
@@ -541,7 +577,7 @@ void GameScene::watchMeAndOther(float dt)
 			//判断并进行普攻
 			if (length <= HouyiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
 			{
-				takeHouyiNormalAttack(otherHero,false, otherHeroPoint, meHeroPoint);
+				takeHouyiNormalAttack(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
 				otherHero->setHeroAfterShake(otherHero->getNormalAttackAfterShake());
 			}//end 普攻
@@ -557,32 +593,32 @@ void GameScene::watchMeAndOther(float dt)
 				otherHero->setQSkillWaitTime(otherHero->getQSkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getQSkillAfterShake());
 			}//end buff
-		
+
 			//判断并W技能
 			if (length <= HouyiWSkillRange - 20 && otherHero->getWSkillWaitTime() <= 0.01)
 			{
-				takeHouyiWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				takeHouyiWSkill(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setWSkillWaitTime(otherHero->getWSkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getWSkillAfterShake());
 			}//end W
-		
+
 			//判断并放大
 			if (length <= HouyiESkillRange && otherHero->getESkillWaitTime() <= 0.01)
 			{
-				takeHouyiESkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				takeHouyiESkill(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setESkillWaitTime(otherHero->getESkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getESkillAfterShake());
 			}//end E
-			
+
 		}
-		
+
 		//如果AI控制亚瑟
 		if (this->getOtherHeroTag() == 'Y')
 		{
 			//判断并进行普攻
 			if (length <= YaseNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
 			{
-				takeYaseNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
+				takeYaseNormalAttack(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
 				otherHero->setHeroAfterShake(otherHero->getNormalAttackAfterShake());
 			}//end 普攻
@@ -590,7 +626,7 @@ void GameScene::watchMeAndOther(float dt)
 			//判断并W技能
 			if (length <= YaseWSkillRange - 20 && otherHero->getWSkillWaitTime() <= 0.01)
 			{
-				takeYaseWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				takeYaseWSkill(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setWSkillWaitTime(otherHero->getWSkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getWSkillAfterShake());
 			}//end W
@@ -598,7 +634,7 @@ void GameScene::watchMeAndOther(float dt)
 			//判断并放大
 			if (length <= YaseESkillRange && otherHero->getESkillWaitTime() <= 0.01)
 			{
-				takeYaseESkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				takeYaseESkill(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setESkillWaitTime(otherHero->getESkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getESkillAfterShake());
 			}//end E
@@ -609,28 +645,28 @@ void GameScene::watchMeAndOther(float dt)
 			//判断并进行普攻
 			if (length <= DajiNormalAttackRange && otherHero->getAttackWaitTime() <= 0.01)
 			{
-				takeDajiNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
+				takeDajiNormalAttack(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setAttackWaitTime(1.0 / otherHero->getAttackSpeed());
 				otherHero->setHeroAfterShake(otherHero->getNormalAttackAfterShake());
 			}//end 普攻
 			//判断并Q技能
 			if (length <= DajiQSkillRange && otherHero->getQSkillWaitTime() <= 0.01)
 			{
-				takeDajiQSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				takeDajiQSkill(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setQSkillWaitTime(otherHero->getQSkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getQSkillAfterShake());
 			}//end Q
 			//判断并W技能
 			if (length <= DajiWSkillRange && otherHero->getWSkillWaitTime() <= 0.01)
 			{
-				takeDajiWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				takeDajiWSkill(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setWSkillWaitTime(otherHero->getWSkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getWSkillAfterShake());
 			}//end W
 			//判断并放大
 			if (length <= DajiESkillRange && otherHero->getESkillWaitTime() <= 0.01)
 			{
-				takeDajiESkill(otherHero, false, otherHeroPoint, meHeroPoint);
+				takeDajiESkill(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setESkillWaitTime(otherHero->getESkillCdTime());
 				otherHero->setHeroAfterShake(otherHero->getESkillAfterShake());
 			}//end E
@@ -638,88 +674,88 @@ void GameScene::watchMeAndOther(float dt)
 	}
 	else
 	{
-	if (n > 0)
-	{
-		//后裔
-		if (this->getOtherHeroTag() == 'H')
+		if (n > 0)
 		{
-			//判断并进行普攻
-			if (AQWE == 'A')
+			//后裔
+			if (this->getOtherHeroTag() == 'H')
 			{
-				takeHouyiNormalAttack(otherHero, false, otherHeroPoint, AQWE_Direction);
-			}
-			//判断并进行Q技能
-			if (AQWE == 'Q')
-			{
-				//发动q技能，持续时间内增加后羿攻击速度
-				otherHero->setBuff(true);
-				//持续时间k*q技能等级
-				otherHero->setBuffTime(HouyiQSkillLastTime * otherHero->getQSkillLevel());
-				//该技能实现效果在update函数中实现
-			}
-			//判断并进行W技能
-			if (AQWE == 'W')
-			{
-				takeHouyiWSkill(otherHero, false, otherHeroPoint, AQWE_Direction);
-			}
-			//判断并进行E技能
-			if (AQWE == 'E')
-			{
-				takeHouyiESkill(otherHero, false, otherHeroPoint, AQWE_Direction);
-			}
+				//判断并进行普攻
+				if (AQWE == 'A')
+				{
+					takeHouyiNormalAttack(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
+				}
+				//判断并进行Q技能
+				if (AQWE == 'Q')
+				{
+					//发动q技能，持续时间内增加后羿攻击速度
+					otherHero->setBuff(true);
+					//持续时间k*q技能等级
+					otherHero->setBuffTime(HouyiQSkillLastTime * otherHero->getQSkillLevel());
+					//该技能实现效果在update函数中实现
+				}
+				//判断并进行W技能
+				if (AQWE == 'W')
+				{
+					takeHouyiWSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
+				}
+				//判断并进行E技能
+				if (AQWE == 'E')
+				{
+					takeHouyiESkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
+				}
 
+			}
+			//亚瑟
+			if (this->getOtherHeroTag() == 'Y')
+			{
+				//判断并进行普攻
+				if (AQWE == 'A')
+				{
+					takeYaseNormalAttack(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+				}
+				//判断并进行Q技能
+				if (AQWE == 'Q')
+				{
+					otherHero->setBuff(true);
+					otherHero->setBuffTime(YaseQSkillLastTime * otherHero->getQSkillLevel());
+				}
+				//判断并进行W技能
+				if (AQWE == 'W')
+				{
+					takeYaseWSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+				}
+				//判断并进行E技能
+				if (AQWE == 'E')
+				{
+					takeYaseESkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+				}
+			}
+			//妲己
+			if (this->getOtherHeroTag() == 'D')
+			{
+				//判断并进行普攻
+				if (AQWE == 'A')
+				{
+					takeDajiNormalAttack(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+				}
+				//判断并进行Q技能
+				if (AQWE == 'Q')
+				{
+					takeDajiQSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+				}
+				//判断并进行W技能
+				if (AQWE == 'W')
+				{
+					takeDajiWSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+				}
+				//判断并进行E技能
+				if (AQWE == 'E')
+				{
+					takeDajiESkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+				}
+			}
+			n--;
 		}
-		//亚瑟
-		if (this->getOtherHeroTag() == 'Y')
-		{
-			//判断并进行普攻
-			if (AQWE == 'A')
-			{
-				takeYaseNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
-			}
-			//判断并进行Q技能
-			if (AQWE == 'Q')
-			{
-				otherHero->setBuff(true);
-				otherHero->setBuffTime(YaseQSkillLastTime * otherHero->getQSkillLevel());
-			}
-			//判断并进行W技能
-			if (AQWE == 'W')
-			{
-				takeYaseWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
-			}
-			//判断并进行E技能
-			if (AQWE == 'E')
-			{
-				takeYaseESkill(otherHero, false, otherHeroPoint, meHeroPoint);
-			}
-		}
-		//妲己
-		if (this->getOtherHeroTag() == 'D')
-		{
-			//判断并进行普攻
-			if (AQWE == 'A')
-			{
-				takeDajiNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
-			}
-			//判断并进行Q技能
-			if (AQWE == 'Q')
-			{
-				takeDajiQSkill(otherHero, false, otherHeroPoint, meHeroPoint);
-			}
-			//判断并进行W技能
-			if (AQWE == 'W')
-			{
-				takeDajiWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
-			}
-			//判断并进行E技能
-			if (AQWE == 'E')
-			{
-				takeDajiESkill(otherHero, false, otherHeroPoint, meHeroPoint);
-			}
-		}
-		n--;
-	}
 	}
 }
 
@@ -859,7 +895,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
-					takeHouyiNormalAttack(target,true,heroPosition, touchPosition);
+					takeHouyiNormalAttack(target, target->getFlag(), heroPosition, touchPosition);
 
 					//发送给对方客户端
 					if (!IfAI)
@@ -888,7 +924,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行W
 					target->stopActionByTag(HeroMove);
-					takeHouyiWSkill(target,true,heroPosition, touchPosition);
+					takeHouyiWSkill(target, target->getFlag(), heroPosition, touchPosition);
 
 					//发送给对方客户端
 					if (!IfAI)
@@ -910,7 +946,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
-					takeHouyiESkill(target,true,heroPosition, touchPosition);
+					takeHouyiESkill(target, target->getFlag(), heroPosition, touchPosition);
 
 					//发送给对方客户端
 					if (!IfAI)
@@ -971,7 +1007,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
-					takeYaseNormalAttack(target, true, heroPosition, touchPosition);
+					takeYaseNormalAttack(target, target->getFlag(), heroPosition, touchPosition);
 
 					//发送给对方客户端
 					if (!IfAI)
@@ -998,7 +1034,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				if (target->getWSkillWaitTime() <= 0.01)
 				{
 					//边移动边旋转
-					takeYaseWSkill(target, true, heroPosition, touchPosition);
+					takeYaseWSkill(target, target->getFlag(), heroPosition, touchPosition);
 
 					//发送给对方客户端
 					if (!IfAI)
@@ -1021,7 +1057,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
-					takeYaseESkill(target, true, heroPosition, touchPosition);
+					takeYaseESkill(target, target->getFlag(), heroPosition, touchPosition);
 
 					//发送给对方客户端
 					if (!IfAI)
@@ -1080,7 +1116,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
-					takeDajiNormalAttack(target, true, heroPosition, touchPosition);
+					takeDajiNormalAttack(target, target->getFlag(), heroPosition, touchPosition);
 
 					//发送给对方客户端
 					if (!IfAI)
@@ -1103,7 +1139,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行Q
 					target->stopActionByTag(HeroMove);
-					takeDajiQSkill(target, true, heroPosition, touchPosition);
+					takeDajiQSkill(target, target->getFlag(), heroPosition, touchPosition);
 					//发送给对方客户端
 					if (!IfAI)
 					{
@@ -1124,7 +1160,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行W
 					target->stopActionByTag(HeroMove);
-					takeDajiWSkill(target, true, heroPosition, touchPosition);
+					takeDajiWSkill(target, target->getFlag(), heroPosition, touchPosition);
 
 					//发送给对方客户端
 					if (!IfAI)
@@ -1146,7 +1182,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
-					takeDajiESkill(target, true, heroPosition, touchPosition);
+					takeDajiESkill(target, target->getFlag(), heroPosition, touchPosition);
 
 					//发送给对方客户端
 					if (!IfAI)
@@ -1217,10 +1253,10 @@ void GameScene::update(float dt)
 //判断碰撞
 void GameScene::collision(float dt)
 {
-	position_now = (this->getChildByTag(MeHeroTag))->getPosition();
+	position_now = (this->getChildByTag(this->getMeFlag()))->getPosition();
 	if (setPlayerPosition(position_now) == true)
 	{
-		(this->getChildByTag(MeHeroTag))->setPosition(position_last);
+		(this->getChildByTag(this->getMeFlag()))->setPosition(position_last);
 	}
 	else position_last = position_now;
 }
@@ -1251,11 +1287,11 @@ Vec2 GameScene::tileCoordFromPosition(Vec2 pos)
 bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 {
 
-//	log("contact");
+	//	log("contact");
 	auto spriteA = (BasicSprite*)contact.getShapeA()->getBody()->getNode();
 	auto spriteB = (BasicSprite*)contact.getShapeB()->getBody()->getNode();
 
-//	log("A %d ,B %d", spriteA->getTag(), spriteB->getTag());
+	//	log("A %d ,B %d", spriteA->getTag(), spriteB->getTag());
 
 	if (spriteA && spriteA->getTag() == OtherSkillTag)
 	{
@@ -1263,7 +1299,7 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		auto otherSkill = static_cast<BasicSkill*>(spriteA);
 		auto meHero = static_cast<Hero*>(spriteB);
 		//己方单位受到伤害
-		meHero->sufferDamage(otherSkill->getDamagePoint() / (1 + meHero->getDefensePoint()/100));
+		meHero->sufferDamage(otherSkill->getDamagePoint() / (1 + meHero->getDefensePoint() / 100));
 		//如果己方单位死亡
 		//给对面英雄加经验和金币
 		if (meHero->getHealthPoint() <= 0)
@@ -1276,7 +1312,7 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		{
 			otherSkill->removeFromParent();
 			return false;
-		}	
+		}
 	}
 	if (spriteB && spriteB->getTag() == OtherSkillTag)
 	{
@@ -1318,7 +1354,7 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 			return false;
 		}
 	}
-	
+
 	if (spriteB && spriteB->getTag() == MeSkillTag)
 	{
 		//此时B是我方技能 A是敌方单位
@@ -1342,7 +1378,7 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		}
 	}
 
-	
+
 	return true;
 }
 
@@ -1370,13 +1406,13 @@ void GameScene::heroMove(Hero* target)
 	moveAction->setTag(HeroMove);
 }
 
-void GameScene::takeHouyiNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeHouyiNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	HouyiNormalAttack* houyiNormalAttack = HouyiNormalAttack::createTheAttack(hero);
 	auto body = PhysicsBody::createBox(houyiNormalAttack->getContentSize());
 	houyiNormalAttack->setPhysicsBody(body);
 	//停止当前的移动进行普攻
-	if (isMe)
+	if (flag == Player1)
 	{
 		this->addChild(houyiNormalAttack, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
@@ -1390,13 +1426,13 @@ void GameScene::takeHouyiNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Ve
 		body->setCategoryBitmask(OTHERSKILLCATEGORY);
 		body->setCollisionBitmask(OTHERSKILLCOLLISION);
 	}
-	houyiNormalAttack->takeHouyiNormalAttack(startPoint,targetPoint);
+	houyiNormalAttack->takeHouyiNormalAttack(startPoint, targetPoint);
 	//把普攻显示在gamescene场景中
 	//当普攻精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
 	//重置平A等待时间
 }
 
-void GameScene::takeHouyiWSkill(Hero* hero,bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeHouyiWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	//先弄他十个箭头
 					//修改箭头数记得修改for循环
@@ -1407,7 +1443,7 @@ void GameScene::takeHouyiWSkill(Hero* hero,bool isMe, Vec2 startPoint, Vec2 targ
 	PhysicsBody* body[HouyiWSkillArrowNumber];
 	body[0] = PhysicsBody::createBox(houyiWSkill[0]->getContentSize());
 	houyiWSkill[0]->setPhysicsBody(body[0]);
-	if (isMe)
+	if (flag == Player1)
 	{
 		this->addChild(houyiWSkill[0], 200, MeSkillTag);
 		body[0]->setContactTestBitmask(MESKILLTEST);
@@ -1428,7 +1464,7 @@ void GameScene::takeHouyiWSkill(Hero* hero,bool isMe, Vec2 startPoint, Vec2 targ
 		houyiWSkill[i] = HouyiWSkill::createHouyiWSkill(hero);
 		body[i] = PhysicsBody::createBox(houyiWSkill[i]->getContentSize());
 		houyiWSkill[i]->setPhysicsBody(body[i]);
-		if (isMe)
+		if (flag == Player1)
 		{
 			this->addChild(houyiWSkill[i], 200, MeSkillTag);
 			body[i]->setContactTestBitmask(MESKILLTEST);
@@ -1447,7 +1483,7 @@ void GameScene::takeHouyiWSkill(Hero* hero,bool isMe, Vec2 startPoint, Vec2 targ
 		houyiWSkill[i + 1] = HouyiWSkill::createHouyiWSkill(hero);
 		body[i + 1] = PhysicsBody::createBox(houyiWSkill[i + 1]->getContentSize());
 		houyiWSkill[i + 1]->setPhysicsBody(body[i + 1]);
-		if (isMe)
+		if (flag == Player1)
 		{
 			this->addChild(houyiWSkill[i + 1], 200, MeSkillTag);
 			body[i + 1]->setContactTestBitmask(MESKILLTEST);
@@ -1467,14 +1503,14 @@ void GameScene::takeHouyiWSkill(Hero* hero,bool isMe, Vec2 startPoint, Vec2 targ
 	//当精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
 }
 
-void GameScene::takeHouyiESkill(Hero* hero,bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeHouyiESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	HouyiESkill* bigBird = HouyiESkill::createHouyiESkill(hero);
-	auto body = PhysicsBody::createCircle(bigBird->getContentSize().height/2);
-	
+	auto body = PhysicsBody::createCircle(bigBird->getContentSize().height / 2);
+
 	bigBird->setPhysicsBody(body);
-	bigBird->takeHouyiESkill(startPoint,targetPoint);
-	if (isMe)
+	bigBird->takeHouyiESkill(startPoint, targetPoint);
+	if (flag == Player1)
 	{
 		this->addChild(bigBird, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
@@ -1491,16 +1527,16 @@ void GameScene::takeHouyiESkill(Hero* hero,bool isMe, Vec2 startPoint, Vec2 targ
 	log("%d", bigBird->getTag());
 	log("%d", body->getContactTestBitmask());
 	//把大招显示在gamescene场景中
-	
+
 	//当大招精灵运动一定距离时删除，该功能在HouyiESkill类的update函数中实现
 }
 
-void GameScene::takeYaseNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeYaseNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	YaseNormalAttack* yaseNormalAttack = YaseNormalAttack::createTheAttack(hero);
 	auto body = PhysicsBody::createBox(yaseNormalAttack->getContentSize());
 	yaseNormalAttack->setPhysicsBody(body);
-	if (isMe)
+	if (flag == Player1)
 	{
 		this->addChild(yaseNormalAttack, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
@@ -1519,7 +1555,7 @@ void GameScene::takeYaseNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Vec
 	//当普攻精灵运动一定距离时删除，该功能在HouyiNormalAttack类的update函数中实现
 }
 
-void GameScene::takeYaseWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeYaseWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	YaseWSkill* yaseWSkill = YaseWSkill::createYaseWSkill(hero);
 	Vec2 verts[] = {
@@ -1531,16 +1567,16 @@ void GameScene::takeYaseWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targ
 	auto body = PhysicsBody::create();
 	body->addShape(PhysicsShapePolygon::create(verts, 4));
 	yaseWSkill->setPhysicsBody(body);
-	if (isMe)
+	if (flag == Player1)
 	{
-		this->getChildByTag(MeHeroTag)->addChild(yaseWSkill, 200, MeSkillTag);
+		this->getChildByTag(this->getMeFlag())->addChild(yaseWSkill, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
 		body->setCategoryBitmask(MESKILLCATEGORY);
 		body->setCollisionBitmask(MESKILLCOLLISION);
 	}
 	else
 	{
-		this->getChildByTag(this->getEnermyType())->addChild(yaseWSkill, 200, OtherSkillTag);
+		this->getChildByTag(601 - this->getMeFlag())->addChild(yaseWSkill, 200, OtherSkillTag);
 		body->setContactTestBitmask(OTHERSKILLTEST);
 		body->setCategoryBitmask(OTHERSKILLCATEGORY);
 		body->setCollisionBitmask(OTHERSKILLCOLLISION);
@@ -1548,12 +1584,12 @@ void GameScene::takeYaseWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targ
 	yaseWSkill->takeYaseWSkill(hero);
 }
 
-void GameScene::takeYaseESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeYaseESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	YaseESkill* yaseESkill = YaseESkill::createYaseESkill(hero);
 	auto body = PhysicsBody::createBox(yaseESkill->getContentSize());
 	yaseESkill->setPhysicsBody(body);
-	if (isMe)
+	if (flag == Player1)
 	{
 		this->addChild(yaseESkill, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
@@ -1570,13 +1606,13 @@ void GameScene::takeYaseESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targ
 	yaseESkill->takeYaseESkill(startPoint, targetPoint);
 }
 
-void GameScene::takeDajiNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeDajiNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	DajiNormalAttack* dajiNormalAttack = DajiNormalAttack::createTheAttack(hero);
 	auto body = PhysicsBody::createBox(dajiNormalAttack->getContentSize());
 	dajiNormalAttack->setPhysicsBody(body);
 	//停止当前的移动进行普攻
-	if (isMe)
+	if (flag == Player1)
 	{
 		this->addChild(dajiNormalAttack, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
@@ -1596,14 +1632,14 @@ void GameScene::takeDajiNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Vec
 	//重置平A等待时间
 }
 
-void GameScene::takeDajiQSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeDajiQSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	DajiQSkill* bigMoon = DajiQSkill::createDajiQSkill(hero);
 	auto body = PhysicsBody::createCircle(bigMoon->getContentSize().height / 2);
 
 	bigMoon->setPhysicsBody(body);
 	bigMoon->takeDajiQSkill(startPoint, targetPoint);
-	if (isMe)
+	if (flag == Player1)
 	{
 		this->addChild(bigMoon, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
@@ -1624,14 +1660,14 @@ void GameScene::takeDajiQSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targ
 	//当Q精灵运动一定距离时删除，该功能在DajiQSkill类的update函数中实现
 }
 
-void GameScene::takeDajiWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeDajiWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	DajiWSkill* bigLove = DajiWSkill::createDajiWSkill(hero);
 	auto body = PhysicsBody::createCircle(bigLove->getContentSize().height / 2);
 
 	bigLove->setPhysicsBody(body);
 	bigLove->takeDajiWSkill(startPoint, targetPoint);
-	if (isMe)
+	if (flag == Player1)
 	{
 		this->addChild(bigLove, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
@@ -1652,14 +1688,14 @@ void GameScene::takeDajiWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targ
 	//当W精灵运动一定距离时删除，该功能在DajiWSkill类的update函数中实现
 }
 
-void GameScene::takeDajiESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint)
+void GameScene::takeDajiESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	DajiESkill* bigBall = DajiESkill::createDajiESkill(hero);
 	auto body = PhysicsBody::createCircle(bigBall->getContentSize().height / 2);
 
 	bigBall->setPhysicsBody(body);
 	bigBall->takeDajiESkill(startPoint, targetPoint);
-	if (isMe)
+	if (flag == Player1)
 	{
 		this->addChild(bigBall, 200, MeSkillTag);
 		body->setContactTestBitmask(MESKILLTEST);
@@ -1685,37 +1721,37 @@ void GameScene::wulawula(float dt)
 	//player1方近战兵
 	auto meJinzhanSoldier = JinzhanSoldier::create(Player1);
 	meJinzhanSoldier->setPosition(500, 500);
-	meJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(this->getEnermyType())));
+	meJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player2)));
 	this->addChild(meJinzhanSoldier, 200, MeJinzhanSoldierTag);
 	meJinzhanSoldier->scheduleUpdate();
 	//player2方近战兵
 	auto otherJinzhanSoldier = JinzhanSoldier::create(Player2);
 	otherJinzhanSoldier->setPosition(900, 900);
-	otherJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+	otherJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherJinzhanSoldier, 200, OtherJinzhanSoldierTag);
 	otherJinzhanSoldier->scheduleUpdate();
 	//player1方远程兵
 	auto meYuanchengSoldier = YuanchengSoldier::create(Player1);
 	meYuanchengSoldier->setPosition(500, 500);
-	meYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(this->getEnermyType())));
+	meYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player2)));
 	this->addChild(meYuanchengSoldier, 200, MeYuanchengSoldierTag);
 	meYuanchengSoldier->scheduleUpdate();
 	//player2方远程兵
 	auto otherYuanchengSoldier = YuanchengSoldier::create(Player2);
 	otherYuanchengSoldier->setPosition(900, 900);
-	otherYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+	otherYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherYuanchengSoldier, 200, OtherYuanchengSoldierTag);
 	otherYuanchengSoldier->scheduleUpdate();
 	//player1方炮车兵
 	auto mePaocheSoldier = PaocheSoldier::create(Player1);
 	mePaocheSoldier->setPosition(500, 500);
-	mePaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(this->getEnermyType())));
+	mePaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player2)));
 	this->addChild(mePaocheSoldier, 200, MePaocheSoldierTag);
 	mePaocheSoldier->scheduleUpdate();
 	//player2方炮车兵
 	auto otherPaocheSoldier = PaocheSoldier::create(Player2);
 	otherPaocheSoldier->setPosition(900, 900);
-	otherPaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+	otherPaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherPaocheSoldier, 200, OtherPaocheSoldierTag);
 	otherPaocheSoldier->scheduleUpdate();
 }
@@ -1743,7 +1779,7 @@ void GameScene::equipmentCheck()
 
 void GameScene::SendPosition(float dt)
 {
-	HeroPosition = (this->getChildByTag(MeHeroTag))->getPosition();
+	HeroPosition = (this->getChildByTag(this->getMeFlag()))->getPosition();
 	Cli.MessageSending(FloatToChar(HeroPosition.x, HeroPosition.y));
 }
 
@@ -1753,15 +1789,18 @@ void GameScene::GetAndMove(float dt)
 	{
 		if (ID == 1)
 		{
-			(this->getChildByTag(OtherHeroTag))->setPosition(Player2StartPosition);
+			(this->getChildByTag(601 - this->getMeFlag()))->setPosition(Player2StartPosition);
 		}
 		else
 		{
-			(this->getChildByTag(OtherHeroTag))->setPosition(Player1StartPosition);
+			(this->getChildByTag(601 - this->getMeFlag()))->setPosition(Player1StartPosition);
 		}
 	}
 	else
 	{
-		(this->getChildByTag(OtherHeroTag))->setPosition(Position.x, Position.y);
+		(this->getChildByTag(601 - this->getMeFlag()))->setPosition(Position.x, Position.y);
 	}
 }
+
+
+

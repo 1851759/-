@@ -81,6 +81,7 @@ class GameScene :public cocos2d::Layer
 	char meHeroTag;
 	char otherHeroTag;
 	int _enermyType;
+	int _meFlag;
 
 	int _meMoney;
 	int _meExp;
@@ -90,9 +91,12 @@ class GameScene :public cocos2d::Layer
 	cocos2d::TMXTiledMap *_tileMap;
 	cocos2d::TMXLayer *_collidable;
 	cocos2d::Vec2 position_now;
+
+	
 public:
 
-
+	void setMeFlag(int flag) { _meFlag = flag; }
+	int getMeFlag() const { return _meFlag; }
 	//获取敌我金币和经验
 	int getMeMoney() const { return _meMoney; }
 	void changeMeMoney(int money) { _meMoney += money; }
@@ -107,20 +111,20 @@ public:
 	//英雄操控函数
 	void heroMove(Hero* target);
 	//后羿技能
-	void takeHouyiNormalAttack(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
-	void takeHouyiWSkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
-	void takeHouyiESkill(Hero* hero,bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeHouyiNormalAttack(Hero* hero, int flag, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeHouyiWSkill(Hero* hero, int flag, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeHouyiESkill(Hero* hero, int flag, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
 	//亚瑟技能
-	void takeYaseNormalAttack(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
-	void takeYaseWSkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
-	void takeYaseESkill(Hero* hero, bool isMe, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeYaseNormalAttack(Hero* hero, int flag, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeYaseWSkill(Hero* hero, int flag, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
+	void takeYaseESkill(Hero* hero, int flag, cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
 	//妲己技能
-	void takeDajiNormalAttack(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint);
-	void takeDajiQSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint);
-	void takeDajiWSkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint);
-	void takeDajiESkill(Hero* hero, bool isMe, Vec2 startPoint, Vec2 targetPoint);
+	void takeDajiNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
+	void takeDajiQSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
+	void takeDajiWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
+	void takeDajiESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
 
 	//获取meHeroTag
 	char getMeHeroTag() { return meHeroTag; }
@@ -135,7 +139,7 @@ public:
 	int getEnermyType() const { return _enermyType; }
 	void setEnermyType(int type) { _enermyType = type; }
 
-	static cocos2d::Scene* createScene(char meHero,char otherHero,bool isAI);
+	static cocos2d::Scene* createScene(char meHero, char otherHero, bool isAI);
 	virtual bool init();
 
 	//返回初始场景
@@ -149,7 +153,7 @@ public:
 	virtual void onEnter();
 	virtual void onExit();
 	static GameScene* create(char meName, char otherName, bool enermyType);
-//	static GameScene* createWithPhysics(char meName, char otherName, bool isAI);
+	//	static GameScene* createWithPhysics(char meName, char otherName, bool isAI);
 	void shop_xie(cocos2d::Ref *pSender);
 	void shop_shoutao(cocos2d::Ref* pSender);
 	void shop_changgong(cocos2d::Ref *pSender);
@@ -188,6 +192,8 @@ public:
 
 	//敌方装备更新
 	void EnemyEquipUpdate(float dt);
+
+	
 };
 
 #endif
