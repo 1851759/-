@@ -28,7 +28,7 @@
 #include"JinzhanSoldier.h"
 #include"YuanchengSoldier.h"
 #include"PaocheSoldier.h"
-
+#include"client.h"
 
 //修改技能范围时需要修改英雄头文件define中的参数
 
@@ -37,8 +37,10 @@ Vec2 position_last = Vec2(0, 0);
 //英雄起始位置
 //注意此处用数字表示////////////////////////////////////////////////////////////////////////////////////////////////////
 Vec2 Player1StartPosition(250, 250);
-Vec2 Player2StartPosition(1300, 800);
-
+Vec2 Player2StartPosition(1350, 850);
+Vec2 HeroPosition;
+char *AboutKeyboardMessage;
+char JustAboutKeyboard[SIZE] = "Q";
 
 GameScene* GameScene::create(char meName, char otherName, bool isAI)
 {
@@ -108,6 +110,7 @@ void GameScene::onEnter()
 
 	//初始化碰撞层
 	_collidable = _tileMap->getLayer("Collidable");
+  
 
 	//注册鼠标监听器
 	//使用λ表达式
@@ -227,9 +230,25 @@ bool GameScene::init()
 		body->setCategoryBitmask(MEUNITCATEGORY);
 		body->setCollisionBitmask(MEUNITCOLLISION);
 		hero->setPhysicsBody(body);
-		hero->setPosition(Player1StartPosition);
+		if (!IfAI)
+		{
+			if (ID == 1)
+			{
+				hero->setPosition(Player1StartPosition);
+				hero->setFlag(Player1);
+			}
+			else
+			{
+				hero->setPosition(Player2StartPosition);
+				hero->setFlag(Player2);
+			}
+		}
+		else
+		{
+			hero->setPosition(Player1StartPosition);
+			hero->setFlag(Player1);
+		}
 		hero->setHuman();
-		hero->setFlag(Player1);
 		addChild(hero, 100, MeHeroTag);
 
 		//该函数为计算冷却时间和攻击间隔的函数
@@ -246,8 +265,24 @@ bool GameScene::init()
 		body->setCategoryBitmask(MEUNITCATEGORY);
 		body->setCollisionBitmask(MEUNITCOLLISION);
 		hero->setPhysicsBody(body);
-		hero->setPosition(Player1StartPosition);
-		hero->setFlag(Player1);
+		if (!IfAI)
+		{
+			if (ID == 1)
+			{
+				hero->setPosition(Player1StartPosition);
+				hero->setFlag(Player1);
+			}
+			else
+			{
+				hero->setPosition(Player2StartPosition);
+				hero->setFlag(Player2);
+			}
+		}
+		else
+		{
+			hero->setPosition(Player1StartPosition);
+			hero->setFlag(Player1);
+		}
 		hero->setHuman();
 		addChild(hero, 100, MeHeroTag);
 		//该函数为计算冷却时间和攻击间隔的函数
@@ -265,9 +300,25 @@ bool GameScene::init()
 		body->setCategoryBitmask(MEUNITCATEGORY);
 		body->setCollisionBitmask(MEUNITCOLLISION);
 		hero->setPhysicsBody(body);
-		hero->setPosition(Player1StartPosition);
+		if (!IfAI)
+		{
+			if (ID == 1)
+			{
+				hero->setPosition(Player1StartPosition);
+				hero->setFlag(Player1);
+			}
+			else
+			{
+				hero->setPosition(Player2StartPosition);
+				hero->setFlag(Player2);
+			}
+		}
+		else
+		{
+			hero->setPosition(Player1StartPosition);
+			hero->setFlag(Player1);
+		}
 		hero->setHuman();
-		hero->setFlag(Player1);
 		addChild(hero, 100, MeHeroTag);
 		//该函数为计算冷却时间和攻击间隔的函数
 		hero->scheduleUpdate();
@@ -289,11 +340,28 @@ bool GameScene::init()
 		body->setCollisionBitmask(OTHERUNITCOLLISION);
 		log("otherhero test mask %d", body->getContactTestBitmask());
 		otherHero->setPhysicsBody(body);
-		otherHero->setPosition(Player2StartPosition);
+		if (IfAI)
+		{
+			otherHero->setPosition(Player2StartPosition);
+			otherHero->setAI();
+			otherHero->setFlag(Player2);
+			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+		}
+		else
+		{
+			otherHero->setHuman();
+			if (ID == 1)
+			{
+				otherHero->setPosition(Player2StartPosition);
+				otherHero->setFlag(Player2);
+			}
+			else
+			{
+				otherHero->setPosition(Player1StartPosition);
+				otherHero->setFlag(Player1);
+			}
+		}
 		addChild(otherHero, 100, this->getEnermyType());
-		otherHero->setAI();
-		otherHero->setFlag(Player2);
-		otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
 		otherHero->scheduleUpdate();
 		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
@@ -308,11 +376,28 @@ bool GameScene::init()
 		body->setCollisionBitmask(OTHERUNITCOLLISION);
 		log("otherhero test mask %d", body->getContactTestBitmask());
 		otherHero->setPhysicsBody(body);
-		otherHero->setPosition(Player2StartPosition);
+		if (IfAI)
+		{
+			otherHero->setPosition(Player2StartPosition);
+			otherHero->setAI();
+			otherHero->setFlag(Player2);
+			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+		}
+		else
+		{
+			otherHero->setHuman();
+			if (ID == 1)
+			{
+				otherHero->setPosition(Player2StartPosition);
+				otherHero->setFlag(Player2);
+			}
+			else
+			{
+				otherHero->setPosition(Player1StartPosition);
+				otherHero->setFlag(Player1);
+			}
+		}
 		addChild(otherHero, 100, this->getEnermyType());
-		otherHero->setAI();
-		otherHero->setFlag(Player2);
-		otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
 		otherHero->scheduleUpdate();
 		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
@@ -327,11 +412,28 @@ bool GameScene::init()
 		body->setCollisionBitmask(OTHERUNITCOLLISION);
 	//	log("otherhero test mask %d", body->getContactTestBitmask());
 		otherHero->setPhysicsBody(body);
-		otherHero->setPosition(Player2StartPosition);
+		if (IfAI)
+		{
+			otherHero->setPosition(Player2StartPosition);
+			otherHero->setAI();
+			otherHero->setFlag(Player2);
+			otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
+		}
+		else
+		{
+			otherHero->setHuman();
+			if (ID == 1)
+			{
+				otherHero->setPosition(Player2StartPosition);
+				otherHero->setFlag(Player2);
+			}
+			else
+			{
+				otherHero->setPosition(Player1StartPosition);
+				otherHero->setFlag(Player1);
+			}
+		}
 		addChild(otherHero, 100, this->getEnermyType());
-		otherHero->setAI();
-		otherHero->setFlag(Player2);
-		otherHero->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(MeHeroTag)));
 		otherHero->scheduleUpdate();
 		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
@@ -394,6 +496,11 @@ this->addChild(menu,1);*/
 
 	this->schedule(schedule_selector(GameScene::watchMeAndOther), 1.0 / 60.0);
 	this->schedule(schedule_selector(GameScene::wulawula), WulaWulaCD);
+	if (!IfAI)
+	{
+		this->schedule(schedule_selector(GameScene::GetAndMove), 0.03f);
+		this->schedule(schedule_selector(GameScene::SendPosition), 0.03f);
+	}
 	return true;
 }
 
@@ -529,6 +636,91 @@ void GameScene::watchMeAndOther(float dt)
 			}//end E
 		}
 	}
+	else
+	{
+	if (n > 0)
+	{
+		//后裔
+		if (this->getOtherHeroTag() == 'H')
+		{
+			//判断并进行普攻
+			if (AQWE == 'A')
+			{
+				takeHouyiNormalAttack(otherHero, false, otherHeroPoint, AQWE_Direction);
+			}
+			//判断并进行Q技能
+			if (AQWE == 'Q')
+			{
+				//发动q技能，持续时间内增加后羿攻击速度
+				otherHero->setBuff(true);
+				//持续时间k*q技能等级
+				otherHero->setBuffTime(HouyiQSkillLastTime * otherHero->getQSkillLevel());
+				//该技能实现效果在update函数中实现
+			}
+			//判断并进行W技能
+			if (AQWE == 'W')
+			{
+				takeHouyiWSkill(otherHero, false, otherHeroPoint, AQWE_Direction);
+			}
+			//判断并进行E技能
+			if (AQWE == 'E')
+			{
+				takeHouyiESkill(otherHero, false, otherHeroPoint, AQWE_Direction);
+			}
+
+		}
+		//亚瑟
+		if (this->getOtherHeroTag() == 'Y')
+		{
+			//判断并进行普攻
+			if (AQWE == 'A')
+			{
+				takeYaseNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
+			}
+			//判断并进行Q技能
+			if (AQWE == 'Q')
+			{
+				otherHero->setBuff(true);
+				otherHero->setBuffTime(YaseQSkillLastTime * otherHero->getQSkillLevel());
+			}
+			//判断并进行W技能
+			if (AQWE == 'W')
+			{
+				takeYaseWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+			}
+			//判断并进行E技能
+			if (AQWE == 'E')
+			{
+				takeYaseESkill(otherHero, false, otherHeroPoint, meHeroPoint);
+			}
+		}
+		//妲己
+		if (this->getOtherHeroTag() == 'D')
+		{
+			//判断并进行普攻
+			if (AQWE == 'A')
+			{
+				takeDajiNormalAttack(otherHero, false, otherHeroPoint, meHeroPoint);
+			}
+			//判断并进行Q技能
+			if (AQWE == 'Q')
+			{
+				takeDajiQSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+			}
+			//判断并进行W技能
+			if (AQWE == 'W')
+			{
+				takeDajiWSkill(otherHero, false, otherHeroPoint, meHeroPoint);
+			}
+			//判断并进行E技能
+			if (AQWE == 'E')
+			{
+				takeDajiESkill(otherHero, false, otherHeroPoint, meHeroPoint);
+			}
+		}
+		n--;
+	}
+	}
 }
 
 //by 王文政 2019年5月20日
@@ -564,6 +756,13 @@ void GameScene::keyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 				target->setBuff(true);
 				//持续时间5*q技能等级
 				target->setBuffTime(HouyiQSkillLastTime * target->getQSkillLevel());
+
+				//发送给对方客户端
+				if (!IfAI)
+				{
+					Cli.MessageSending(JustAboutKeyboard);
+				}
+
 				//该技能实现效果在HouyiHero update函数中实现
 				target->setQSkillWaitTime(target->getQSkillCdTime());
 				target->setHeroAfterShake(target->getQSkillAfterShake());
@@ -582,6 +781,13 @@ void GameScene::keyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 				target->setBuff(true);
 				//持续时间5*q技能等级
 				target->setBuffTime(YaseQSkillLastTime * target->getQSkillLevel());
+
+				//发送给对方客户端
+				if (!IfAI)
+				{
+					Cli.MessageSending(JustAboutKeyboard);
+				}
+
 				//该技能实现效果在YaseHero update函数中实现
 				target->setQSkillWaitTime(target->getQSkillCdTime());
 				target->setHeroAfterShake(target->getQSkillAfterShake());
@@ -654,6 +860,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
 					takeHouyiNormalAttack(target,true,heroPosition, touchPosition);
+
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'A';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置普攻间隔和攻击后摇
 					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
 					target->setHeroAfterShake(target->getNormalAttackAfterShake());
@@ -674,6 +889,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行W
 					target->stopActionByTag(HeroMove);
 					takeHouyiWSkill(target,true,heroPosition, touchPosition);
+
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'W';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置W CD和技能后摇
 					target->setWSkillWaitTime(target->getWSkillCdTime());
 					target->setHeroAfterShake(target->getWSkillAfterShake());
@@ -687,6 +911,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
 					takeHouyiESkill(target,true,heroPosition, touchPosition);
+
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'E';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置大招等待时间
 					target->setESkillWaitTime(target->getESkillCdTime());
 					target->setHeroAfterShake(target->getESkillAfterShake());
@@ -739,6 +972,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
 					takeYaseNormalAttack(target, true, heroPosition, touchPosition);
+
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'A';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置平A等待时间
 					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
 					target->setHeroAfterShake(target->getNormalAttackAfterShake());
@@ -757,6 +999,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 				{
 					//边移动边旋转
 					takeYaseWSkill(target, true, heroPosition, touchPosition);
+
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'W';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置CD和技能后摇
 					target->setWSkillWaitTime(target->getWSkillCdTime());
 					target->setHeroAfterShake(target->getWSkillAfterShake());
@@ -771,6 +1022,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
 					takeYaseESkill(target, true, heroPosition, touchPosition);
+
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'E';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置大招等待时间
 					target->setESkillWaitTime(target->getESkillCdTime());
 					target->setHeroAfterShake(target->getESkillAfterShake());
@@ -821,6 +1081,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
 					takeDajiNormalAttack(target, true, heroPosition, touchPosition);
+
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'A';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置普攻间隔和攻击后摇
 					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
 					target->setHeroAfterShake(target->getNormalAttackAfterShake());
@@ -835,6 +1104,14 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行Q
 					target->stopActionByTag(HeroMove);
 					takeDajiQSkill(target, true, heroPosition, touchPosition);
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'Q';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置Q CD和技能后摇
 					target->setQSkillWaitTime(target->getQSkillCdTime());
 					target->setHeroAfterShake(target->getQSkillAfterShake());
@@ -848,6 +1125,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行W
 					target->stopActionByTag(HeroMove);
 					takeDajiWSkill(target, true, heroPosition, touchPosition);
+
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'W';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置W CD和技能后摇
 					target->setWSkillWaitTime(target->getWSkillCdTime());
 					target->setHeroAfterShake(target->getWSkillAfterShake());
@@ -861,6 +1147,15 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
 					takeDajiESkill(target, true, heroPosition, touchPosition);
+
+					//发送给对方客户端
+					if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'E';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}
+
 					//重置大招等待时间
 					target->setESkillWaitTime(target->getESkillCdTime());
 					target->setHeroAfterShake(target->getESkillAfterShake());
@@ -1443,5 +1738,30 @@ void GameScene::equipmentCheck()
 		this->setChecking();
 		//此时按p为开启面板
 		//设置面板为可见
+	}
+}
+
+void GameScene::SendPosition(float dt)
+{
+	HeroPosition = (this->getChildByTag(MeHeroTag))->getPosition();
+	Cli.MessageSending(FloatToChar(HeroPosition.x, HeroPosition.y));
+}
+
+void GameScene::GetAndMove(float dt)
+{
+	if (Position.x == 0 && Position.y == 0)
+	{
+		if (ID == 1)
+		{
+			(this->getChildByTag(OtherHeroTag))->setPosition(Player2StartPosition);
+		}
+		else
+		{
+			(this->getChildByTag(OtherHeroTag))->setPosition(Player1StartPosition);
+		}
+	}
+	else
+	{
+		(this->getChildByTag(OtherHeroTag))->setPosition(Position.x, Position.y);
 	}
 }

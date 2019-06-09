@@ -176,6 +176,18 @@ public:
 	bool isChecking() const { return _ischecking; }
 	void setChecking() { _ischecking = true; }
 	void setUnChecking() { _ischecking = false; }
+
+	//发送位置信息
+	void SendPosition(float dt);
+
+	//接收对方英雄位置并进行移动
+	void GetAndMove(float dt);
+
+	//攻击与技能释放
+	//void Attacking(float dt);
+
+	//敌方装备更新
+	void EnemyEquipUpdate(float dt);
 };
 
 #endif

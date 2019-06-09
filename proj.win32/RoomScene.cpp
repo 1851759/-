@@ -2,10 +2,11 @@
 #include "cocos2d.h"
 #include "GameScene.h"
 #include "HelloWorldScene.h"
-
+#include"client.h"
 
 USING_NS_CC;
-
+Client Cli;
+char MyHero[SIZE] = "H";
 Scene* RoomScene::createScene()
 {
 	return RoomScene::create();
@@ -45,7 +46,9 @@ bool RoomScene::init()
 	player2->setPosition(origin.x + visibleSize.width / 5.0*4.0, origin.y + visibleSize.height / 3.0*2.0);
 	this->addChild(player2, 1);
 
-	
+	//Ê±¿Ì¼àÌýµÐ·½Ó¢ÐÛÃû×Ö
+	this->schedule(schedule_selector(RoomScene::ListenEnemyHeroName), 0.001f);
+	this->schedule(schedule_selector(RoomScene::ListenIfStart), 0.001f);
 
 	//Ñ¡ÔñÓ¢ÐÛ²Ëµ¥
 	MenuItemImage *houyi = MenuItemImage::create("houyi.jpg", "houyi.jpg", CC_CALLBACK_1(RoomScene::ChooseHero_h, this));
@@ -90,11 +93,9 @@ void RoomScene::menuReadyCallback(cocos2d::Ref* pSender)
 {
 	log("ready get %c,%c\n", this->getMeHeroName(), this->getOtherHeroName());
 
-	if (this->getMeHeroName() != '\0' && this->getOtherHeroName() != '\0')
-	{
-		auto gs = GameScene::createScene(this->getMeHeroName(),this->getOtherHeroName(),this->isAI());
-		Director::getInstance()->replaceScene(gs);
-	}
+	Cli.MessageSending("Start");
+	if (isAI() && this->getMeHeroName() != '\0' && this->getOtherHeroName() != '\0')
+		IfStart = 1;
 	
 }
 
@@ -119,6 +120,8 @@ void RoomScene::ChooseHero_h(cocos2d::Ref* pSender)
 	{
 		pic->setPosition(origin.x + visibleSize.width / 5.0, origin.y + visibleSize.height / 3 * 2);
 		this->setMeHeroName('H');
+		MyHero[1] = 'H';
+		Cli.MessageSending(MyHero);
 	}
 	//¸øAIÑ¡Ó¢ÐÛ
 	else if (flag == OtherFlag)
@@ -143,6 +146,8 @@ void RoomScene::ChooseHero_y(cocos2d::Ref* pSender)
 	{
 		pic->setPosition(origin.x + visibleSize.width / 5.0, origin.y + visibleSize.height / 3 * 2);
 		this->setMeHeroName('Y');
+		MyHero[1] = 'Y';
+		Cli.MessageSending(MyHero);
 	}
 	//¸øAIÑ¡Ó¢ÐÛ
 	else if (flag == OtherFlag)
@@ -167,6 +172,8 @@ void RoomScene::ChooseHero_d(cocos2d::Ref* pSender)
 	{
 		pic->setPosition(origin.x + visibleSize.width / 5.0, origin.y + visibleSize.height / 3 * 2);
 		this->setMeHeroName('D');
+		MyHero[1] = 'D';
+		Cli.MessageSending(MyHero);
 	}
 	//¸øAIÑ¡Ó¢ÐÛ
 	else if (flag == OtherFlag)
@@ -180,6 +187,8 @@ void RoomScene::menuClickToAddAI(Ref* pSender)
 {
 	this->setFlag(OtherFlag);
 	this->setAI();
+	IfAI = 1;
+	Cli.~Client();
 	log("flag is %d", this->getFlag());
 }
 
@@ -188,6 +197,48 @@ void RoomScene::menuClickToAddMyHero(cocos2d::Ref* pSender)
 	this->setFlag(MeFlag);
 }
 
+void RoomScene::ListenEnemyHeroName(float dt)
+{
+	if (EnemyHero != '\0')
+	{
+		auto visibleSize = Director::getInstance()->getVisibleSize();
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+		if (EnemyHero == 'H')
+		{
+			Sprite *pic = Sprite::create("houyi.jpg");
+			this->setOtherHeroName(EnemyHero);
+			pic->setPosition(origin.x + visibleSize.width / 5.0*4.0, origin.y + visibleSize.height / 3.0*2.0);
+			this->addChild(pic, 200);
+			EnemyHero = '\0';
+		}
+		if (EnemyHero == 'Y')
+		{
+			Sprite *pic = Sprite::create("yase.png");
+			this->setOtherHeroName(EnemyHero);
+			pic->setPosition(origin.x + visibleSize.width / 5.0*4.0, origin.y + visibleSize.height / 3.0*2.0);
+			this->addChild(pic, 200);
+			EnemyHero = '\0';
+		}
+		if (EnemyHero == 'D')
+		{
+			Sprite *pic = Sprite::create("daji.png");
+			this->setOtherHeroName(EnemyHero);
+			pic->setPosition(origin.x + visibleSize.width / 5.0*4.0, origin.y + visibleSize.height / 3.0*2.0);
+			this->addChild(pic, 200);
+			EnemyHero = '\0';
+		}
+	}
+}
+
+void RoomScene::ListenIfStart(float dt)
+{
+	if (IfStart == 1)
+	{
+		IfStart = 0;
+		auto gs = GameScene::createScene(this->getMeHeroName(), this->getOtherHeroName(), this->isAI());
+		Director::getInstance()->replaceScene(gs);
+	}
+}
 
 
 

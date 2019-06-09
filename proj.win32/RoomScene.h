@@ -51,6 +51,12 @@ public:
 	bool isAI() const { return _isAI; }
 
 	CREATE_FUNC(RoomScene);
+
+	//时刻监听敌方英雄名字
+	void ListenEnemyHeroName(float dt);
+
+	//时刻监听是否开始
+	void ListenIfStart(float dt);
 };
 
 
