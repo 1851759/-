@@ -1,7 +1,8 @@
 #include "cocos2d.h"
 #include "CrystalTower.h"
 #include "GameScene.h"
-
+#include"client.h"
+bool over = 0, victory = 0;
 CrystalTower* CrystalTower::create(PlayerFlag flag)
 {
 	CrystalTower* crystal = new CrystalTower();
@@ -65,9 +66,45 @@ void CrystalTower::update(float dt)
 	//ËþËÀÍöÔòÓÎÏ·½áÊø
 	if (this->getHealthPoint() <= 0)
 	{
+		over = 1;
+		if (this->getTowerFlag() == Player1)
+		{
+			if (IfAI)
+			{
+				victory = 0;
+			}
+			else
+			{
+				if (ID == 1)
+				{
+					victory = 0;
+				}
+				else
+				{
+					victory = 1;
+				}
+			}
+		}
+		else
+		{
+			if (IfAI)
+			{
+				victory = 1;
+			}
+			else
+			{
+				if (ID == 1)
+				{
+					victory = 1;
+				}
+				else
+				{
+					victory = 0;
+				}
+			}
+		}
 		auto sc = HelloWorld::createScene();
 		Director::getInstance()->replaceScene(sc);
-		
 	}
 }
 

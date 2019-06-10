@@ -32,5 +32,6 @@ public:
 
 };
 
+extern bool over, victory;
 
 #endif // !__CRYSTALTOWER__
