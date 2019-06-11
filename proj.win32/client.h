@@ -15,8 +15,8 @@ using namespace std;
 #define IP "192.168.1.102"           //IP地址
 #define SIZE 30                      //缓存区大小
 
-extern int ID, n, IfStart, IfAI, N_EnemyEquip;
-extern char EnemyHero, Enemyquip, AQWE, EnemyEquip[5];
+extern int ID, n, IfStart, IfAI, IfEquipUpdate;
+extern char EnemyHero, EnemyEquip, AQWE;
 extern Vec2 Position, AQWE_Direction;
 class Client                         //客户端
 {

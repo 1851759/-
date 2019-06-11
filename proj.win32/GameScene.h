@@ -83,17 +83,18 @@ class GameScene :public cocos2d::Layer
 	int _enermyType;
 	int _meFlag;
 
-	int _meMoney,_meMoney_moment;
+	int _meMoney, _meMoney_moment;
 	int _meExp;
 	int _otherMoney;
 	int _otherExp;
-	bool _ischecking;
+	bool _ischecking=false;
 	cocos2d::TMXTiledMap *_tileMap;
 	cocos2d::TMXLayer *_collidable;
 	cocos2d::Vec2 position_now;
-	int RedScore=9999, BlueScore=9998;                 //Tag
+	int RedScore = 9999, BlueScore = 9998;                 //Tag
 	int moneytag = 8888;
-	
+	int equ_num_me = 0,equ_num_enemy;
+
 public:
 
 	void setMeFlag(int flag) { _meFlag = flag; }
@@ -156,11 +157,10 @@ public:
 	static GameScene* create(char meName, char otherName, bool enermyType);
 	//	static GameScene* createWithPhysics(char meName, char otherName, bool isAI);
 	void shop_xie(cocos2d::Ref *pSender);
-	void shop_shoutao(cocos2d::Ref* pSender);
-	void shop_changgong(cocos2d::Ref *pSender);
+	void shop_duanjian(cocos2d::Ref* pSender);
+	void shop_changjian(cocos2d::Ref *pSender);
 	void shop_kaijia(cocos2d::Ref *pSender);
 	void shop_hongshuijing(cocos2d::Ref *pSender);
-	void shop_lanshuijing(cocos2d::Ref *pSender);
 	virtual void update(float dt);
 
 

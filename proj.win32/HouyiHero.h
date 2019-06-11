@@ -11,25 +11,25 @@
 
 //后羿技能属性
 #define HouyiNormalAttackRange 100.0
-#define HouyiNormalAttackMoveSpeed 3.0
+#define HouyiNormalAttackMoveSpeed 1.0//3.0
 
 
 #define HouyiQSkillLastTime 5.0
 #define HouyiQSkillAttackSpeedAdd 2.0
-#define HouyiQSkillMoveSpeedAdd 20.0
+#define HouyiQSkillMoveSpeedAdd 3.0//20.0
 #define HouyiQSkillCD 10.0
 #define HouyiQSkillAfterShake 1.0
 
 #define HouyiWSkillRange 200.0
 #define HouyiWSkillDamage 100
 #define HouyiWSkillArrowNumber 9
-#define HouyiWSkillMoveSpeed 3.0
+#define HouyiWSkillMoveSpeed 1.0//3.0
 #define HouyiWSkillCD 5.0
 #define HouyiWSkillAfterShake 1.0
 
 #define HouyiESkillRange 1000.0
 #define HouyiESkillDamage 100
-#define HouyiESkillMoveSpeed 5.0
+#define HouyiESkillMoveSpeed 2.0//5.0
 #define HouyiESkillCD 5.0
 #define HouyiESkillAfterShake 1.0
 

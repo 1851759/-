@@ -89,7 +89,7 @@ void Hero::update(float dt)
 		this->changeAttackPoint(AtkPerLevel);
 		this->changeDefensePoint(DefPerLevel);
 		this->changeMaxHealthPoint(HpPerLevel);
-		this->setHealthPoint(this->getMaxHealthPoint());
+		//this->setHealthPoint(this->getMaxHealthPoint());
 		this->changeMagicPoint(MpPerLevel);
 		cocos2d::log("levelUP");
 	}

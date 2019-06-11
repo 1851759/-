@@ -481,7 +481,7 @@ bool GameScene::init()
 
 	//双方防御塔
 	auto player1Tower = DefenceTower::create(Player1);
-	player1Tower->setPosition(560,310);
+	player1Tower->setPosition(560, 310);
 	////////////////////////////////////////////////////playerflag之和是601
 	player1Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(Player2)));
 	player1Tower->scheduleUpdate();
@@ -489,7 +489,7 @@ bool GameScene::init()
 	player1Tower->setScale(0.8);
 
 	auto player2Tower = DefenceTower::create(Player2);
-	player2Tower->setPosition(1160,695);
+	player2Tower->setPosition(1160, 695);
 	player2Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(Player1)));
 	player2Tower->scheduleUpdate();
 	this->addChild(player2Tower, 200, OtherTowerTag);
@@ -497,13 +497,13 @@ bool GameScene::init()
 
 	//双方水晶
 	auto player1Crystal = CrystalTower::create(Player1);
-	player1Crystal->setPosition(380,165);
+	player1Crystal->setPosition(380, 165);
 	player1Crystal->scheduleUpdate();
 	this->addChild(player1Crystal, 200, MeCrystalTag);
 	player1Crystal->setScale(0.8);
 
 	auto player2Crystal = CrystalTower::create(Player2);
-	player2Crystal->setPosition(1285,795);
+	player2Crystal->setPosition(1285, 795);
 	player2Crystal->scheduleUpdate();
 	this->addChild(player2Crystal, 200, OtherCrystalTag);
 	player2Crystal->setScale(0.8);
@@ -519,20 +519,19 @@ bool GameScene::init()
 	this->addChild(menu, 200);
 
 	//装备商店
-/*MenuItemImage *shop_xie = MenuItemImage::create("shop_xie.png", "shop_xie.png", CC_CALLBACK_1(GameScene::shop_xie, this));
-shop_xie->setPosition(Vec2(0,75));
-MenuItemImage *shop_shoutao = MenuItemImage::create("shop_shoutao.png", "shop_shoutao.png", CC_CALLBACK_1(GameScene::shop_shoutao, this));
-shop_shoutao->setPosition(Vec2(0,45));
-MenuItemImage *shop_changgong = MenuItemImage::create("shop_changgong.png", "shop_changgong.png", CC_CALLBACK_1(GameScene::shop_changgong, this));
-shop_changgong->setPosition(Vec2(0,15));
-MenuItemImage *shop_kaijia = MenuItemImage::create("shop_kaijia.png", "shop_kaijia.png", CC_CALLBACK_1(GameScene::shop_kaijia, this));
-shop_kaijia->setPosition(Vec2(0,-15));
-MenuItemImage *shop_hongshuijing = MenuItemImage::create("shop_hongshuijing.png", "shop_hongshuijing.png", CC_CALLBACK_1(GameScene::shop_hongshuijing, this));
-shop_hongshuijing->setPosition(Vec2(0,-45));
-MenuItemImage *shop_lanshuijing = MenuItemImage::create("shop_lanshuijing.png", "shop_lanshuijing.png", CC_CALLBACK_1(GameScene::shop_lanshuijing, this));
-shop_lanshuijing->setPosition(Vec2(0,-75));
-Menu *menu = Menu::create(shop_xie, shop_shoutao,shop_changgong,shop_kaijia,shop_hongshuijing,shop_lanshuijing, NULL);
-this->addChild(menu,1);*/
+    MenuItemImage *shop_xie = MenuItemImage::create("zhuangbei/xie.png", "zhuangbei/xie.png", CC_CALLBACK_1(GameScene::shop_xie, this));
+    shop_xie->setPosition(Vec2(-710,300));
+    MenuItemImage *shop_shoutao = MenuItemImage::create("zhuangbei/duanjian.png", "zhuangbei/duanjian.png", CC_CALLBACK_1(GameScene::shop_duanjian, this));
+    shop_shoutao->setPosition(Vec2(-710,235));
+    MenuItemImage *shop_changgong = MenuItemImage::create("zhuangbei/changjian.png", "zhuangbei/changgong.png", CC_CALLBACK_1(GameScene::shop_changjian, this));
+    shop_changgong->setPosition(Vec2(-710,170));
+    MenuItemImage *shop_kaijia = MenuItemImage::create("zhuangbei/kaijia.png", "zhuangbei/kaijia.png", CC_CALLBACK_1(GameScene::shop_kaijia, this));
+    shop_kaijia->setPosition(Vec2(-710,115));
+    MenuItemImage *shop_hongshuijing = MenuItemImage::create("zhuangbei/hongshuijing.png", "zhuangbei/hongshuijing.png", CC_CALLBACK_1(GameScene::shop_hongshuijing, this));
+    shop_hongshuijing->setPosition(Vec2(-710,50));
+
+    Menu *_menu = Menu::create(shop_xie, shop_shoutao,shop_changgong,shop_kaijia,shop_hongshuijing, NULL);
+    this->addChild(_menu,200);
 
 //左上角战绩
 	auto score_blue = LabelTTF::create("0 ", "Arial", 36);
@@ -559,12 +558,19 @@ this->addChild(menu,1);*/
 	//_meMoney_moment = _meMoney*100;
 	this->setTag(moneytag);
 
-	this->schedule(schedule_selector(GameScene::watchMeAndOther), 1.0 / 60.0);
+	//装备查看面板
+	Sprite*equ_che = Sprite::create("equipment.png");
+	equ_che->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	this->addChild(equ_che, 200, 666);
+	equ_che->setVisible(false);
+
+	this->schedule(schedule_selector(GameScene::watchMeAndOther), 0.03f);
 	this->schedule(schedule_selector(GameScene::wulawula), WulaWulaCD);
+	this->schedule(schedule_selector(GameScene::EnemyEquipUpdate), 0.03f);
 	if (!IfAI)
 	{
-		this->schedule(schedule_selector(GameScene::GetAndMove), 0.03f);
-		this->schedule(schedule_selector(GameScene::SendPosition), 0.03f);
+		this->schedule(schedule_selector(GameScene::GetAndMove), 0.05f);
+		this->schedule(schedule_selector(GameScene::SendPosition), 0.05f);
 	}
 	return true;
 }
@@ -1253,32 +1259,77 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 
 void GameScene::shop_xie(cocos2d::Ref* pSender)
 {
-	Director::getInstance()->end();
+	if (_meMoney >= 300&&equ_num_me<=4) 
+	{
+		_meMoney -= 300; 
+		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeMoveSpeed(30);
+		auto xie = Sprite::create("1.png");
+		this->getChildByTag(666)->addChild(xie);
+		xie->setPosition(320+equ_num_me*80,340);
+		if (!IfAI)
+			Cli.MessageSending("BX");
+		equ_num_me++;
+	}
 }
 
-void GameScene::shop_shoutao(cocos2d::Ref* pSender)
+void GameScene::shop_duanjian(cocos2d::Ref* pSender)
 {
-	Director::getInstance()->end();
+	if (_meMoney >= 300&&equ_num_me<=4)
+	{
+		_meMoney -= 300;
+		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeAttackSpeed(0.5);
+		auto duanjian= Sprite::create("2.png");
+		this->getChildByTag(666)->addChild(duanjian);
+		duanjian->setPosition(320 + equ_num_me* 80, 340);
+		if (!IfAI)
+			Cli.MessageSending("BD");
+		equ_num_me++;
+	}
 }
 
-void GameScene::shop_changgong(cocos2d::Ref* pSender)
+void GameScene::shop_changjian(cocos2d::Ref* pSender)
 {
-	Director::getInstance()->end();
+	if (_meMoney >= 300&& equ_num_me <= 4)
+	{
+		_meMoney -= 300;
+		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeAttackPoint(200);
+		auto changjian = Sprite::create("3.png");
+		this->getChildByTag(666)->addChild(changjian);
+		changjian->setPosition(320 + equ_num_me * 80, 340);
+		if (!IfAI)
+			Cli.MessageSending("BC");
+		equ_num_me++;
+	}
 }
 
 void GameScene::shop_kaijia(cocos2d::Ref* pSender)
 {
-	Director::getInstance()->end();
+	if (_meMoney >= 300&& equ_num_me <= 4)
+	{
+		_meMoney -= 300;
+		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeDefensePoint(200);
+		auto kaijia = Sprite::create("4.png");
+		this->getChildByTag(666)->addChild(kaijia);
+		kaijia->setPosition(320 + equ_num_me * 80, 340);
+		if (!IfAI)
+			Cli.MessageSending("BK");
+		equ_num_me++;
+	}
 }
 
 void GameScene::shop_hongshuijing(cocos2d::Ref* pSender)
 {
-	Director::getInstance()->end();
-}
-
-void GameScene::shop_lanshuijing(cocos2d::Ref* pSender)
-{
-	Director::getInstance()->end();
+	if (_meMoney >= 300&& equ_num_me <= 4)
+	{
+		_meMoney -= 300;
+		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeMaxHealthPoint(100);
+		auto hong = Sprite::create("5.png");
+		this->getChildByTag(666)->addChild(hong);
+		hong->setPosition(320 + equ_num_me * 80, 340);
+		if (!IfAI)
+			Cli.MessageSending("BH");
+		equ_num_me++;
+	}
 }
 
 void GameScene::update(float dt)
@@ -1791,6 +1842,53 @@ void GameScene::wulawula(float dt)
 	otherPaocheSoldier->scheduleUpdate();
 }
 
+void GameScene::EnemyEquipUpdate(float dt)
+{
+	if (IfEquipUpdate)
+	{
+		if (EnemyEquip == 'X')
+		{
+			static_cast<Hero*>(this->getChildByTag(601 - this->getMeFlag()))->changeMoveSpeed(30);
+			auto xie = Sprite::create("1.png");
+			this->getChildByTag(666)->addChild(xie);
+			xie->setPosition(320 + equ_num_enemy * 80, 140);
+			equ_num_enemy++;
+		}
+		if (EnemyEquip == 'D')
+		{
+			static_cast<Hero*>(this->getChildByTag(601 - this->getMeFlag()))->changeAttackSpeed(0.5);
+			auto duanjian = Sprite::create("2.png");
+			this->getChildByTag(666)->addChild(duanjian);
+			duanjian->setPosition(320 + equ_num_enemy * 80, 140);
+			equ_num_enemy++;
+		}
+		if (EnemyEquip == 'C')
+		{
+			static_cast<Hero*>(this->getChildByTag(601 - this->getMeFlag()))->changeAttackPoint(200);
+			auto changjian = Sprite::create("3.png");
+			this->getChildByTag(666)->addChild(changjian);
+			changjian->setPosition(320 + equ_num_enemy * 80, 140);
+			equ_num_enemy++;
+		}
+		if (EnemyEquip == 'K')
+		{
+			static_cast<Hero*>(this->getChildByTag(601 - this->getMeFlag()))->changeDefensePoint(200);
+			auto kaijia = Sprite::create("4.png");
+			this->getChildByTag(666)->addChild(kaijia);
+			kaijia->setPosition(320 + equ_num_enemy * 80, 140);
+			equ_num_enemy++;
+		}
+		if (EnemyEquip == 'H')
+		{
+			static_cast<Hero*>(this->getChildByTag(601 - this->getMeFlag()))->changeMaxHealthPoint(100);
+			auto hong = Sprite::create("5.png");
+			this->getChildByTag(666)->addChild(hong);
+			hong->setPosition(320 + equ_num_enemy * 80, 140);
+			equ_num_enemy++;
+		}
+		IfEquipUpdate = 0;
+	}
+}
 
 ///////////////在此处定义装备查看/////////////////////////////////////////////////////////////////////////////
 void GameScene::equipmentCheck()
@@ -1799,14 +1897,16 @@ void GameScene::equipmentCheck()
 	if (this->isChecking())
 	{
 		this->setUnChecking();
+		this->getChildByTag(666)->setVisible(false);
 		//此时按p时已经在查看装备
 		//按p的作用为关闭面板
 		//设置面板为不可见
 	}
 
-	if (!this->isChecking())
+	else if (!this->isChecking())
 	{
 		this->setChecking();
+		this->getChildByTag(666)->setVisible(true);
 		//此时按p为开启面板
 		//设置面板为可见
 	}
@@ -1853,5 +1953,3 @@ void GameScene::Zhanji(float dt)
 	mm2->setPosition(150, 850);
 	this->addChild(mm2, 2, RedScore);
 }
-
-

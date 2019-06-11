@@ -4,8 +4,8 @@
 #include"GameScene.h"
 #include"cocos2d.h"
 USING_NS_CC;
-int ret, ID = 1, n = 0, IfStart = 0, IfAI = 0, N_EnemyEquip = 0;          //IfStartÅÐ¶ÏÊÇ·ñ¿ªÊ¼£¬IfAIÅÐ¶ÏÊÇ·ñÊÇÈË»ú¶ÔÕ½
-char EnemyHero = '\0', AQWE, EnemyEquip[5] = { 0 };
+int ret, ID = 1, n = 0, IfStart = 0, IfAI = 0, IfEquipUpdate = 0;          //IfStartÅÐ¶ÏÊÇ·ñ¿ªÊ¼£¬IfAIÅÐ¶ÏÊÇ·ñÊÇÈË»ú¶ÔÕ½
+char EnemyHero = '\0', AQWE, EnemyEquip;
 Vec2 Position = { 0,0 }, AQWE_Direction;
 Vec2 CharToVec2(char Message[SIZE])                //½«´«µÝµÄcharÊý×é×ª»¯ÎªfloatÊý×é
 {
@@ -123,8 +123,8 @@ DWORD WINAPI ClientThread(LPVOID lpParameter)                              //Ïß³
 		}
 		if (message[1] == 'B')                                           //Âò×°±¸
 		{
-			EnemyEquip[N_EnemyEquip] = message[2];
-			N_EnemyEquip++;
+			EnemyEquip = message[2];
+			IfEquipUpdate = 1;
 		}
 		if (message[0] == 'o')                                             //over                          
 			break;
