@@ -67,13 +67,15 @@ HouyiHero* HouyiHero::create()
 bool HouyiHero::init()
 {
 	//下边的if里搞出了英雄的图片
-	if (!Sprite::initWithFile("HouyiHero.png"))
+	if (!Sprite::initWithFile("houyi.jpg"))
 	{
 		
 		return false;
 	}
+	this->setScale(0.3);
 	this->createBlood();
-	this->setScale(0.2);
+	this->createLevel();
+
 	return true;
 }
 
@@ -119,7 +121,7 @@ void HouyiHero::AIcontrol(Hero* hero)
 	this->setOtherHeroPoint(hero->getPosition());
 	*/
 	this->setOtherHero(hero);
-	this->schedule(schedule_selector(HouyiHero::AIAction),1.0/60.0f);
+	this->schedule(schedule_selector(HouyiHero::AIAction),1.0/20.0);
 }
 	
 void HouyiHero::AIAction(float dt)

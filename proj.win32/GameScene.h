@@ -12,6 +12,7 @@
 #include "HouyiHero.h"
 #include "YaseHero.h"
 #include "DajiHero.h"
+#include"JieHero.h"
 
 USING_NS_CC;
 
@@ -48,7 +49,7 @@ USING_NS_CC;
 #define TowerMoney 100
 
 //出兵间隔
-#define WulaWulaCD 10.0
+#define WulaWulaCD 30.0
 
 typedef enum
 {
@@ -91,6 +92,7 @@ class GameScene :public cocos2d::Layer
 	cocos2d::TMXTiledMap *_tileMap;
 	cocos2d::TMXLayer *_collidable;
 	cocos2d::Vec2 position_now;
+	cocos2d::Vec2 position_now_me, position_now_other;
 	int RedScore = 9999, BlueScore = 9998;                 //Tag
 	int moneytag = 8888;
 	int equ_num_me = 0,equ_num_enemy;
@@ -127,6 +129,16 @@ public:
 	void takeDajiQSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
 	void takeDajiWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
 	void takeDajiESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
+
+	//劫技能
+	void takeJieNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
+	void takeJieQSkill(JieHero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
+	void takeJieWSkill(JieHero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
+	void jieWShadow(float dt);
+	void takeJieESkill(JieHero* hero, int flag, Vec2 startPoint, Vec2 targetPoint);
+	void jieEShadow(float dt);
+	void jieEappear(float dt);
+	void jieEDamage(float dt);
 
 	//获取meHeroTag
 	char getMeHeroTag() { return meHeroTag; }
@@ -174,7 +186,9 @@ public:
 	void watchMeAndOther(float dt);
 
 	//出兵函数
-	void wulawula(float dt);
+	void jinzhanWulawula(float dt);
+	void yuanchengWulawula(float dt);
+	void paocheWulawula(float dt);
 
 	//装备面板
 	void equipmentCheck();
@@ -188,6 +202,9 @@ public:
 	//接收对方英雄位置并进行移动
 	void GetAndMove(float dt);
 
+	//金钱随时间增加
+	void MakeMoney(float dt);
+
 	//攻击与技能释放
 	//void Attacking(float dt);
 
@@ -196,6 +213,7 @@ public:
 
 	//判断战绩
 	void Zhanji(float dt);
+
 };
 
 #endif

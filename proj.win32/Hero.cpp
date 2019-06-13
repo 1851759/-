@@ -1,12 +1,15 @@
 #include "cocos2d.h"
 #include "Hero.h"
+#include"client.h"
 USING_NS_CC;
 //定义两方英雄复活点
 //注意此处用数字表示///////////////////////////////////////////////////////////////////////////////////////////////////
 cocos2d::Vec2 Player1Reborn(650, 350);
 cocos2d::Vec2 Player2Reborn(1050, 650);
 
-int n_RedDeath = 0, n_BlueDeath = 0;
+int n_RedDeath = 0, n_BlueDeath = 0, i;
+char ZhanjiSengding[SIZE] = "Z";
+string zhanji;
 bool Hero::init()
 {
 	//下边的if里搞出了英雄的图片
@@ -32,8 +35,8 @@ Hero* Hero::create()
 		sprite = NULL;
 		return NULL;
 	}
-	
-	
+
+
 	return sprite;
 }
 
@@ -106,16 +109,32 @@ void Hero::update(float dt)
 		this->setHealthPoint(this->getMaxHealthPoint());
 		if (this->getFlag() == Player1)
 		{
-			n_RedDeath++;
+			
+			if (ID == 1)
+			{
+				n_RedDeath++;
+				ZhanjiSengding[1] = 'R';
+				ZhanjiSengding[2] = n_RedDeath;
+				ZhanjiSengding[3] = '/';
+				Cli.MessageSending(ZhanjiSengding);
+			}
 			this->setPosition(Player1Reborn);
 		}
 		if (this->getFlag() == Player2)
 		{
-			n_BlueDeath++;
+			
+			if (ID == 1)
+			{
+				n_BlueDeath++;
+				ZhanjiSengding[1] = 'B';
+				ZhanjiSengding[2] = n_BlueDeath;
+				ZhanjiSengding[3] = '/';
+				Cli.MessageSending(ZhanjiSengding);
+			}
 			this->setPosition(Player2Reborn);
 		}
 	}
-	cocos2d::log("hp %f exp %d money %d", this->getHealthPoint(), this->getExpPoint(), this->showMeTheMoney());
+	/*cocos2d::log("hp %f exp %d money %d", this->getHealthPoint(), this->getExpPoint(), this->showMeTheMoney());*/
 }
 
 void Hero::createBlood()
@@ -131,7 +150,7 @@ void Hero::createBlood()
 	pro->setBarChangeRate(Vec2(1, 0));
 	pro->setTag(bloodbar);
 	this->addChild(pro, 200);
-	this->schedule(schedule_selector(Hero::checkBlood), 0.01f);
+	this->schedule(schedule_selector(Hero::checkBlood), 1.0 / 10.0);
 }
 
 void Hero::checkBlood(float dt)
@@ -143,3 +162,20 @@ void Hero::checkBlood(float dt)
 
 
 
+void Hero::createLevel()
+{
+	auto level = LabelTTF::create("1", "Arial", 45);
+	level->setPosition(-350, 100);
+	this->addChild(level, 200, 9888);
+	this->schedule(schedule_selector(Hero::checkLevel), 1.0 / 10.0);
+}
+
+void Hero::checkLevel(float dt)
+{
+	this->getChildByTag(9888);
+	this->removeChildByTag(9888);
+	cocos2d::__String* level = cocos2d::__String::createWithFormat("%d", this->getLevel());
+	auto level2 = LabelTTF::create(level->getCString(), "Arial", 45);
+	level2->setPosition(-350, 100);
+	this->addChild(level2, 200, 9888);
+}

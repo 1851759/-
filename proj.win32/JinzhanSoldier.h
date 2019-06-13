@@ -13,7 +13,7 @@
 //在此处定义近战初始属性
 #define JinzhanMoveSpeed 50.0
 #define JinzhanAttackSpeed 0.4
-#define JinzhanAttack 200.0
+#define JinzhanAttack 20.0
 #define JinzhanDefence 20.0
 #define JinzhanNormalAttackAfterShake 1.0/JinzhanAttackSpeed 
 #define JinzhanHealthPoint 100.0

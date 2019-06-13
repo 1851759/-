@@ -91,7 +91,7 @@ void YuanchengSoldier::update(float dt)
 void YuanchengSoldier::AIcontrol(Hero* hero)
 {
 	this->setOtherHero(hero);
-	this->schedule(schedule_selector(YuanchengSoldier::AIAction), 1.0 / 60.0f);
+	this->schedule(schedule_selector(YuanchengSoldier::AIAction), 1.0 / 20.0);
 }
 
 void YuanchengSoldier::AIAction(float dt)

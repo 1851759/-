@@ -4,7 +4,7 @@
 #include"GameScene.h"
 #include"cocos2d.h"
 USING_NS_CC;
-int ret, ID = 1, n = 0, IfStart = 0, IfAI = 0, IfEquipUpdate = 0;          //IfStartÅÐ¶ÏÊÇ·ñ¿ªÊ¼£¬IfAIÅÐ¶ÏÊÇ·ñÊÇÈË»ú¶ÔÕ½
+int ret, ID = 1, n = 0, IfStart = 0, IfAI = 0, IfEquipUpdate = 0, P1Exp = 0, P2Exp = 0, P1Blood = 200, P2Blood = 200;         //IfStartÅÐ¶ÏÊÇ·ñ¿ªÊ¼£¬IfAIÅÐ¶ÏÊÇ·ñÊÇÈË»ú¶ÔÕ½
 char EnemyHero = '\0', AQWE, EnemyEquip;
 Vec2 Position = { 0,0 }, AQWE_Direction;
 Vec2 CharToVec2(char Message[SIZE])                //½«´«µÝµÄcharÊý×é×ª»¯ÎªfloatÊý×é
@@ -70,7 +70,7 @@ DWORD WINAPI ClientThread(LPVOID lpParameter)                              //Ïß³
 		log("%s", message);
 		if (SOCKET_ERROR == ret)
 		{
-			cout << "recvÊ§°Ü" << endl;
+			log("recvÊ§°Ü");
 			closesocket(*ClientSocket);                                    //¹Ø±ÕÌ×½Ó×Ö       
 			WSACleanup();                                                  //ÊÍ·ÅÌ×½Ó×Ö×ÊÔ´;  
 			return -1;
@@ -126,6 +126,27 @@ DWORD WINAPI ClientThread(LPVOID lpParameter)                              //Ïß³
 			EnemyEquip = message[2];
 			IfEquipUpdate = 1;
 		}
+		if (message[1] == 'Z')
+		{
+			if (message[2] == 'R')
+			{
+				n_RedDeath = message[3];
+			}
+			else
+			{
+				n_BlueDeath = message[3];
+			}
+		}
+		if (message[1] == 'L')
+		{
+			P1Exp = message[2] * 100;
+			P2Exp = message[3] * 100;
+		}
+		if (message[1] == 'X')
+		{
+			P1Blood = message[2] * 10;
+			P2Blood = message[3] * 10;
+		}
 		if (message[0] == 'o')                                             //over                          
 			break;
 		//Ò»´ó¶Ñif...
@@ -162,6 +183,7 @@ Client::Client()
 		return;
 	}
 	CreateThread(NULL, 0, &ClientThread, &ClientSock, 0, NULL);  //½¨Á¢×ÓÏß³Ì
+	CreateThread(NULL, 0, &ClientThread, &ClientSock, 0, NULL);  //ÔÙ½¨Á¢×ÓÏß³Ì
 }
 
 Client::~Client()

@@ -13,7 +13,7 @@
 //在此处定义近战初始属性
 #define PaocheMoveSpeed 50.0
 #define PaocheAttackSpeed 0.4
-#define PaocheAttack 200.0
+#define PaocheAttack 20.0
 #define PaocheDefence 20.0
 #define PaocheNormalAttackAfterShake 1.0/PaocheAttackSpeed 
 #define PaocheHealthPoint 100.0

@@ -67,6 +67,7 @@ bool JieHero::init()
 		return false;
 	}
 	this->createBlood();
+	this->createLevel();
 	this->setScale(0.2);
 	return true;
 }

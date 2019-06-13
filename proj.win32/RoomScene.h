@@ -30,7 +30,6 @@ public:
 	int getFlag() { return _flag; } 
 
 
-	void ChooseHero_h(cocos2d::Ref* pSender);
 	void menuBackToStart(cocos2d::Ref* pSender);
 	void menuReadyCallback(cocos2d::Ref* pSender);
 
@@ -41,7 +40,8 @@ public:
 	char getOtherHeroName() { return _otherHeroName; }
 	void ChooseHero_y(cocos2d::Ref* pSender);
 	void ChooseHero_d(cocos2d::Ref* pSender);
-
+	void ChooseHero_h(cocos2d::Ref* pSender);
+	void ChooseHero_j(cocos2d::Ref* pSender);
 
 	void menuClickToAddAI(cocos2d::Ref* pSender);
 	void menuClickToAddMyHero(cocos2d::Ref* pSender);

@@ -12,10 +12,10 @@ using namespace std;
 #pragma comment(lib, "ws2_32.lib")  
 
 #define PORT 8000                    //端口
-#define IP "192.168.1.102"           //IP地址
+#define IP "192.168.1.103"           //IP地址                            //"192.168.43.243"
 #define SIZE 30                      //缓存区大小
 
-extern int ID, n, IfStart, IfAI, IfEquipUpdate;
+extern int ID, n, IfStart, IfAI, IfEquipUpdate, P1Exp, P2Exp, P1Blood, P2Blood;
 extern char EnemyHero, EnemyEquip, AQWE;
 extern Vec2 Position, AQWE_Direction;
 class Client                         //客户端

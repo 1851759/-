@@ -91,7 +91,7 @@ void PaocheSoldier::update(float dt)
 void PaocheSoldier::AIcontrol(Hero* hero)
 {
 	this->setOtherHero(hero);
-	this->schedule(schedule_selector(PaocheSoldier::AIAction), 1.0 / 60.0f);
+	this->schedule(schedule_selector(PaocheSoldier::AIAction), 1.0 / 20.0);
 }
 
 void PaocheSoldier::AIAction(float dt)

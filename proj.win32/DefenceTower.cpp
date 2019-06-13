@@ -45,7 +45,8 @@ bool DefenceTower::init()
 		body->setCategoryBitmask(MEUNITCATEGORY);
 		body->setCollisionBitmask(MEUNITCOLLISION);
 		this->setPhysicsBody(body);
-		this->setScale(0.2);
+		this->createBlood();
+		this->setScale(0.5);
 		return true;
 	}
 
@@ -56,7 +57,8 @@ bool DefenceTower::init()
 		body->setCategoryBitmask(OTHERUNITCATEGORY);
 		body->setCollisionBitmask(OTHERUNITCOLLISION);
 		this->setPhysicsBody(body);
-		this->setScale(0.2);
+		this->createBlood();
+		this->setScale(0.5);
 		return true;
 	}
 	return false;

@@ -24,6 +24,11 @@
 #include "DajiWSkill.h"
 #include "DajiESkill.h"
 
+#include "JieHero.h"
+#include "JieNormalAttack.h"
+#include "JieQSkill.h"
+
+
 #include"Soldier.h"
 #include"JinzhanSoldier.h"
 #include"YuanchengSoldier.h"
@@ -34,13 +39,14 @@
 
 USING_NS_CC;
 Vec2 position_last = Vec2(0, 0);
+Vec2 position_last_me = Vec2(0, 0), position_last_other = Vec2(0, 0);
 //英雄起始位置
 //注意此处用数字表示////////////////////////////////////////////////////////////////////////////////////////////////////
 Vec2 Player1StartPosition(650, 350);
 Vec2 Player2StartPosition(1050, 650);
 Vec2 HeroPosition;
 char *AboutKeyboardMessage;
-char JustAboutKeyboard[SIZE] = "Q0/0/";
+char JustAboutKeyboard[SIZE] = "Q0/0/", TwoBlood[SIZE] = "X", TwoExp[SIZE] = "L";
 
 GameScene* GameScene::create(char meName, char otherName, bool isAI)
 {
@@ -85,8 +91,11 @@ Scene* GameScene::createScene(char meHero, char otherHero, bool isAI)
 void GameScene::menuBackCallback(cocos2d::Ref* pSender)
 {
 
-	auto sc = HelloWorld::createScene();
-	Director::getInstance()->replaceScene(sc);
+	if (IfAI) 
+	{
+		auto sc = HelloWorld::createScene();
+		Director::getInstance()->replaceScene(sc);
+	}
 }
 
 //onEnter函数
@@ -256,8 +265,20 @@ bool GameScene::init()
 		hero->setHuman();
 		addChild(hero, 100, hero->getFlag());
 		this->setMeFlag(hero->getFlag());
+
+		//增加技能图标
+		auto HouyiQ = Sprite::create("HouyiQ.png");
+		HouyiQ->setPosition(origin.x + visibleSize.width * 3 / 4, origin.y + visibleSize.height / 9);
+		this->addChild(HouyiQ, 200);
+		auto HouyiW = Sprite::create("HouyiW.png");
+		HouyiW->setPosition(origin.x + visibleSize.width * 13 / 16, origin.y + visibleSize.height / 9);
+		this->addChild(HouyiW, 200);
+		auto HouyiE = Sprite::create("HouyiE.png");
+		HouyiE->setPosition(origin.x + visibleSize.width * 7 / 8, origin.y + visibleSize.height / 9);
+		this->addChild(HouyiE, 200);
+
 		//该函数为计算冷却时间和攻击间隔的函数
-		hero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
+		hero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 20.0);
 		hero->scheduleUpdate();
 		break;
 	}
@@ -299,8 +320,20 @@ bool GameScene::init()
 		hero->setHuman();
 		addChild(hero, 100, hero->getFlag());
 		this->setMeFlag(hero->getFlag());
+
+		//增加技能图标
+		auto YaseQ = Sprite::create("YaseQ.png");
+		YaseQ->setPosition(origin.x + visibleSize.width * 3 / 4, origin.y + visibleSize.height / 9);
+		this->addChild(YaseQ, 200);
+		auto YaseW = Sprite::create("YaseW.png");
+		YaseW->setPosition(origin.x + visibleSize.width * 13 / 16, origin.y + visibleSize.height / 9);
+		this->addChild(YaseW, 200);
+		auto YaseE = Sprite::create("YaseE.png");
+		YaseE->setPosition(origin.x + visibleSize.width * 7 / 8, origin.y + visibleSize.height / 9);
+		this->addChild(YaseE, 200);
+
 		//该函数为计算冷却时间和攻击间隔的函数
-		hero->schedule(schedule_selector(YaseHero::buffUpdate), 1.0 / 60.0);
+		hero->schedule(schedule_selector(YaseHero::buffUpdate), 1.0 / 20.0);
 		hero->scheduleUpdate();
 		break;
 	}
@@ -308,6 +341,58 @@ bool GameScene::init()
 	case 'D':
 	{
 		static auto hero = DajiHero::create();
+		auto body = PhysicsBody::createCircle(hero->getContentSize().width / 2);
+		hero->setPhysicsBody(body);
+		if (!IfAI)
+		{
+			if (ID == 1)
+			{
+				body->setContactTestBitmask(MEUNITTEST);
+				body->setCategoryBitmask(MEUNITCATEGORY);
+				body->setCollisionBitmask(MEUNITCOLLISION);
+				hero->setPosition(Player1StartPosition);
+				hero->setFlag(Player1);
+			}
+			else
+			{
+				body->setContactTestBitmask(OTHERUNITTEST);
+				body->setCategoryBitmask(OTHERUNITCATEGORY);
+				body->setCollisionBitmask(OTHERUNITCOLLISION);
+				hero->setPosition(Player2StartPosition);
+				hero->setFlag(Player2);
+			}
+		}
+		else
+		{
+			body->setContactTestBitmask(MEUNITTEST);
+			body->setCategoryBitmask(MEUNITCATEGORY);
+			body->setCollisionBitmask(MEUNITCOLLISION);
+			hero->setPosition(Player1StartPosition);
+			hero->setFlag(Player1);
+		}
+		hero->setHuman();
+		addChild(hero, 100, hero->getFlag());
+		this->setMeFlag(hero->getFlag());
+
+		//增加技能图标
+		auto DajiQ = Sprite::create("DajiQ.png");
+		DajiQ->setPosition(origin.x + visibleSize.width * 3 / 4, origin.y + visibleSize.height / 9);
+		this->addChild(DajiQ, 200);
+		auto DajiW = Sprite::create("DajiW.png");
+		DajiW->setPosition(origin.x + visibleSize.width * 13 / 16, origin.y + visibleSize.height / 9);
+		this->addChild(DajiW, 200);
+		auto DajiE = Sprite::create("DajiE.png");
+		DajiE->setPosition(origin.x + visibleSize.width * 7 / 8, origin.y + visibleSize.height / 9);
+		this->addChild(DajiE, 200);
+
+		//该函数为计算冷却时间和攻击间隔的函数
+		hero->scheduleUpdate();
+		break;
+	}
+	//劫
+	case 'J':
+	{
+		static auto hero = JieHero::create();
 		auto body = PhysicsBody::createCircle(hero->getContentSize().width / 2);
 		hero->setPhysicsBody(body);
 		if (!IfAI)
@@ -388,7 +473,7 @@ bool GameScene::init()
 		}
 		addChild(otherHero, 100, otherHero->getFlag());
 		otherHero->scheduleUpdate();
-		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
+		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 20.0);
 		break;
 	}
 
@@ -429,7 +514,6 @@ bool GameScene::init()
 		}
 		addChild(otherHero, 100, otherHero->getFlag());
 		otherHero->scheduleUpdate();
-		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
 		break;
 	}
 
@@ -470,7 +554,7 @@ bool GameScene::init()
 		}
 		addChild(otherHero, 100, otherHero->getFlag());
 		otherHero->scheduleUpdate();
-		otherHero->schedule(schedule_selector(HouyiHero::buffUpdate), 1.0 / 60.0);
+		otherHero->schedule(schedule_selector(YaseHero::buffUpdate), 1.0 / 20.0);
 		break;
 	}
 
@@ -486,27 +570,27 @@ bool GameScene::init()
 	player1Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(Player2)));
 	player1Tower->scheduleUpdate();
 	this->addChild(player1Tower, 200, MeTowerTag);
-	player1Tower->setScale(0.8);
+	//player1Tower->setScale(0.8);
 
 	auto player2Tower = DefenceTower::create(Player2);
 	player2Tower->setPosition(1160, 695);
 	player2Tower->AIcontrol(dynamic_cast<Hero*>(this->getChildByTag(Player1)));
 	player2Tower->scheduleUpdate();
 	this->addChild(player2Tower, 200, OtherTowerTag);
-	player2Tower->setScale(0.8);
+	//player2Tower->setScale(0.8);
 
 	//双方水晶
 	auto player1Crystal = CrystalTower::create(Player1);
 	player1Crystal->setPosition(380, 165);
 	player1Crystal->scheduleUpdate();
 	this->addChild(player1Crystal, 200, MeCrystalTag);
-	player1Crystal->setScale(0.8);
+	//player1Crystal->setScale(0.8);
 
 	auto player2Crystal = CrystalTower::create(Player2);
 	player2Crystal->setPosition(1285, 795);
 	player2Crystal->scheduleUpdate();
 	this->addChild(player2Crystal, 200, OtherCrystalTag);
-	player2Crystal->setScale(0.8);
+	//player2Crystal->setScale(0.8);
 	//设置返回初始场景的菜单
 	MenuItemFont::setFontName("Arial");
 	MenuItemFont::setFontSize(20);
@@ -546,7 +630,7 @@ bool GameScene::init()
 	score_red->setPosition(150, 850);
 	score_red->setTag(RedScore);
 
-	this->schedule(schedule_selector(GameScene::Zhanji), 0.001f);
+	this->schedule(schedule_selector(GameScene::Zhanji), 1.0 / 10.0);
 
 	//金币
 	auto gold = LabelTTF::create("Gold:", "Arial", 18);
@@ -564,13 +648,14 @@ bool GameScene::init()
 	this->addChild(equ_che, 200, 666);
 	equ_che->setVisible(false);
 
-	this->schedule(schedule_selector(GameScene::watchMeAndOther), 0.03f);
-	this->schedule(schedule_selector(GameScene::wulawula), WulaWulaCD);
-	this->schedule(schedule_selector(GameScene::EnemyEquipUpdate), 0.03f);
+	this->schedule(schedule_selector(GameScene::watchMeAndOther), 1.0 / 20.0);
+	this->schedule(schedule_selector(GameScene::jinzhanWulawula), WulaWulaCD);
+	this->schedule(schedule_selector(GameScene::EnemyEquipUpdate), 1.0 / 20.0);
+	this->schedule(schedule_selector(GameScene::MakeMoney), 1);
 	if (!IfAI)
 	{
-		this->schedule(schedule_selector(GameScene::GetAndMove), 0.05f);
-		this->schedule(schedule_selector(GameScene::SendPosition), 0.05f);
+		this->schedule(schedule_selector(GameScene::GetAndMove), 1.0 / 20.0);
+		this->schedule(schedule_selector(GameScene::SendPosition), 1.0 / 20.0);
 	}
 	return true;
 }
@@ -579,6 +664,12 @@ bool GameScene::init()
 //by 王文政 2019年6月2日
 void GameScene::watchMeAndOther(float dt)
 {
+	position_now_other = (this->getChildByTag(601 - this->getMeFlag()))->getPosition();
+	if (setPlayerPosition(position_now_other) == true)
+	{
+		(this->getChildByTag(601 - this->getMeFlag()))->setPosition(position_last_other);
+	}
+	else position_last_other = position_now_other;
 	Hero* meHero = dynamic_cast<Hero*>(this->getChildByTag(this->getMeFlag()));
 	Hero* otherHero = dynamic_cast<Hero*>(this->getChildByTag(601 - this->getMeFlag()));
 	//监控我方经验金币
@@ -746,7 +837,7 @@ void GameScene::watchMeAndOther(float dt)
 				//判断并进行普攻
 				if (AQWE == 'A')
 				{
-					takeYaseNormalAttack(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+					takeYaseNormalAttack(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
 				}
 				//判断并进行Q技能
 				if (AQWE == 'Q')
@@ -757,12 +848,12 @@ void GameScene::watchMeAndOther(float dt)
 				//判断并进行W技能
 				if (AQWE == 'W')
 				{
-					takeYaseWSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+					takeYaseWSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
 				}
 				//判断并进行E技能
 				if (AQWE == 'E')
 				{
-					takeYaseESkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+					takeYaseESkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
 				}
 			}
 			//妲己
@@ -771,22 +862,22 @@ void GameScene::watchMeAndOther(float dt)
 				//判断并进行普攻
 				if (AQWE == 'A')
 				{
-					takeDajiNormalAttack(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+					takeDajiNormalAttack(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
 				}
 				//判断并进行Q技能
 				if (AQWE == 'Q')
 				{
-					takeDajiQSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+					takeDajiQSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
 				}
 				//判断并进行W技能
 				if (AQWE == 'W')
 				{
-					takeDajiWSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+					takeDajiWSkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
 				}
 				//判断并进行E技能
 				if (AQWE == 'E')
 				{
-					takeDajiESkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, meHeroPoint);
+					takeDajiESkill(otherHero, 601 - this->getMeFlag(), otherHeroPoint, AQWE_Direction);
 				}
 			}
 			n--;
@@ -798,6 +889,28 @@ void GameScene::watchMeAndOther(float dt)
 	auto mm = LabelTTF::create(m->getCString(), "Arial", 18);
 	mm->setPosition(1330, 20);
 	this->addChild(mm, 2, moneytag);
+
+	//客户端1号发送己方血量和等级
+	if (ID == 1)
+	{
+		P1Blood = meHero->getHealthPoint();
+		P2Blood = otherHero->getHealthPoint();
+		P1Exp = meHero->getExpPoint();
+		P2Exp = otherHero->getExpPoint();
+		TwoBlood[1] = P1Blood / 10;
+		TwoBlood[2] = P2Blood / 10;
+		TwoExp[1] = P1Exp / 100;
+		TwoExp[2] = P2Exp / 100;
+		Cli.MessageSending(TwoBlood);
+		Cli.MessageSending(TwoExp);
+	}
+	else
+	{
+		meHero->setHealthPoint(P2Blood);
+		otherHero->setHealthPoint(P1Blood);
+		meHero->setExpPoint(P2Exp);
+		otherHero->setExpPoint(P1Exp);
+	}
 }
 
 //by 王文政 2019年5月20日
@@ -875,12 +988,34 @@ void GameScene::keyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 	case EventKeyboard::KeyCode::KEY_W:
 	{
 		target->thisKeyPressed('W');
+		if (target->getHeroName() == 'J' && !static_cast<JieHero*>(target)->isInDisappear())
+		{
+			if (static_cast<JieHero*>(target)->isWShadowOn() && static_cast<JieHero*>(target)->wCanChange())
+			{
+				static_cast<JieHero*>(target)->setCanWChange(false);
+				Vec2 tPos{ target->getPosition() };
+				target->setPosition(this->getChildByTag(WShadowTag)->getPosition());
+				this->getChildByTag(WShadowTag)->setPosition(tPos);
+				static_cast<JieHero*>(target)->setWShadowPoint(tPos);
+			}
+		}
 		break;
 	}
 
 	case EventKeyboard::KeyCode::KEY_E:
 	{
 		target->thisKeyPressed('E');
+		if (target->getHeroName() == 'J' && !static_cast<JieHero*>(target)->isInDisappear())
+		{
+			if (static_cast<JieHero*>(target)->isEShadowOn() && static_cast<JieHero*>(target)->eCanChange())
+			{
+				static_cast<JieHero*>(target)->setCanEChange(false);
+				Vec2 tPos{ target->getPosition() };
+				target->setPosition(this->getChildByTag(EShadowTag)->getPosition());
+				this->getChildByTag(EShadowTag)->setPosition(tPos);
+				static_cast<JieHero*>(target)->setEShadowPoint(tPos);
+			}
+		}
 		break;
 	}
 	//暂定按P键实现查看装备功能
@@ -1254,7 +1389,136 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			}
 		}
 	}
-	this->schedule(schedule_selector(GameScene::collision), 0.001f);
+	//如果选择劫，暂时劫仅限于人机对战中己方使用
+	if (this->meHeroTag == 'J')
+	{
+		auto target = static_cast<JieHero*>(event->getCurrentTarget());
+		//将英雄的成员变量touchPoint赋值为touchPosition
+		target->setTouchPoint(touchPosition);
+		//获取英雄当前位置
+		Vec2 heroPosition = target->getPosition();
+
+		//如果点击鼠标时未按键，则把鼠标点击作为向该点移动
+		if (!target->isPressingKeyboard() && target->getHeroAfterShake() <= 0.01)
+		{
+			heroMove(target);
+		}
+		//如果点击鼠标时按键，则根据按键进行技能释放
+		//此时鼠标的点对应于技能释放的点
+		if (target->isPressingKeyboard())
+		{
+
+			char key = target->pressThisKey();
+			switch (key)
+			{
+			case 'A':
+			{
+				if (target->getAttackWaitTime() <= 0.01 && !target->isInDisappear())
+				{
+					//停止当前的移动进行普攻
+					target->stopActionByTag(HeroMove);
+					takeJieNormalAttack(target, target->getFlag(), heroPosition, touchPosition);
+
+					////发送给对方客户端
+					//if (!IfAI)
+					//{
+					//	AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+					//	AboutKeyboardMessage[0] = 'A';
+					//	Cli.MessageSending(AboutKeyboardMessage);
+					//}
+
+					//重置普攻间隔和攻击后摇
+					target->setAttackWaitTime(1.0 / target->getAttackSpeed());
+					target->setHeroAfterShake(target->getNormalAttackAfterShake());
+				}
+				break;
+			}
+
+			case 'Q':
+			{
+				if (target->getQSkillWaitTime() <= 0.01 && !target->isInDisappear())
+				{
+					//停止当前的移动进行Q
+					target->stopActionByTag(HeroMove);
+					takeJieQSkill(target, target->getFlag(), heroPosition, touchPosition);
+					//发送给对方客户端
+					/*if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'Q';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}*/
+					//重置Q CD和技能后摇
+					target->setQSkillWaitTime(target->getQSkillCdTime());
+					target->setHeroAfterShake(target->getQSkillAfterShake());
+				}
+				break;
+			}
+			case 'W':
+			{
+
+				if (target->getWSkillWaitTime() <= 0.01 && heroPosition.getDistance(touchPosition) <= JieWSkillRange
+					&& !target->isInDisappear())
+				{
+					//停止当前的移动进行W
+					target->stopActionByTag(HeroMove);
+					takeJieWSkill(target, target->getFlag(), heroPosition, touchPosition);
+
+					//发送给对方客户端
+					/*if (!IfAI)
+					{
+						AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+						AboutKeyboardMessage[0] = 'W';
+						Cli.MessageSending(AboutKeyboardMessage);
+					}*/
+
+					//重置W CD和技能后摇
+					target->setWSkillWaitTime(target->getWSkillCdTime());
+					target->setHeroAfterShake(target->getWSkillAfterShake());
+				}
+				break;
+			}
+			case 'E':
+			{
+
+				if (target->getESkillWaitTime() <= 0.01 && heroPosition.getDistance(touchPosition) <= JieESkillRange
+					&& !target->isInDisappear()
+					&& touchPosition.getDistance(this->getChildByTag(601 - this->getMeFlag())->getPosition()) <= 10)
+				{
+					//停止当前的移动进行大招
+					target->stopActionByTag(HeroMove);
+					takeJieESkill(target, target->getFlag(), heroPosition, touchPosition);
+
+					////发送给对方客户端
+					//if (!IfAI)
+					//{
+					//	AboutKeyboardMessage = FloatToChar(touchPosition.x, touchPosition.y);
+					//	AboutKeyboardMessage[0] = 'E';
+					//	Cli.MessageSending(AboutKeyboardMessage);
+					//}
+
+					//重置大招等待时间
+					target->setESkillWaitTime(target->getESkillCdTime());
+					target->setHeroAfterShake(target->getESkillAfterShake());
+				}
+				break;
+
+			}
+
+			case 'P':
+			{
+				break;
+			}
+
+			case 'B':
+			{
+				break;
+			}
+			default:break;
+			}
+		}
+	}
+	this->schedule(schedule_selector(GameScene::collision), 1.0 / 60.0);
 }
 
 void GameScene::shop_xie(cocos2d::Ref* pSender)
@@ -1390,8 +1654,16 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		//给对面英雄加经验和金币
 		if (meHero->getHealthPoint() <= 0)
 		{
-			this->changeOtherExp(HeroExp);
-			this->changeOtherMoney(HeroMoney);
+			if (ID == 1) 
+			{
+				this->changeOtherExp(HeroExp);
+				this->changeOtherMoney(HeroMoney);
+			}
+			else
+			{
+				this->changeMeExp(HeroExp);
+				this->changeMeMoney(HeroMoney);
+			}
 		}
 		//如果技能为打中就消失，则让技能消失
 		if (otherSkill->shouldRemove())
@@ -1410,8 +1682,16 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		//给对面英雄加经验和金币
 		if (meHero->getHealthPoint() <= 0)
 		{
-			this->changeOtherExp(HeroExp);
-			this->changeOtherMoney(HeroMoney);
+			if (ID == 1)
+			{
+				this->changeOtherExp(HeroExp);
+				this->changeOtherMoney(HeroMoney);
+			}
+			else
+			{
+				this->changeMeExp(HeroExp);
+				this->changeMeMoney(HeroMoney);
+			}
 		}
 		//如果技能为打中就消失，则让技能消失
 		if (otherSkill->shouldRemove())
@@ -1430,8 +1710,16 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		//给我方英雄加经验和金币
 		if (otherHero->getHealthPoint() <= 0)
 		{
-			this->changeMeExp(HeroExp);
-			this->changeMeMoney(HeroMoney);
+			if (ID == 1)
+			{
+				this->changeMeExp(HeroExp);
+				this->changeMeMoney(HeroMoney);
+			}
+			else
+			{
+				this->changeOtherExp(HeroExp);
+				this->changeOtherMoney(HeroMoney);
+			}
 		}
 		//如果技能为打中就消失，则让技能消失
 		if (meSkill->shouldRemove())
@@ -1453,8 +1741,16 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		//给我方英雄加经验和金币
 		if (otherHero->getHealthPoint() <= 0)
 		{
-			this->changeMeExp(HeroExp);
-			this->changeMeMoney(HeroMoney);
+			if (ID == 1)
+			{
+				this->changeMeExp(HeroExp);
+				this->changeMeMoney(HeroMoney);
+			}
+			else
+			{
+				this->changeOtherExp(HeroExp);
+				this->changeOtherMoney(HeroMoney);
+			}
 		}
 		//如果技能为打中就消失，则让技能消失
 		if (meSkill->shouldRemove())
@@ -1655,14 +1951,28 @@ void GameScene::takeYaseWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targe
 	yaseWSkill->setPhysicsBody(body);
 	if (flag == Player1)
 	{
-		this->getChildByTag(this->getMeFlag())->addChild(yaseWSkill, 200, MeSkillTag);
+		if (ID == 1)
+		{
+			this->getChildByTag(this->getMeFlag())->addChild(yaseWSkill, 200, MeSkillTag);
+		}
+		else
+		{
+			this->getChildByTag(601 - this->getMeFlag())->addChild(yaseWSkill, 200, OtherSkillTag);
+		}
 		body->setContactTestBitmask(MESKILLTEST);
 		body->setCategoryBitmask(MESKILLCATEGORY);
 		body->setCollisionBitmask(MESKILLCOLLISION);
 	}
 	else
 	{
-		this->getChildByTag(601 - this->getMeFlag())->addChild(yaseWSkill, 200, OtherSkillTag);
+		if (ID == 1)
+		{
+			this->getChildByTag(601 - this->getMeFlag())->addChild(yaseWSkill, 200, OtherSkillTag);
+		}
+		else
+		{
+			this->getChildByTag(this->getMeFlag())->addChild(yaseWSkill, 200, MeSkillTag);
+		}
 		body->setContactTestBitmask(OTHERSKILLTEST);
 		body->setCategoryBitmask(OTHERSKILLCATEGORY);
 		body->setCollisionBitmask(OTHERSKILLCOLLISION);
@@ -1802,7 +2112,168 @@ void GameScene::takeDajiESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targe
 	//当大招精灵运动一定距离时删除，该功能在HouyiESkill类的update函数中实现
 }
 
-void GameScene::wulawula(float dt)
+void GameScene::takeJieNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
+{
+	JieNormalAttack* jieNormalAttack = JieNormalAttack::createTheAttack(hero);
+	auto body = PhysicsBody::createBox(jieNormalAttack->getContentSize());
+	jieNormalAttack->setPhysicsBody(body);
+	//停止当前的移动进行普攻
+	if (flag == Player1)
+	{
+		this->addChild(jieNormalAttack, 200, MeSkillTag);
+		body->setContactTestBitmask(MESKILLTEST);
+		body->setCategoryBitmask(MESKILLCATEGORY);
+		body->setCollisionBitmask(MESKILLCOLLISION);
+	}
+	else
+	{
+		this->addChild(jieNormalAttack, 200, OtherSkillTag);
+		body->setContactTestBitmask(OTHERSKILLTEST);
+		body->setCategoryBitmask(OTHERSKILLCATEGORY);
+		body->setCollisionBitmask(OTHERSKILLCOLLISION);
+	}
+	jieNormalAttack->takeJieNormalAttack(startPoint, targetPoint);
+	//把普攻显示在gamescene场景中
+	//当普攻精灵运动一定距离时删除，该功能在DajiNormalAttack类的update函数中实现
+	//重置平A等待时间
+}
+
+void GameScene::takeJieQSkill(JieHero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
+{
+	JieQSkill* star = JieQSkill::createJieQSkill(hero);
+	auto body = PhysicsBody::createCircle(star->getContentSize().height / 4);
+	star->setPhysicsBody(body);
+	star->takeJieQSkill(startPoint, targetPoint);
+	if (flag == Player1)
+	{
+		this->addChild(star, 200, MeSkillTag);
+		body->setContactTestBitmask(MESKILLTEST);
+		body->setCategoryBitmask(MESKILLCATEGORY);
+		body->setCollisionBitmask(MESKILLCOLLISION);
+	}
+	else
+	{
+		this->addChild(star, 200, OtherSkillTag);
+		body->setContactTestBitmask(OTHERSKILLTEST);
+		body->setCategoryBitmask(OTHERSKILLCATEGORY);
+		body->setCollisionBitmask(OTHERSKILLCOLLISION);
+	}
+	//Wshadow飞镖
+	if (hero->isWShadowOn())
+	{
+		JieQSkill* star = JieQSkill::createJieQSkill(hero);
+		auto body = PhysicsBody::createCircle(star->getContentSize().height / 2);
+		star->setPhysicsBody(body);
+		star->takeJieQSkill(hero->getWShadowPoint(), targetPoint);
+		if (flag == Player1)
+		{
+			this->addChild(star, 200, MeSkillTag);
+			body->setContactTestBitmask(MESKILLTEST);
+			body->setCategoryBitmask(MESKILLCATEGORY);
+			body->setCollisionBitmask(MESKILLCOLLISION);
+		}
+		else
+		{
+			this->addChild(star, 200, OtherSkillTag);
+			body->setContactTestBitmask(OTHERSKILLTEST);
+			body->setCategoryBitmask(OTHERSKILLCATEGORY);
+			body->setCollisionBitmask(OTHERSKILLCOLLISION);
+		}
+	}
+	//Eshadow飞镖
+	if (hero->isEShadowOn())
+	{
+		JieQSkill* star = JieQSkill::createJieQSkill(hero);
+		auto body = PhysicsBody::createCircle(star->getContentSize().height / 2);
+		star->setPhysicsBody(body);
+		star->takeJieQSkill(hero->getEShadowPoint(), targetPoint);
+		if (flag == Player1)
+		{
+			this->addChild(star, 200, MeSkillTag);
+			body->setContactTestBitmask(MESKILLTEST);
+			body->setCategoryBitmask(MESKILLCATEGORY);
+			body->setCollisionBitmask(MESKILLCOLLISION);
+		}
+		else
+		{
+			this->addChild(star, 200, OtherSkillTag);
+			body->setContactTestBitmask(OTHERSKILLTEST);
+			body->setCategoryBitmask(OTHERSKILLCATEGORY);
+			body->setCollisionBitmask(OTHERSKILLCOLLISION);
+		}
+	}
+}
+
+void GameScene::takeJieWSkill(JieHero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
+{
+	Sprite* wShadow = Sprite::create("JieShadow.png");
+	wShadow->setPosition(targetPoint);
+	wShadow->setTag(WShadowTag);
+	this->addChild(wShadow, 200);
+	hero->wShadowOn();
+	hero->setWShadowPoint(targetPoint);
+	hero->setCanWChange(true);
+	this->scheduleOnce(schedule_selector(GameScene::jieWShadow), JieWSkillLastTime);
+
+}
+void GameScene::jieWShadow(float dt)
+{
+	static_cast<JieHero*>(this->getChildByTag(this->getMeFlag()))->wShadowOff();
+	static_cast<JieHero*>(this->getChildByTag(this->getMeFlag()))->setCanWChange(false);
+	this->removeChildByTag(WShadowTag);
+}
+
+
+void GameScene::takeJieESkill(JieHero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
+{
+	Sprite* eShadow = Sprite::create("JieShadow.png");
+	eShadow->setPosition(startPoint);
+	eShadow->setTag(EShadowTag);
+	this->addChild(eShadow, 200);
+
+	hero->setPosition(targetPoint);
+	hero->setEShadowPoint(startPoint);
+	hero->setCanEChange(true);
+	//hero隐身且不可抓取
+	hero->getPhysicsBody()->setContactTestBitmask(0);
+	hero->getPhysicsBody()->setCategoryBitmask(0);
+	hero->getPhysicsBody()->setCollisionBitmask(0);
+	hero->setInDisappear(true);
+	hero->setVisible(false);
+	hero->setAppearPoint(targetPoint);
+	hero->setEShadowLastTime(JieESkillLastTime);
+	hero->eShadowOn();
+	this->scheduleOnce(schedule_selector(GameScene::jieEappear), JieESkillDisappearTime);
+	this->scheduleOnce(schedule_selector(GameScene::jieEShadow), JieESkillLastTime);
+	this->scheduleOnce(schedule_selector(GameScene::jieEDamage), JieESkillDamageTime);
+}
+
+void GameScene::jieEShadow(float dt)
+{
+	static_cast<JieHero*>(this->getChildByTag(this->getMeFlag()))->eShadowOff();
+	static_cast<JieHero*>(this->getChildByTag(this->getMeFlag()))->setCanEChange(false);
+	this->removeChildByTag(EShadowTag);
+}
+
+void GameScene::jieEappear(float dt)
+{
+	auto hero = static_cast<JieHero*>(this->getChildByTag(this->getMeFlag()));
+	hero->setVisible(true);
+	hero->setPosition(this->getChildByTag(601 - this->getMeFlag())->getPosition());
+	hero->setInDisappear(false);
+	hero->getPhysicsBody()->setContactTestBitmask(MEUNITTEST);
+	hero->getPhysicsBody()->setCategoryBitmask(MEUNITCATEGORY);
+	hero->getPhysicsBody()->setCollisionBitmask(MEUNITCOLLISION);
+}
+
+void GameScene::jieEDamage(float dt)
+{
+	auto me = static_cast<JieHero*>(this->getChildByTag(this->getMeFlag()));
+	auto enermy = static_cast<Hero*>(this->getChildByTag(601 - this->getMeFlag()));
+	enermy->sufferDamage(JieESkillDamage / (1 + enermy->getDefensePoint() / 100));
+}
+
+void GameScene::jinzhanWulawula(float dt)
 {
 	//player1方近战兵
 	auto meJinzhanSoldier = JinzhanSoldier::create(Player1);
@@ -1816,6 +2287,11 @@ void GameScene::wulawula(float dt)
 	otherJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherJinzhanSoldier, 200, OtherJinzhanSoldierTag);
 	otherJinzhanSoldier->scheduleUpdate();
+	this->scheduleOnce(schedule_selector(GameScene::yuanchengWulawula), 1);
+}
+
+void GameScene::yuanchengWulawula(float dt)
+{
 	//player1方远程兵
 	auto meYuanchengSoldier = YuanchengSoldier::create(Player1);
 	meYuanchengSoldier->setPosition(500, 500);
@@ -1828,6 +2304,11 @@ void GameScene::wulawula(float dt)
 	otherYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherYuanchengSoldier, 200, OtherYuanchengSoldierTag);
 	otherYuanchengSoldier->scheduleUpdate();
+	this->scheduleOnce(schedule_selector(GameScene::paocheWulawula), 1);
+}
+
+void GameScene::paocheWulawula(float dt)
+{
 	//player1方炮车兵
 	auto mePaocheSoldier = PaocheSoldier::create(Player1);
 	mePaocheSoldier->setPosition(500, 500);
@@ -1952,4 +2433,12 @@ void GameScene::Zhanji(float dt)
 	auto mm2 = LabelTTF::create(m2->getCString(), "Arial", 36);
 	mm2->setPosition(150, 850);
 	this->addChild(mm2, 2, RedScore);
+}
+
+void GameScene::MakeMoney(float dt)
+{
+	if (ID == 1)
+		this->changeMeMoney(1);
+	else
+		this->changeOtherMoney(1);
 }

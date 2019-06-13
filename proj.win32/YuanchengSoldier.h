@@ -13,7 +13,7 @@
 //在此处定义近战初始属性
 #define YuanchengMoveSpeed 50.0
 #define YuanchengAttackSpeed 0.4
-#define YuanchengAttack 200.0
+#define YuanchengAttack 20.0
 #define YuanchengDefence 20.0
 #define YuanchengNormalAttackAfterShake 1.0/YuanchengAttackSpeed 
 #define YuanchengHealthPoint 100.0

@@ -47,8 +47,8 @@ bool RoomScene::init()
 	this->addChild(player2, 1);
 
 	//时刻监听敌方英雄名字
-	this->schedule(schedule_selector(RoomScene::ListenEnemyHeroName), 0.001f);
-	this->schedule(schedule_selector(RoomScene::ListenIfStart), 0.001f);
+	this->schedule(schedule_selector(RoomScene::ListenEnemyHeroName), 1.0 / 10.0);
+	this->schedule(schedule_selector(RoomScene::ListenIfStart), 1.0 / 30.0);
 
 	//选择英雄菜单
 	MenuItemImage *houyi = MenuItemImage::create("houyi.jpg", "houyi.jpg", CC_CALLBACK_1(RoomScene::ChooseHero_h, this));
@@ -60,6 +60,8 @@ bool RoomScene::init()
 	MenuItemImage *daji = MenuItemImage::create("daji.png", "daji.png", CC_CALLBACK_1(RoomScene::ChooseHero_d, this));
 	daji->setPosition(Vec2(origin.x + visibleSize.width / 3.0 * 2.0, origin.y + visibleSize.height / 5.0));
 	
+	MenuItemImage *jie = MenuItemImage::create("jie.jpg", "jie.jpg", CC_CALLBACK_1(RoomScene::ChooseHero_j, this));
+	jie->setPosition(origin.x + visibleSize.width / 5.0, origin.y + visibleSize.height / 5.0);
 
 	
 	//设置点击返回初始页面菜单 准备菜单 添加人机菜单
@@ -81,7 +83,7 @@ bool RoomScene::init()
 	addMyHero->setPosition(origin.x + visibleSize.width / 5.0, 
 					   origin.y + visibleSize.height / 3.0*2.0 + player1->getContentSize().height);
 
-	Menu *menu = Menu::create(back, ready, addAI, addMyHero, houyi, daji, yase, NULL);
+	Menu *menu = Menu::create(back, ready, addAI, addMyHero, houyi, daji, yase, jie, NULL);
 	menu->setPosition(Vec2::ZERO);
 //	log("%f,%f", back->getPosition().x, back->getPosition().y);
 	this->addChild(menu,1);
@@ -183,6 +185,33 @@ void RoomScene::ChooseHero_d(cocos2d::Ref* pSender)
 	}
 	this->addChild(pic, 2);
 }
+
+//选择劫
+void RoomScene::ChooseHero_j(cocos2d::Ref* pSender)
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	Sprite *pic = Sprite::create("jie.jpg");
+	int flag = this->getFlag();
+
+	//如果给自己选英雄
+	if (flag == MeFlag)
+	{
+		pic->setPosition(origin.x + visibleSize.width / 5.0, origin.y + visibleSize.height / 3 * 2);
+		this->setMeHeroName('J');
+		MyHero[1] = 'J';
+		Cli.MessageSending(MyHero);
+	}
+	//给AI选英雄
+	else if (flag == OtherFlag)
+	{
+		pic->setPosition(origin.x + visibleSize.width / 5.0*4.0, origin.y + visibleSize.height / 3.0*2.0);
+		this->setOtherHeroName('J');
+	}
+	this->addChild(pic, 2);
+}
+
 void RoomScene::menuClickToAddAI(Ref* pSender)
 {
 	this->setFlag(OtherFlag);
@@ -227,6 +256,7 @@ void RoomScene::ListenEnemyHeroName(float dt)
 			this->addChild(pic, 200);
 			EnemyHero = '\0';
 		}
+		//有机会的话加个劫
 	}
 }
 

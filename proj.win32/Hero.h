@@ -11,7 +11,7 @@
 //英雄的tag
 typedef enum
 {
-	Yase_Tag =101,
+	Yase_Tag = 101,
 	Houyi_Tag = 102,
 	Daji_Tag = 103
 
@@ -65,7 +65,7 @@ class Hero : public BasicSprite
 	cocos2d::Vec2 _otherSoldierPoint;
 	int _flag;
 	Hero* _otherHero;
-	
+
 	//在此处添加英雄的属性数值
 
 	//该版本目的为测试移动和技能释放所以暂不定义英雄属性
@@ -101,7 +101,7 @@ class Hero : public BasicSprite
 	float _wSkillCdTime;
 	float _qSkillCdTime;
 	float _attackSpeed;
-	
+
 	//设定攻击和技能等待时间
 	//这些值不为0时每帧都减小1/60
 	//值为0时才可以攻击和发动技能
@@ -127,19 +127,23 @@ class Hero : public BasicSprite
 
 	float _heroAfterShake;
 	bool _heroInShake;
-	
+
 public:
 	//血条
 	void createBlood();
 
 	void checkBlood(float dt);
+	//等级
+	void createLevel();
+
+	void checkLevel(float dt);
 
 	int getFlag() const { return _flag; }
 	void setFlag(PlayerFlag flag) { _flag = flag; }
 
 	//重写SPrite类的init函数
 	virtual bool init();
-	
+
 	static Hero* create();
 
 	//计算冷却时间的函数
@@ -155,11 +159,11 @@ public:
 	//设置该英雄的敌方英雄
 	void setOtherHero(Hero* hero) { _otherHero = hero; }
 	Hero* getOtherHero() const { return _otherHero; }
-	
+
 	//交互相关
 
 	//获得和改变攻击速度
-	float getAttackSpeed() const{ return _attackSpeed; } 
+	float getAttackSpeed() const { return _attackSpeed; }
 	void changeAttackSpeed(const float equipmentAttackSpeed) { _attackSpeed += equipmentAttackSpeed; }
 
 	//获得和改变技能冷却
@@ -177,24 +181,24 @@ public:
 	void cutAttackWaitTime(float waittime) { _attackWaitTime -= waittime; }
 	void setAttackWaitTime(float waittime) { _attackWaitTime = waittime; }
 
-	float getQSkillWaitTime() const{ return _qSkillWaitTime; } 
+	float getQSkillWaitTime() const { return _qSkillWaitTime; }
 	void cutQSkillWaitTime(float waittime) { _qSkillWaitTime -= waittime; }
 	void setQSkillWaitTime(float waittime) { _qSkillWaitTime = waittime; }
 
-	float getWSkillWaitTime() const{ return _wSkillWaitTime; } 
+	float getWSkillWaitTime() const { return _wSkillWaitTime; }
 	void cutWSkillWaitTime(float waittime) { _wSkillWaitTime -= waittime; }
 	void setWSkillWaitTime(float waittime) { _wSkillWaitTime = waittime; }
 
-	float getESkillWaitTime() const{ return _eSkillWaitTime; } 
+	float getESkillWaitTime() const { return _eSkillWaitTime; }
 	void cutESkillWaitTime(float waittime) { _eSkillWaitTime -= waittime; }
 	void setESkillWaitTime(float waittime) { _eSkillWaitTime = waittime; }
 
 	//获得和改变buff持续时间
-	float getBuffTime() const{ return _buffTime; } 
+	float getBuffTime() const { return _buffTime; }
 	void cutBuffTime(float waittime) { _buffTime -= waittime; }
 	void setBuffTime(float lasttime) { _buffTime = lasttime; }
 	void setBuff(bool isinbuff) { _isInBuff = isinbuff; }
-	bool isInBuff() const{ return _isInBuff; }  
+	bool isInBuff() const { return _isInBuff; }
 
 	//获得和改变技能后摇及后摇相关
 	float getNormalAttackAfterShake() const { return _attackAfterShake; }
@@ -216,27 +220,27 @@ public:
 	void setHeroAfterShake(float shakeTime) { _heroAfterShake = shakeTime; }
 	void cutHeroAfterShake(float cuttime) { _heroAfterShake -= cuttime; }
 	//获得和改变属性
-		
+
 	//给英雄命名和获得英雄名字
 	void setHeroName(char name) { _heroName = name; }
-	char getHeroName() const{ return _heroName; } 
+	char getHeroName() const { return _heroName; }
 
 	//获得和改变等级
 	int getLevel() const { return _level; }
 	void levelUp() { _level++; }
 
 	//获得和改变技能等级
-	int getQSkillLevel() const{ return _qSkillLevel; } 
-	void qSkillLevelUp() { _qSkillLevel++; } 
+	int getQSkillLevel() const { return _qSkillLevel; }
+	void qSkillLevelUp() { _qSkillLevel++; }
 
-	int getWSkillLevel() const{ return _wSkillLevel; } 
+	int getWSkillLevel() const { return _wSkillLevel; }
 	void wSkillLevelUp() { _wSkillLevel++; }
 
-	int getESkillLevel() const{ return _eSkillLevel; } 
+	int getESkillLevel() const { return _eSkillLevel; }
 	void eSkillLevelUp() { _eSkillLevel++; }
 
 	//获得和改变移动速度
-	float getMoveSpeed() const{ return _moveSpeed; } 
+	float getMoveSpeed() const { return _moveSpeed; }
 	void changeMoveSpeed(const float equipmentAttackSpeed) { _moveSpeed += equipmentAttackSpeed; }
 
 	//获得和改变攻击力
@@ -269,16 +273,16 @@ public:
 	virtual int showMeTheMoney() const { return _money; }
 	virtual void setMoney(int point) { _money = point; }
 	//获得装备
-	
+
 
 	//下列几个函数用于模拟同时监听鼠标和键盘
 	//判断是否在按键盘
 	//和监听中的技能释放有关
-	bool isPressingKeyboard() const{ return _isPressingKeyboard; } 
+	bool isPressingKeyboard() const { return _isPressingKeyboard; }
 	void setPressingKeyboard() { _isPressingKeyboard = true; }
 	void setUnPressingKeyboard() { _isPressingKeyboard = false; }
 	void thisKeyPressed(char key) { _pressedKey = key; }
-	char pressThisKey() { return _pressedKey; } 
+	char pressThisKey() { return _pressedKey; }
 
 	void setTouchPoint(cocos2d::Vec2 touchPoint) { _touchPoint = touchPoint; }
 	cocos2d::Vec2 getTouchPoint() { return _touchPoint; }

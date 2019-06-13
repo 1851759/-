@@ -3,7 +3,7 @@
 #include "DajiNormalAttack.h"
 #include "DajiESkill.h"
 
-
+USING_NS_CC;
 DajiHero* DajiHero::create()
 {
 	DajiHero* daji = new DajiHero();
@@ -72,6 +72,7 @@ bool DajiHero::init()
 	}
 	this->setScale(0.2);
 	this->createBlood();
+	this->createLevel();
 	return true;
 }
 
@@ -86,7 +87,7 @@ void DajiHero::AIcontrol(Hero* hero)
 	this->setOtherHeroPoint(hero->getPosition());
 	*/
 	this->setOtherHero(hero);
-	this->schedule(schedule_selector(DajiHero::AIAction), 1.0 / 60.0f);
+	this->schedule(schedule_selector(DajiHero::AIAction), 1.0 / 20.0);
 }
 
 void DajiHero::AIAction(float dt)

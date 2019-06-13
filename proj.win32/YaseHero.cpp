@@ -71,8 +71,10 @@ bool YaseHero::init()
 	{
 		return false;
 	}
-	this->createBlood();
 	this->setScale(0.3);
+	this->createBlood();
+	this->createLevel();
+
 	return true;
 }
 
@@ -110,7 +112,7 @@ void YaseHero::buffUpdate(float dt)
 void YaseHero::AIcontrol(Hero* hero)
 {
 	this->setOtherHero(hero);
-	this->schedule(schedule_selector(YaseHero::AIAction), 1.0 / 60.0f);
+	this->schedule(schedule_selector(YaseHero::AIAction), 1.0 / 20.0);
 }
 
 void YaseHero::AIAction(float dt)
