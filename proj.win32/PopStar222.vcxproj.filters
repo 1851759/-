@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{715254bc-d70b-4ec5-bf29-467dd3ace079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="client.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="CrystalTower.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DajiESkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DajiHero.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DajiNormalAttack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DajiQSkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DajiWSkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DefenceNormalAttack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="DefenceTower.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HelloWorldScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Hero.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HouyiESkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HouyiHero.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HouyiNormalAttack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="HouyiWSkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="JinzhanNormalAttack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="JinzhanSoldier.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PaocheNormalAttack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="PaocheSoldier.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="RoomScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="YaseESkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="YaseHero.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="YaseNormalAttack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="YaseWSkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="YuanchengNormalAttack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="YuanchengSoldier.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="JieHero.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="JieNormalAttack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="JieQSkill.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicSkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicSprite.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="client.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="CrystalTower.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DajiESkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DajiHero.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DajiNormalAttack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DajiQSkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DajiWSkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DefenceNormalAttack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="DefenceTower.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HelloWorldScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Hero.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HouyiESkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HouyiHero.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HouyiNormalAttack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="HouyiWSkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="JinzhanNormalAttack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="JinzhanSoldier.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PaocheNormalAttack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="PaocheSoldier.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="RoomScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Soldier.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="YaseESkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="YaseHero.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="YaseNormalAttack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="YaseWSkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="YuanchengNormalAttack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="YuanchengSoldier.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="JieHero.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="JieNormalAttack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="JieQSkill.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
