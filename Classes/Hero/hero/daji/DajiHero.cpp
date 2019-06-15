@@ -12,41 +12,41 @@ DajiHero* DajiHero::create()
 
 		daji->autorelease();
 
-		//ÔÚÏÂ±ß³õÊ¼»¯æ§¼ºµÄÊôÐÔÖµ////////////////////////////////////////////
+		//åœ¨ä¸‹è¾¹åˆå§‹åŒ–å¦²å·±çš„å±žæ€§å€¼////////////////////////////////////////////
 		daji->setHeroName('D');
-		//»ù´¡ÒÆ¶¯ËÙ¶È
+		//åŸºç¡€ç§»åŠ¨é€Ÿåº¦
 		daji->changeMoveSpeed(DajiMoveSpeed * cocos2d::Vec2(1.0, 0).x);
 
-		//»ù´¡¹¥»÷ËÙ¶È£¬Ã¿Ãë¹¥»÷¶àÉÙ´Î
+		//åŸºç¡€æ”»å‡»é€Ÿåº¦ï¼Œæ¯ç§’æ”»å‡»å¤šå°‘æ¬¡
 		daji->changeAttackSpeed(DajiAttackSpeed);
 		daji->setAttackWaitTime(0);
 		daji->setNormalAttackAfterShake(DajiNormalAttackAfterShake);
 		daji->setHeroInSkake(false);
 
-		//»ù´¡ÉúÃüÖµ
+		//åŸºç¡€ç”Ÿå‘½å€¼
 		daji->setHealthPoint(DajiHealth);
 		daji->changeMaxHealthPoint(DajiHealth);
-		//»ù´¡¹¥»÷Á¦
+		//åŸºç¡€æ”»å‡»åŠ›
 		daji->changeAttackPoint(DajiAttack);
-        //»ù´¡·ÀÓùÁ¦
+		//åŸºç¡€é˜²å¾¡åŠ›
 		daji->changeDefensePoint(DajiDefence);
-		//»ù´¡µÈ¼¶
+		//åŸºç¡€ç­‰çº§
 		daji->levelUp();
-		//»ù´¡½ð±Ò
+		//åŸºç¡€é‡‘å¸
 		daji->setMoney(0);
-		//»ù´¡¾­ÑéÖµ
+		//åŸºç¡€ç»éªŒå€¼
 		daji->setExpPoint(0);
-		//q¼¼ÄÜ
-		daji->qSkillLevelUp();//´Ë´¦Ä¬ÈÏ¼¼ÄÜÒ»¼¶ÓÃÓÚ²âÊÔ////////////////////////////////////
+		//qæŠ€èƒ½
+		daji->qSkillLevelUp();//æ­¤å¤„é»˜è®¤æŠ€èƒ½ä¸€çº§ç”¨äºŽæµ‹è¯•////////////////////////////////////
 		daji->setQSkillCdTime(DajiQSkillCD);
 		daji->setQSkillAfterShake(DajiQSkillAfterShake);
 
-		//w¼¼ÄÜ
+		//wæŠ€èƒ½
 		daji->wSkillLevelUp();
 		daji->setWSkillCdTime(DajiWSkillCD);
 		daji->setWSkillAfterShake(DajiWSkillAfterShake);
 
-		//e¼¼ÄÜ
+		//eæŠ€èƒ½
 		daji->eSkillLevelUp();
 		daji->setESkillCdTime(DajiESkillCD);
 		daji->setESkillAfterShake(DajiESkillAfterShake);
@@ -64,13 +64,13 @@ DajiHero* DajiHero::create()
 
 bool DajiHero::init()
 {
-	//ÏÂ±ßµÄifÀï¸ã³öÁËÓ¢ÐÛµÄÍ¼Æ¬
+	//ä¸‹è¾¹çš„ifé‡Œæžå‡ºäº†è‹±é›„çš„å›¾ç‰‡
 	if (!Sprite::initWithFile("DajiHero.png"))
 	{
 
 		return false;
 	}
-	this->setScale(0.2);
+	this->setScale(0.5);
 	this->createBlood();
 	this->createLevel();
 	return true;
@@ -79,7 +79,7 @@ bool DajiHero::init()
 
 
 
-//ÊµÏÖAI
+//å®žçŽ°AI
 void DajiHero::AIcontrol(Hero* hero)
 {
 	/*
@@ -96,13 +96,13 @@ void DajiHero::AIAction(float dt)
 	this->setOtherHeroPoint(this->getOtherHero()->getPosition());
 	this->setHeroPoint(this->getPosition());
 
-	//ÒÆ¶¯AI
+	//ç§»åŠ¨AI
 	if (this->getHeroAfterShake() <= 0.01)
 	{
 		cocos2d::Vec2 distance = this->getOtherHeroPoint() - this->getHeroPoint();
 		float length = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
 		cocos2d::Vec2 standardDistance = distance / length;
-		//AIæ§¼ºÀëÍæ¼Ò80ÒÔÉÏ
+		//AIå¦²å·±ç¦»çŽ©å®¶80ä»¥ä¸Š
 		if (length >= 80.0)
 		{
 			this->setPosition(this->getPosition() + this->getMoveSpeed() / 60 * standardDistance);
