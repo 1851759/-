@@ -1,10 +1,3 @@
-//by 王文政 sj2019年5月26日
-//定义后羿平A的类
-//是Sprite的子类
-
-
-
-
 #ifndef __HOUYINORMALATTACK__
 #define __HOUYINORMALATTACK__
 
@@ -17,9 +10,9 @@ class HouyiNormalAttack : public BasicSkill
 {
 	cocos2d::Vec2 _arrowMoveDirection;
 	cocos2d::Vec2 _originPosition;
-	
+
 public:
-	
+
 	//更新函数
 	virtual void update(float dt);
 
@@ -38,7 +31,7 @@ public:
 	//当运动一定距离时将该平A箭头删除
 	cocos2d::Vec2 getOriginPosition() { return _originPosition; };
 	void setOriginPosition(cocos2d::Vec2 position) { _originPosition = position; }
-	
+
 };
 
 
@@ -47,4 +40,3 @@ public:
 
 
 #endif // __HOUYINORMALATTACK__
-

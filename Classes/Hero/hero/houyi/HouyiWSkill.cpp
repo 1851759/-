@@ -1,4 +1,3 @@
-//by 王文政 2019年5月27日
 #include "cocos2d.h"
 
 #include "HouyiHero.h"
@@ -22,7 +21,7 @@ HouyiWSkill* HouyiWSkill::createHouyiWSkill(Hero* hero)
 	return nullptr;
 }
 
-void HouyiWSkill::takeHouyiWSkill(HouyiHero* hero,float angle)
+void HouyiWSkill::takeHouyiWSkill(HouyiHero* hero, float angle)
 {
 	cocos2d::Vec2 touchPoint = hero->getTouchPoint();
 	cocos2d::Vec2 heroPoint = hero->getPosition();
@@ -34,9 +33,9 @@ void HouyiWSkill::takeHouyiWSkill(HouyiHero* hero,float angle)
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//让方向向量转过一个角度
-	directionWithDistance.rotate(directionWithDistance-
-								cocos2d::Vec2(directionWithDistance.x, directionWithDistance.y), angle);
-	
+	directionWithDistance.rotate(directionWithDistance -
+		cocos2d::Vec2(directionWithDistance.x, directionWithDistance.y), angle);
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//计算模长
 	float distanceSquare = directionWithDistance.x*directionWithDistance.x + directionWithDistance.y*directionWithDistance.y;
@@ -44,7 +43,7 @@ void HouyiWSkill::takeHouyiWSkill(HouyiHero* hero,float angle)
 
 	//获取单位向量
 	cocos2d::Vec2 unitVector = directionWithDistance / distance;
-	
+
 	//将扇形的方向向量赋给成员_arrowMoveDirection
 	this->setArrowMoveDirection(unitVector);
 

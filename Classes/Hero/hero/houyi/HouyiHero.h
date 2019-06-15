@@ -1,8 +1,3 @@
-//by 王文政 2019年5月26日
-//这个类是后羿的类
-//是Hero类的子类
-
-
 #ifndef __HOUYIHERO__
 #define __HOUYIHERO__
 #include "cocos2d.h"
@@ -11,38 +6,38 @@
 
 //后羿技能属性
 #define HouyiNormalAttackRange 100.0
-#define HouyiNormalAttackMoveSpeed 1.5
+#define HouyiNormalAttackMoveSpeed 3.0
 
 
 #define HouyiQSkillLastTime 5.0
 #define HouyiQSkillAttackSpeedAdd 0.1
 #define HouyiQSkillMoveSpeedAdd 1.0
 #define HouyiQSkillCD 10.0
-#define HouyiQSkillAfterShake 1.0
+#define HouyiQSkillAfterShake 0.5
 
-#define HouyiWSkillRange 200.0
+#define HouyiWSkillRange 300.0
 #define HouyiWSkillDamage 100
 #define HouyiWSkillArrowNumber 5
-#define HouyiWSkillMoveSpeed 1.5
-#define HouyiWSkillCD 5.0
-#define HouyiWSkillAfterShake 1.0
+#define HouyiWSkillMoveSpeed 2.0
+#define HouyiWSkillCD 8.0
+#define HouyiWSkillAfterShake 0.5
 
 #define HouyiESkillRange 1000.0
 #define HouyiESkillDamage 100
 #define HouyiESkillMoveSpeed 2.5
-#define HouyiESkillCD 5.0
-#define HouyiESkillAfterShake 1.0
+#define HouyiESkillCD 10.0
+#define HouyiESkillAfterShake 0.5
 
 //在此处定义后羿初始属性
-#define HouyiMoveSpeed 60.0
-#define HouyiAttackSpeed 0.5
+#define HouyiMoveSpeed 70.0
+#define HouyiAttackSpeed 0.6
 #define HouyiAttack 100.0
-#define HouyiDefence 100.0
-#define HoyyiMaxHealth 200.0
-#define HouyiHealth 200.0
+#define HouyiDefence 60.0
+#define HoyyiMaxHealth 500.0
+#define HouyiHealth 500.0
 #define HouyiMaxMagic 100.0
 #define HouyiMagic 100.0
-#define HouyiNormalAttackAfterShake 1.0/ HouyiAttackSpeed
+#define HouyiNormalAttackAfterShake 0.5/ HouyiAttackSpeed
 
 typedef enum
 {

@@ -14,7 +14,7 @@ HouyiESkill* HouyiESkill::createHouyiESkill(Hero* hero)
 		bigBird->setIfRemoveWhenDamage(true);
 		bigBird->setDamagePoint(HouyiESkillDamage * hero->getESkillLevel());
 		bigBird->autorelease();
-		bigBird->setScale(0.2);
+		bigBird->setScale(0.08);
 		return bigBird;
 	}
 	CC_SAFE_DELETE(bigBird);
@@ -25,8 +25,8 @@ void HouyiESkill::takeHouyiESkill(HouyiHero* hero)
 {
 	cocos2d::Vec2 touchPoint = hero->getTouchPoint();
 	cocos2d::Vec2 heroPoint = hero->getPosition();
-//	cocos2d::log("toouchPoint %f %f ", touchPoint.x, touchPoint.y);
-//	cocos2d::log("heroPoint %f %f ", heroPoint.x, heroPoint.y);
+	//	cocos2d::log("toouchPoint %f %f ", touchPoint.x, touchPoint.y);
+	//	cocos2d::log("heroPoint %f %f ", heroPoint.x, heroPoint.y);
 	this->setPosition(heroPoint);
 	this->setOriginPosition(heroPoint);
 	//获取模长不为1的方向向量

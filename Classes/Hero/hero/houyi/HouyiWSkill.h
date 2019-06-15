@@ -1,9 +1,3 @@
-//by 王文政 2019年5月27日
-//定义后羿的W技能
-//散射
-//代码大部分嫖houyi普攻的类
-//是Sprite类的子类
-
 #ifndef __HOUYIWSKILL__
 #define __HOUYIWSKILL__
 
@@ -15,7 +9,7 @@ class HouyiWSkill : public BasicSkill
 {
 	cocos2d::Vec2 _arrowMoveDirection;
 	cocos2d::Vec2 _originPosition;
-	
+
 public:
 
 	//更新函数
@@ -23,7 +17,7 @@ public:
 
 	//触发散射技能
 	static HouyiWSkill* createHouyiWSkill(Hero* hero);
-	void takeHouyiWSkill(HouyiHero* hero ,float angle);
+	void takeHouyiWSkill(HouyiHero* hero, float angle);
 	//重载take函数
 	void takeHouyiWSkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint, float angle);
 
@@ -40,4 +34,3 @@ public:
 };
 
 #endif // !__HOUYIWSKILL__
-

@@ -1,9 +1,3 @@
-//by 王文政 2019年5月27日
-//定义后羿的E技能
-//放一个大（yuan）鸟（quan）
-//代码大部分嫖houyi普攻的类
-//是Sprite类的子类
-
 #ifndef __HOUYIESKILL__
 #define __HOUYIESKILL__
 
@@ -25,7 +19,7 @@ public:
 	static HouyiESkill* createHouyiESkill(Hero* hero);
 	void takeHouyiESkill(HouyiHero* hero);
 	//重载take函数
-	void takeHouyiESkill(cocos2d::Vec2 startPoint,cocos2d::Vec2 targetPoint);
+	void takeHouyiESkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
 	//设置大鸟箭头移动方向
 	//需要设置一个模长为1的二维向量

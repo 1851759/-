@@ -1,4 +1,3 @@
-//by 王文政 2019年5月27日
 #include "cocos2d.h"
 #include "HouyiHero.h"
 #include "HouyiNormalAttack.h"
@@ -12,7 +11,7 @@ HouyiNormalAttack* HouyiNormalAttack::createTheAttack(Hero* hero)
 		normalAttack->setCanTakeDamage(true);
 		normalAttack->setIfRemoveWhenDamage(true);
 		normalAttack->autorelease();
-		normalAttack->setScale(0.2);
+		normalAttack->setScale(0.1);
 		return normalAttack;
 	}
 	CC_SAFE_DELETE(normalAttack);
@@ -23,7 +22,7 @@ void HouyiNormalAttack::takeHouyiNormalAttack(HouyiHero* hero)
 {
 	cocos2d::Vec2 touchPoint = hero->getTouchPoint();
 	cocos2d::Vec2 heroPoint = hero->getPosition();
-	
+
 	this->setPosition(heroPoint);
 	this->setOriginPosition(heroPoint);
 	//获取模长不为1的方向向量
@@ -38,8 +37,8 @@ void HouyiNormalAttack::takeHouyiNormalAttack(HouyiHero* hero)
 	this->setArrowMoveDirection(unitVector);
 
 	//把精灵旋转，让箭头指向点击方向
-	
-	cocos2d::RotateTo* rotateTo = cocos2d::RotateTo::create(0.01, -180.0/3.14*unitVector.getAngle());
+
+	cocos2d::RotateTo* rotateTo = cocos2d::RotateTo::create(0.01, -180.0 / 3.14*unitVector.getAngle());
 	this->runAction(rotateTo);
 
 	this->unscheduleUpdate();
@@ -75,7 +74,7 @@ void HouyiNormalAttack::update(float dt)
 {
 	///这个是箭头移动速度//////////////////// ↓
 	/////////////////////////////////////// ↓
-	this->setPosition(this->getPosition() + HouyiNormalAttackMoveSpeed*this->getArrowMoveDirection());
+	this->setPosition(this->getPosition() + HouyiNormalAttackMoveSpeed * this->getArrowMoveDirection());
 
 	/////////////////////////////////////////
 	cocos2d::Vec2 distance = this->getPosition() - this->getOriginPosition();
@@ -84,11 +83,11 @@ void HouyiNormalAttack::update(float dt)
 
 	//这个是箭头移动的最大距离////////// ↓
 	////////////////////////////////  ↓
-	cocos2d::Vec2 standardAttackRange(HouyiNormalAttackRange,0);
+	cocos2d::Vec2 standardAttackRange(HouyiNormalAttackRange, 0);
 	float standardLength = standardAttackRange.x;
 
 
-	if (length>=standardLength)
+	if (length >= standardLength)
 	{
 		this->removeFromParent();
 	}

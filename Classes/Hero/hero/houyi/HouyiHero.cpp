@@ -1,4 +1,3 @@
-//by 王文政 2019年5月27日
 #include "cocos2d.h"
 #include "HouyiHero.h"
 #include "HouyiNormalAttack.h"
@@ -16,8 +15,8 @@ HouyiHero* HouyiHero::create()
 		//在下边初始化后羿的属性值////////////////////////////////////////////
 		houyi->setHeroName('H');
 		//基础移动速度
-		houyi->changeMoveSpeed(HouyiMoveSpeed * cocos2d::Vec2(1.0,0).x);
-		
+		houyi->changeMoveSpeed(HouyiMoveSpeed * cocos2d::Vec2(1.0, 0).x);
+
 		//基础攻击速度，每秒攻击多少次
 		houyi->changeAttackSpeed(HouyiAttackSpeed);
 		houyi->setAttackWaitTime(0);
@@ -67,12 +66,12 @@ HouyiHero* HouyiHero::create()
 bool HouyiHero::init()
 {
 	//下边的if里搞出了英雄的图片
-	if (!Sprite::initWithFile("houyi.jpg"))
+	if (!Sprite::initWithFile("HouyiHero.png"))
 	{
-		
+
 		return false;
 	}
-	this->setScale(0.3);
+	this->setScale(0.5);
 	this->createBlood();
 	this->createLevel();
 
@@ -82,7 +81,7 @@ bool HouyiHero::init()
 void HouyiHero::buffUpdate(float dt)
 {
 	float cuttime = 1.0 / 20.0;
-	
+
 	//buff持续时间
 	if (this->getBuffTime() >= 0.01)
 	{
@@ -105,12 +104,12 @@ void HouyiHero::buffUpdate(float dt)
 		this->changeMoveSpeed(this->getQSkillLevel() * HouyiQSkillMoveSpeedAdd);
 		this->changeAttackSpeed(this->getQSkillLevel() * HouyiQSkillAttackSpeedAdd);
 		this->setNormalAttackAfterShake(1.0 / this->getAttackSpeed());
-		Sprite* houyiBuff = Sprite::create("HouyiBuff.png");
-		houyiBuff->setPosition(0, 0);
-		houyiBuff->setAnchorPoint(cocos2d::Vec2(0,0));
+		Sprite* houyiBuff = Sprite::create("HouyiQSkill.png");
+		houyiBuff->setPosition(-10, -5);
+		houyiBuff->setAnchorPoint(cocos2d::Vec2(0, 0));
 		this->addChild(houyiBuff, 200, HouyiBuffTag);
 	}
-//	cocos2d::log("attackspeed %f", this->getAttackSpeed());
+	//	cocos2d::log("attackspeed %f", this->getAttackSpeed());
 }
 
 //实现AI
@@ -121,12 +120,12 @@ void HouyiHero::AIcontrol(Hero* hero)
 	this->setOtherHeroPoint(hero->getPosition());
 	*/
 	this->setOtherHero(hero);
-	this->schedule(schedule_selector(HouyiHero::AIAction),1.0/20.0);
+	this->schedule(schedule_selector(HouyiHero::AIAction), 1.0 / 20.0);
 }
-	
+
 void HouyiHero::AIAction(float dt)
 {
-//	cocos2d::log("%f  %f\n",this->getOtherHero()->getPosition().x, this->getOtherHero()->getPosition().y);
+	//	cocos2d::log("%f  %f\n",this->getOtherHero()->getPosition().x, this->getOtherHero()->getPosition().y);
 	this->setOtherHeroPoint(this->getOtherHero()->getPosition());
 	this->setHeroPoint(this->getPosition());
 
@@ -140,7 +139,7 @@ void HouyiHero::AIAction(float dt)
 		if (length >= 80.0)
 		{
 			this->setPosition(this->getPosition() + this->getMoveSpeed() / 60 * standardDistance);
-		//	cocos2d::log(" speed %f", this->getMoveSpeed());
+			//	cocos2d::log(" speed %f", this->getMoveSpeed());
 		}
 	}
 }
