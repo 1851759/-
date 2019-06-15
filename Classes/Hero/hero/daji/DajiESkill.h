@@ -12,22 +12,22 @@ class DajiESkill : public BasicSkill
 
 public:
 
-	//¸üĞÂº¯Êı
+	//æ›´æ–°å‡½æ•°
 	virtual void update(float dt);
 
-	//´¥·¢¼¼ÄÜ
+	//è§¦å‘æŠ€èƒ½
 	static DajiESkill* createDajiESkill(Hero* hero);
 	void takeDajiESkill(DajiHero* hero);
-	//ÖØÔØtakeº¯Êı
+	//é‡è½½takeå‡½æ•°
 	void takeDajiESkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPoint);
 
-	//ÉèÖÃ¹â²¨¼ıÍ·ÒÆ¶¯·½Ïò
-	//ĞèÒªÉèÖÃÒ»¸öÄ£³¤Îª1µÄ¶şÎ¬ÏòÁ¿
-	//ÓÃÓÚÔÚupdateº¯ÊıÖĞ¿ØÖÆ¼ıÍ·ÒÆ¶¯·½Ïò
+	//è®¾ç½®å…‰æ³¢ç®­å¤´ç§»åŠ¨æ–¹å‘
+	//éœ€è¦è®¾ç½®ä¸€ä¸ªæ¨¡é•¿ä¸º1çš„äºŒç»´å‘é‡
+	//ç”¨äºåœ¨updateå‡½æ•°ä¸­æ§åˆ¶ç®­å¤´ç§»åŠ¨æ–¹å‘
 	void setArrowMoveDirection(cocos2d::Vec2 moveDir) { _arrowMoveDirection = moveDir; }
 	cocos2d::Vec2 getArrowMoveDirection() { return _arrowMoveDirection; }
 
-	//µ±ÔË¶¯Ò»¶¨¾àÀëÊ±½«¸Ã´óÄñ¼ıÍ·É¾³ı
+	//å½“è¿åŠ¨ä¸€å®šè·ç¦»æ—¶å°†å¤§é¸Ÿç®­å¤´åˆ é™¤
 	cocos2d::Vec2 getOriginPosition() { return _originPosition; };
 	void setOriginPosition(cocos2d::Vec2 position) { _originPosition = position; }
 };
