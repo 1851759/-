@@ -4,7 +4,7 @@
 #include "Hero.h"
 
 
-//å¦²å·±æŠ€èƒ½å±æ€§
+//æ§¼º¼¼ÄÜÊôĞÔ
 #define DajiNormalAttackRange 100.0
 #define DajiNormalAttackMoveSpeed 3.0
 
@@ -30,7 +30,7 @@
 #define DajiESkillArrowNumber 6
 #define DajiESkillArrowInterval 50
 
-//åœ¨æ­¤å¤„å®šä¹‰å¦²å·±åˆå§‹å±æ€§
+//ÔÚ´Ë´¦¶¨Òåæ§¼º³õÊ¼ÊôĞÔ
 #define DajiMoveSpeed 70.0
 #define DajiAttackSpeed 0.4
 #define DajiAttack 80.0
@@ -44,8 +44,8 @@
 
 class DajiHero : public Hero
 {
-	//è®¾å®šè‹±é›„çš„åå­—
-	//å¦²å·±çš„åå­—ä¸º'D'
+	//Éè¶¨Ó¢ĞÛµÄÃû×Ö
+	//æ§¼ºµÄÃû×ÖÎª'D'
 	char _heroName;
 
 

@@ -25,18 +25,18 @@ void DajiNormalAttack::takeDajiNormalAttack(DajiHero* hero)
 
 	this->setPosition(heroPoint);
 	this->setOriginPosition(heroPoint);
-	//è·å–æ¨¡é•¿ä¸ä¸º1çš„æ–¹å‘å‘é‡
+	//»ñÈ¡Ä£³¤²»Îª1µÄ·½ÏòÏòÁ¿
 	cocos2d::Vec2  directionWithDistance = touchPoint - heroPoint;
-	//è®¡ç®—æ¨¡é•¿
+	//¼ÆËãÄ£³¤
 	float distanceSquare = directionWithDistance.x*directionWithDistance.x + directionWithDistance.y*directionWithDistance.y;
 	float distance = sqrt(distanceSquare);
 
-	//è·å–å•ä½å‘é‡
+	//»ñÈ¡µ¥Î»ÏòÁ¿
 	cocos2d::Vec2 unitVector = directionWithDistance / distance;
-	//å°†å¹³Açš„æ–¹å‘å‘é‡èµ‹ç»™æˆå‘˜_arrowMoveDirection
+	//½«Æ½AµÄ·½ÏòÏòÁ¿¸³¸ø³ÉÔ±_arrowMoveDirection
 	this->setArrowMoveDirection(unitVector);
 
-	//æŠŠç²¾çµæ—‹è½¬ï¼Œè®©ç®­å¤´æŒ‡å‘ç‚¹å‡»æ–¹å‘
+	//°Ñ¾«ÁéĞı×ª£¬ÈÃ¼ıÍ·Ö¸Ïòµã»÷·½Ïò
 
 	cocos2d::RotateTo* rotateTo = cocos2d::RotateTo::create(0.01, -180.0 / 3.14*unitVector.getAngle());
 	this->runAction(rotateTo);
@@ -50,18 +50,18 @@ void DajiNormalAttack::takeDajiNormalAttack(cocos2d::Vec2 startPoint, cocos2d::V
 	this->setPosition(startPoint);
 	this->setOriginPosition(startPoint);
 
-	//è·å–æ¨¡é•¿ä¸ä¸º1çš„æ–¹å‘å‘é‡
+	//»ñÈ¡Ä£³¤²»Îª1µÄ·½ÏòÏòÁ¿
 	cocos2d::Vec2  directionWithDistance = targetPoint - startPoint;
-	//è®¡ç®—æ¨¡é•¿
+	//¼ÆËãÄ£³¤
 	float distanceSquare = directionWithDistance.x*directionWithDistance.x + directionWithDistance.y*directionWithDistance.y;
 	float distance = sqrt(distanceSquare);
 
-	//è·å–å•ä½å‘é‡
+	//»ñÈ¡µ¥Î»ÏòÁ¿
 	cocos2d::Vec2 unitVector = directionWithDistance / distance;
-	//å°†å¹³Açš„æ–¹å‘å‘é‡èµ‹ç»™æˆå‘˜_arrowMoveDirection
+	//½«Æ½AµÄ·½ÏòÏòÁ¿¸³¸ø³ÉÔ±_arrowMoveDirection
 	this->setArrowMoveDirection(unitVector);
 
-	//æŠŠç²¾çµæ—‹è½¬ï¼Œè®©ç®­å¤´æŒ‡å‘ç‚¹å‡»æ–¹å‘
+	//°Ñ¾«ÁéĞı×ª£¬ÈÃ¼ıÍ·Ö¸Ïòµã»÷·½Ïò
 
 	cocos2d::RotateTo* rotateTo = cocos2d::RotateTo::create(0.01, -180.0 / 3.14*unitVector.getAngle());
 	this->runAction(rotateTo);
@@ -72,8 +72,8 @@ void DajiNormalAttack::takeDajiNormalAttack(cocos2d::Vec2 startPoint, cocos2d::V
 
 void DajiNormalAttack::update(float dt)
 {
-	///è¿™ä¸ªæ˜¯ç®­å¤´ç§»åŠ¨é€Ÿåº¦//////////////////// â†“
-	/////////////////////////////////////// â†“
+	///Õâ¸öÊÇ¼ıÍ·ÒÆ¶¯ËÙ¶È//////////////////// ¡ı
+	/////////////////////////////////////// ¡ı
 	this->setPosition(this->getPosition() + DajiNormalAttackMoveSpeed * this->getArrowMoveDirection());
 
 	/////////////////////////////////////////
@@ -81,8 +81,8 @@ void DajiNormalAttack::update(float dt)
 	float lengthSquare = distance.x*distance.x + distance.y*distance.y;
 	float length = sqrt(lengthSquare);
 
-	//è¿™ä¸ªæ˜¯ç®­å¤´ç§»åŠ¨çš„æœ€å¤§è·ç¦»////////// â†“
-	////////////////////////////////  â†“
+	//Õâ¸öÊÇ¼ıÍ·ÒÆ¶¯µÄ×î´ó¾àÀë////////// ¡ı
+	////////////////////////////////  ¡ı
 	cocos2d::Vec2 standardAttackRange(DajiNormalAttackRange, 0);
 	float standardLength = standardAttackRange.x;
 
@@ -92,5 +92,5 @@ void DajiNormalAttack::update(float dt)
 		this->removeFromParent();
 	}
 
-	//æœªæ·»åŠ ç¢°æ’æ£€æµ‹
+	//Î´Ìí¼ÓÅö×²¼ì²â
 }
