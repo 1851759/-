@@ -5,7 +5,7 @@
 JieNormalAttack* JieNormalAttack::createTheAttack(Hero* hero)
 {
 	JieNormalAttack* normalAttack = new JieNormalAttack();
-	if (normalAttack&&normalAttack->initWithFile("HouyiNormalAttack.png"))
+	if (normalAttack&&normalAttack->initWithFile("YaseNormalAttack.png"))
 	{
 		normalAttack->setDamagePoint(hero->getAttackPoint());
 		normalAttack->setCanTakeDamage(true);

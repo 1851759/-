@@ -10,36 +10,35 @@ USING_NS_CC;
 #define JieNormalAttackRange 100.0
 #define JieNormalAttackMoveSpeed 1.0//3.0
 
-#define JieQSkillRange 200.0
+#define JieQSkillRange 300.0
 #define JieQSkillDamage 100
 #define JieQSkillMoveSpeed 5.0//5.0
-#define JieQSkillCD 2.0
-#define JieQSkillAfterShake 1.0
+#define JieQSkillCD 7.0
+#define JieQSkillAfterShake 0.5
 
-#define JieWSkillRange 200.0
-#define JieWSkillLastTime 15.0
+#define JieWSkillRange 250.0
+#define JieWSkillLastTime 10.0
 #define JieWSkillCD 15.0
 #define JieWSkillAfterShake 0.2
 
-#define JieESkillRange 1000.0
+#define JieESkillRange 400.0
 #define JieESkillDamage 200
-#define JieESkillLastTime 15.0
-#define JieESkillDisappearTime 5.0
-#define JieESkillMoveSpeed 2.0//5.0
-#define JieESkillCD 15.0
-#define JieESkillDamageTime 10
-#define JieESkillAfterShake 1.0
+#define JieESkillLastTime 10.0
+#define JieESkillDisappearTime 1.0
+#define JieESkillCD 12.0
+#define JieESkillDamageTime 3.0
+#define JieESkillAfterShake 0.5
 
 //在此处定义劫初始属性
-#define JieMoveSpeed 60.0
+#define JieMoveSpeed 70.0
 #define JieAttackSpeed 0.5
 #define JieAttack 100.0
-#define JieDefence 100.0
-#define JieMaxHealth 200.0
-#define JieHealth 200.0
+#define JieDefence 60.0
+#define JieMaxHealth 500.0
+#define JieHealth 500.0
 #define JieMaxMagic 100.0
 #define JieMagic 100.0
-#define JieNormalAttackAfterShake 1.0/ JieAttackSpeed
+#define JieNormalAttackAfterShake 0.5/ JieAttackSpeed
 
 typedef enum
 {
@@ -98,7 +97,7 @@ public:
 	float getEShadowLastTime() const { return _eShadowLastTime; }
 	void cutEShadowLastTime(float time) { _eShadowLastTime -= time; }
 	void setEShadowLastTime(float time) { _eShadowLastTime = time; }
-	
+
 };
 
 

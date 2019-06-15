@@ -10,10 +10,10 @@ JieQSkill* JieQSkill::createJieQSkill(Hero* hero)
 	if (star&&star->initWithFile("JieQSkill.png"))
 	{
 		star->setCanTakeDamage(true);
-		star->setIfRemoveWhenDamage(true);
+		star->setIfRemoveWhenDamage(false);
 		star->setDamagePoint(JieQSkillDamage * hero->getQSkillLevel());
 		star->autorelease();
-		star->setScale(0.5);
+		star->setScale(0.4);
 		return star;
 	}
 	CC_SAFE_DELETE(star);

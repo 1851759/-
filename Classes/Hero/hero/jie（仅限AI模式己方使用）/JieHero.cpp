@@ -61,13 +61,13 @@ JieHero* JieHero::create()
 bool JieHero::init()
 {
 	//下边的if里搞出了英雄的图片
-	if (!Sprite::initWithFile("jie.jpg"))
+	if (!Sprite::initWithFile("JieHero.png"))
 	{
 
 		return false;
 	}
 	this->createBlood();
 	this->createLevel();
-	this->setScale(0.4);
+	this->setScale(0.5);
 	return true;
 }
