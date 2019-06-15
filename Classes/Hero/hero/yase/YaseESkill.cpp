@@ -27,8 +27,8 @@ void YaseESkill::takeYaseESkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPo
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);//获取两者之间的距离
 	cocos2d::Vec2 unitVector = distance / length;//获取单位向量
 	this->setSwordMoveDirection(unitVector);//将单位向量赋给_swordMOveDirection
-	this->setPosition((startPoint + 50 * unitVector).x, 900);
-	this->setOriginPosition(startPoint + 50 * unitVector);
+	this->setPosition(targetPoint+ Vec2(0,900));
+	this->setOriginPosition(targetPoint + Vec2(0, 900));
 	this->unscheduleUpdate();
 	this->scheduleUpdate();
 }

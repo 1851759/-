@@ -9,7 +9,7 @@ YaseNormalAttack* YaseNormalAttack::createTheAttack(Hero* hero)
 	{
 		normalAttack->setDamagePoint(hero->getAttackPoint());
 		normalAttack->setCanTakeDamage(true);
-		normalAttack->setIfRemoveWhenDamage(true);
+		normalAttack->setIfRemoveWhenDamage(false);
 		normalAttack->autorelease();
 		normalAttack->setScale(0.7);
 		return normalAttack;

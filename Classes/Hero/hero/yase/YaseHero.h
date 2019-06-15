@@ -4,7 +4,7 @@
 #include "Hero.h"
 
 //亚瑟技能属性
-#define YaseNormalAttackRange 30.0
+#define YaseNormalAttackRange 50.0
 #define YaseNormalAttackMoveSpeed 4.0
 
 #define YaseQSkillLastTime 6.0
