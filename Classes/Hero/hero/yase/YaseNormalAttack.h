@@ -1,6 +1,3 @@
-//by 王文政 2019年6月2日
-//亚瑟平A的类
-//嫖后羿平A类
 #ifndef __YASENORMALATTACK__
 #define __YASENORMALATTACK__
 

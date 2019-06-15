@@ -1,4 +1,3 @@
-//by 王文政 2019年5月30日
 #include "cocos2d.h"
 #include "YaseHero.h"
 #include"YaseNormalAttack.h"
@@ -67,11 +66,11 @@ YaseHero* YaseHero::create()
 bool YaseHero::init()
 {
 	//下边的if里搞出了英雄的图片
-	if (!Sprite::initWithFile("yase.png"))
+	if (!Sprite::initWithFile("YaseHero.png"))
 	{
 		return false;
 	}
-	this->setScale(0.3);
+	this->setScale(0.5);
 	this->createBlood();
 	this->createLevel();
 
@@ -101,8 +100,9 @@ void YaseHero::buffUpdate(float dt)
 		//此处为获得的buff属性
 		this->changeDefensePoint(this->getQSkillLevel()*YaseQSkillDefenceAdd);
 		this->setNormalAttackAfterShake(1.0 / this->getAttackSpeed());
-		Sprite* yaseBuff = Sprite::create("yaseBuff.png");
-		yaseBuff->setPosition(0, 0);
+		Sprite* yaseBuff = Sprite::create("yaseQSkill.png");
+		yaseBuff->setScale(0.6);
+		yaseBuff->setPosition(-100, -50);
 		yaseBuff->setAnchorPoint(cocos2d::Vec2(0, 0));
 		this->addChild(yaseBuff, 200, YaseBuffTag);
 	}
@@ -127,7 +127,7 @@ void YaseHero::AIAction(float dt)
 		float length = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
 		cocos2d::Vec2 standardDistance = distance / length;
 		//AI亚瑟离玩家20以上
-		if (length >= YaseNormalAttackRange-10)
+		if (length >= YaseNormalAttackRange - 10)
 		{
 			this->setPosition(this->getPosition() + this->getMoveSpeed() / 60 * standardDistance);
 		}

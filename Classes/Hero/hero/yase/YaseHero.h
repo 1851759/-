@@ -1,9 +1,3 @@
-//by 王文政 2019年5月30日
-//这个类是亚瑟的类
-//是Hero类的子类
-//代码嫖后羿类
-
-
 #ifndef __YASEHERO__
 #define __YASEHERO__
 #include "cocos2d.h"
@@ -13,35 +7,35 @@
 #define YaseNormalAttackRange 30.0
 #define YaseNormalAttackMoveSpeed 4.0
 
-#define YaseQSkillLastTime 5.0
+#define YaseQSkillLastTime 6.0
 #define YaseQSkillDefenceAdd 2.0
 #define YaseQSkillCD 10.0
-#define YaseQSkillAfterShake 1.0
+#define YaseQSkillAfterShake 0.5
 
-#define YaseWSkillRange 200.0
+#define YaseWSkillRange 75.0
 #define YaseWSkillRollSpeed 1.0//3.0
 #define YaseWSkillDamage 30
-#define YaseWSkillCD 10.0
+#define YaseWSkillCD 8.0
 #define YaseWSkillLastTime 5.0//3.0
 #define YaseWSkillRollNumber 10//20
-#define YaseWSkillAfterShake 1.0
+#define YaseWSkillAfterShake 0.5
 
-#define YaseESkillRange 50.0
-#define YaseESkillDamage 100
-#define YaseESkillMoveSpeed 20.0
+#define YaseESkillRange 300.0
+#define YaseESkillDamage 150
+#define YaseESkillMoveSpeed 15.0
 #define YaseESkillCD 10.0
-#define YaseESkillAfterShake 1.0
+#define YaseESkillAfterShake 0.5
 
 //在此处定义亚瑟初始属性
-#define YaseMoveSpeed 60.0
-#define YaseAttackSpeed 0.4
+#define YaseMoveSpeed 80.0
+#define YaseAttackSpeed 0.5
 #define YaseAttack 100.0
-#define YaseDefence 100.0
-#define YaseMaxHealth 250.0
-#define YaseHealth 250.0
+#define YaseDefence 80.0
+#define YaseMaxHealth 600.0.0
+#define YaseHealth 600.0
 #define YaseMaxMagic 100.0
 #define YaseMagic 100.0
-#define YaseNormalAttackAfterShake 1.0/YaseAttackSpeed
+#define YaseNormalAttackAfterShake 0.5//YaseAttackSpeed
 
 
 typedef enum

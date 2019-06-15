@@ -23,7 +23,8 @@ YaseWSkill* YaseWSkill::createYaseWSkill(Hero* hero)
 void YaseWSkill::takeYaseWSkill(Hero* hero)
 {
 	isRoll = true;
-	this->setPosition(cocos2d::Vec2::ZERO);
+	this->setScale(1.7);
+	this->setPosition(50,45);
 	/*this->setOriginPosition(hero->getPosition());*/
 	cocos2d::RotateTo* rotateTo = cocos2d::RotateTo::create(YaseWSkillLastTime, YaseWSkillRollNumber * 360);
 	this->runAction(rotateTo);

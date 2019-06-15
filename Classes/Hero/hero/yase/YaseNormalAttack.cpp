@@ -1,5 +1,3 @@
-//by 王文政 2019年6月2日
-//代码嫖后羿平A
 #include "cocos2d.h"
 #include "YaseHero.h"
 #include "YaseNormalAttack.h"
@@ -54,7 +52,7 @@ void YaseNormalAttack::update(float dt)
 	////////////////////////////////  ↓
 	cocos2d::Vec2 standardAttackRange(YaseNormalAttackRange, 0);
 	float standardLength = standardAttackRange.x;
-	if (go) 
+	if (go)
 	{
 		///这个是剑移动速度//////////////////// ↓
 		/////////////////////////////////////// ↓
@@ -62,14 +60,14 @@ void YaseNormalAttack::update(float dt)
 		/////////////////////////////////////////
 		if (length >= YaseNormalAttackRange)
 		{
-		//	log("bb");
+			//	log("bb");
 			go = false;
 		}
 	}
-	else 
+	else
 	{
 		this->setPosition(this->getPosition() - YaseNormalAttackMoveSpeed * this->getSwordMoveDirection());
-		if ( length <= 0.01)
+		if (length <= 0.01)
 		{
 			this->removeFromParent();
 		}
