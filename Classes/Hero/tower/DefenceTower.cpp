@@ -19,8 +19,8 @@ DefenceTower* DefenceTower::create(PlayerFlag flag)
 		//基础攻击速度，每秒攻击多少次
 		defence->changeAttackSpeed(DefenceAttackSpeed);
 		defence->setAttackWaitTime(0);
-		defence->setHealthPoint(3000);
-		defence->changeMaxHealthPoint(3000);
+		defence->setHealthPoint(2500);
+		defence->changeMaxHealthPoint(2500);
 		//基础攻击力
 		defence->changeAttackPoint(DefenceAttack);
 		//基础防御力
@@ -45,6 +45,7 @@ bool DefenceTower::init()
 		body->setContactTestBitmask(MEUNITTEST);
 		body->setCategoryBitmask(MEUNITCATEGORY);
 		body->setCollisionBitmask(MEUNITCOLLISION);
+		body->setMass(99999);
 		this->setPhysicsBody(body);
 		this->setScale(0.5);
 		this->createBlood();
@@ -58,6 +59,7 @@ bool DefenceTower::init()
 		body->setContactTestBitmask(OTHERUNITTEST);
 		body->setCategoryBitmask(OTHERUNITCATEGORY);
 		body->setCollisionBitmask(OTHERUNITCOLLISION);
+		body->setMass(99999);
 		this->setPhysicsBody(body);
 		this->setScale(0.5);
 		this->createBlood();

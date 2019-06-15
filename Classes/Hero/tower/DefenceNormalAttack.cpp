@@ -7,7 +7,7 @@
 DefenceNormalAttack* DefenceNormalAttack::createTheAttack(Hero* hero)
 {
 	DefenceNormalAttack* normalAttack = new DefenceNormalAttack();
-	if (normalAttack&&normalAttack->initWithFile("HouyiNormalAttack.png"))
+	if (normalAttack&&normalAttack->initWithFile("DefenceNormalAttack.png"))
 	{
 		normalAttack->setDamagePoint(hero->getAttackPoint());
 		normalAttack->setCanTakeDamage(true);

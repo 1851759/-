@@ -28,10 +28,11 @@ public:
 
 	virtual void update(float dt);
 
-	
+
 
 };
 
 extern bool over, victory;
 
 #endif // !__CRYSTALTOWER__
+

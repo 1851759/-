@@ -36,18 +36,19 @@ CrystalTower* CrystalTower::create(PlayerFlag flag)
 bool CrystalTower::init()
 {
 	//下边的if里搞出了英雄的图片
-		if (this->getTowerFlag() == Player1 && Sprite::initWithFile("crystal.png"))
-		{
-			auto body = cocos2d::PhysicsBody::createCircle(this->getContentSize().width / 2);
-			body->setContactTestBitmask(MEUNITTEST);
-			body->setCategoryBitmask(MEUNITCATEGORY);
-			body->setCollisionBitmask(MEUNITCOLLISION);
-			this->setPhysicsBody(body);
-			this->setScale(0.5);
-			this->createBlood();
+	if (this->getTowerFlag() == Player1 && Sprite::initWithFile("crystal.png"))
+	{
+		auto body = cocos2d::PhysicsBody::createCircle(this->getContentSize().width / 2);
+		body->setContactTestBitmask(MEUNITTEST);
+		body->setCategoryBitmask(MEUNITCATEGORY);
+		body->setCollisionBitmask(MEUNITCOLLISION);
+		body->setMass(99999);
+		this->setPhysicsBody(body);
+		this->setScale(0.5);
+		this->createBlood();
 
-			return true;
-		}
+		return true;
+	}
 
 	if (this->getTowerFlag() == Player2 && Sprite::initWithFile("crystal.png"))
 	{
@@ -55,6 +56,7 @@ bool CrystalTower::init()
 		body->setContactTestBitmask(OTHERUNITTEST);
 		body->setCategoryBitmask(OTHERUNITCATEGORY);
 		body->setCollisionBitmask(OTHERUNITCOLLISION);
+		body->setMass(99999);
 		this->setPhysicsBody(body);
 		this->setScale(0.5);
 		this->createBlood();
@@ -112,7 +114,6 @@ void CrystalTower::update(float dt)
 		Director::getInstance()->replaceScene(sc);
 	}
 }
-
 
 
 	
