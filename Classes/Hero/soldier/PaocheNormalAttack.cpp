@@ -7,7 +7,7 @@
 PaocheNormalAttack* PaocheNormalAttack::createTheAttack(Hero* hero)
 {
 	PaocheNormalAttack* normalAttack = new PaocheNormalAttack();
-	if (normalAttack&&normalAttack->initWithFile("HouyiNormalAttack.png"))
+	if (normalAttack&&normalAttack->initWithFile("SoldierNormalAttack.png"))
 	{
 		normalAttack->setDamagePoint(hero->getAttackPoint());
 		normalAttack->setCanTakeDamage(true);

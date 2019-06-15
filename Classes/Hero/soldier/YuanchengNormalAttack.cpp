@@ -7,7 +7,7 @@
 YuanchengNormalAttack* YuanchengNormalAttack::createTheAttack(Hero* hero)
 {
 	YuanchengNormalAttack* normalAttack = new YuanchengNormalAttack();
-	if (normalAttack&&normalAttack->initWithFile("HouyiNormalAttack.png"))
+	if (normalAttack&&normalAttack->initWithFile("SoldierNormalAttack.png"))
 	{
 		normalAttack->setDamagePoint(hero->getAttackPoint());
 		normalAttack->setCanTakeDamage(true);

@@ -68,6 +68,6 @@ void JinzhanNormalAttack::update(float dt)
 	{
 		this->removeFromParent();
 	}
-	
+
 	//Î´Ìí¼ÓÅö×²¼ì²â
 }

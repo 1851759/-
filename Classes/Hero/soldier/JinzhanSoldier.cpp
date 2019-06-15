@@ -51,7 +51,7 @@ bool JinzhanSoldier::init()
 		this->setScale(0.2);
 		return true;
 	}
-	
+
 	if (this->getSoldierFlag() == Player2 && Sprite::initWithFile("JinzhanHong.png"))
 	{
 		auto body = cocos2d::PhysicsBody::createCircle(this->getContentSize().width / 2);
@@ -108,19 +108,19 @@ void JinzhanSoldier::AIAction(float dt)
 	{
 		this->setPosition(this->getPosition() + this->getMoveSpeed() / 60 * standardDistance);
 	}
-	if (length <= JinzhanNormalAttackRange && this->getHeroAfterShake()<=0.01)
+	if (length <= JinzhanNormalAttackRange && this->getHeroAfterShake() <= 0.01)
 	{
 		//cocos2d::log("asdad");
 		if (this->getTag() == MeJinzhanSoldierTag)
 		{
 			takeNormalAttack(this, true, this->getHeroPoint(), this->getOtherHeroPoint());
-			
+
 		}
 		else //if (this->getTag() == OtherJinzhanSoldierTag)
 		{
 			takeNormalAttack(this, false, this->getHeroPoint(), this->getOtherHeroPoint());
 		}
-		this->setAttackWaitTime(1.0/this->getAttackSpeed());
+		this->setAttackWaitTime(1.0 / this->getAttackSpeed());
 		this->setHeroAfterShake(this->getNormalAttackAfterShake());
 	}
 
@@ -151,6 +151,9 @@ void JinzhanSoldier::takeNormalAttack(Hero* hero, bool isMe, cocos2d::Vec2 start
 	}
 	jinzhanNormalAttack->takeJinzhanNormalAttack(startPoint, targetPoint);
 }
+
+
+
 
 
 
