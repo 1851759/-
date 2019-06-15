@@ -14,7 +14,7 @@ DajiQSkill* DajiQSkill::createDajiQSkill(Hero* hero)
 		bigMoon->setIfRemoveWhenDamage(true);
 		bigMoon->setDamagePoint(DajiQSkillDamage * hero->getQSkillLevel());
 		bigMoon->autorelease();
-		bigMoon->setScale(0.2);
+		bigMoon->setScale(0.1);
 		return bigMoon;
 	}
 	CC_SAFE_DELETE(bigMoon);
@@ -29,18 +29,18 @@ void DajiQSkill::takeDajiQSkill(DajiHero* hero)
 	//cocos2d::log("heroPoint %f %f ", heroPoint.x, heroPoint.y);
 	this->setPosition(heroPoint);
 	this->setOriginPosition(heroPoint);
-	//»ñÈ¡Ä£³¤²»Îª1µÄ·½ÏòÏòÁ¿
+	//è·å–æ¨¡é•¿ä¸ä¸º1çš„æ–¹å‘å‘é‡
 	cocos2d::Vec2  directionWithDistance = touchPoint - heroPoint;
-	//¼ÆËãÄ£³¤
+	//è®¡ç®—æ¨¡é•¿
 	float distanceSquare = directionWithDistance.x*directionWithDistance.x + directionWithDistance.y*directionWithDistance.y;
 	float distance = sqrt(distanceSquare);
 
-	//»ñÈ¡µ¥Î»ÏòÁ¿
+	//è·å–å•ä½å‘é‡
 	cocos2d::Vec2 unitVector = directionWithDistance / distance;
-	//½«Æ½AµÄ·½ÏòÏòÁ¿¸³¸ø³ÉÔ±_arrowMoveDirection
+	//å°†å¹³Açš„æ–¹å‘å‘é‡èµ‹ç»™æˆå‘˜_arrowMoveDirection
 	this->setArrowMoveDirection(unitVector);
 
-	//Ğı×ª//////
+	//æ—‹è½¬//////
 	cocos2d::RotateTo* rotateTo = cocos2d::RotateTo::create(0.01, -180.0 / 3.14*unitVector.getAngle());
 	this->runAction(rotateTo);
 
@@ -52,18 +52,18 @@ void DajiQSkill::takeDajiQSkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPo
 {
 	this->setPosition(startPoint);
 	this->setOriginPosition(startPoint);
-	//»ñÈ¡Ä£³¤²»Îª1µÄ·½ÏòÏòÁ¿
+	//è·å–æ¨¡é•¿ä¸ä¸º1çš„æ–¹å‘å‘é‡
 	cocos2d::Vec2  directionWithDistance = targetPoint - startPoint;
-	//¼ÆËãÄ£³¤
+	//è®¡ç®—æ¨¡é•¿
 	float distanceSquare = directionWithDistance.x*directionWithDistance.x + directionWithDistance.y*directionWithDistance.y;
 	float distance = sqrt(distanceSquare);
 
-	//»ñÈ¡µ¥Î»ÏòÁ¿
+	//è·å–å•ä½å‘é‡
 	cocos2d::Vec2 unitVector = directionWithDistance / distance;
-	//½«Æ½AµÄ·½ÏòÏòÁ¿¸³¸ø³ÉÔ±_arrowMoveDirection
+	//å°†å¹³Açš„æ–¹å‘å‘é‡èµ‹ç»™æˆå‘˜_arrowMoveDirection
 	this->setArrowMoveDirection(unitVector);
 
-	//Ğı×ª//////
+	//æ—‹è½¬//////
 	cocos2d::RotateTo* rotateTo = cocos2d::RotateTo::create(0.01, -180.0 / 3.14*unitVector.getAngle());
 	this->runAction(rotateTo);
 
@@ -74,8 +74,8 @@ void DajiQSkill::takeDajiQSkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPo
 
 void DajiQSkill::update(float dt)
 {
-	///Õâ¸öÊÇ¼ıÍ·ÒÆ¶¯ËÙ¶È//////////////////// ¡ı
-	/////////////////////////////////////// ¡ı
+	///è¿™ä¸ªæ˜¯ç®­å¤´ç§»åŠ¨é€Ÿåº¦//////////////////// â†“
+	/////////////////////////////////////// â†“
 	this->setPosition(this->getPosition() + DajiQSkillMoveSpeed * this->getArrowMoveDirection());
 
 	/////////////////////////////////////////
@@ -83,8 +83,8 @@ void DajiQSkill::update(float dt)
 	float lengthSquare = distance.x*distance.x + distance.y*distance.y;
 	float length = sqrt(lengthSquare);
 
-	//Õâ¸öÊÇ¼ıÍ·ÒÆ¶¯µÄ×î´ó¾àÀë////////// ¡ı
-	////////////////////////////////  ¡ı
+	//è¿™ä¸ªæ˜¯ç®­å¤´ç§»åŠ¨çš„æœ€å¤§è·ç¦»////////// â†“
+	////////////////////////////////  â†“
 	cocos2d::Vec2 standardAttackRange(DajiQSkillRange, 0);
 	float standardLength = standardAttackRange.x;
 
@@ -94,5 +94,5 @@ void DajiQSkill::update(float dt)
 		this->removeFromParent();
 	}
 
-	//Î´Ìí¼ÓÅö×²¼ì²â
+	//æœªæ·»åŠ ç¢°æ’æ£€æµ‹
 }
