@@ -4,46 +4,48 @@
 #include "Hero.h"
 
 
-//æ§¼º¼¼ÄÜÊôĞÔ
+//å¦²å·±æŠ€èƒ½å±æ€§
 #define DajiNormalAttackRange 100.0
 #define DajiNormalAttackMoveSpeed 3.0
 
 
-#define DajiQSkillRange 500.0
+#define DajiQSkillRange 350.0
 #define DajiQSkillMoveSpeed 3.0
 #define DajiQSkillDamage 120
-#define DajiQSkillCD 1.0
-#define DajiQSkillAfterShake 1.0
+#define DajiQSkillCD 7.0
+#define DajiQSkillAfterShake 0.5
 
 #define DajiWSkillRange 300.0
-#define DajiWSkillMoveSpeed 3.0
-#define DajiWSkillDamage 150
-#define DajiWSkillCD 1.0
-#define DajiWSkillAfterShake 1.0
+#define DajiWSkillMoveSpeed 2.0
+#define DajiWSkillDamage 200
+#define DajiWSkillCD 8.0
+#define DajiWSkillAfterShake 0.5
 
 #define DajiESkillRange 200.0
 #define DajiESkillArrowNumber 6
-#define DajiESkillMoveSpeed 4.0
+#define DajiESkillMoveSpeed 3.0
 #define DajiESkillDamage 80
-#define DajiESkillCD 1.0
-#define DajiESkillAfterShake 1.0
+#define DajiESkillCD 10.0
+#define DajiESkillAfterShake 0.5
+#define DajiESkillArrowNumber 6
+#define DajiESkillArrowInterval 50
 
-//ÔÚ´Ë´¦¶¨Òåæ§¼º³õÊ¼ÊôĞÔ
-#define DajiMoveSpeed 60.0
+//åœ¨æ­¤å¤„å®šä¹‰å¦²å·±åˆå§‹å±æ€§
+#define DajiMoveSpeed 70.0
 #define DajiAttackSpeed 0.4
 #define DajiAttack 80.0
-#define DajiMaxHealth 200.0
-#define DajiHealth 200.0
+#define DajiMaxHealth 500.0
+#define DajiHealth 500.0
 #define DajiMaxMagic 200.0
 #define DajiMagic 100.0
 #define DajiDefence 100.0
-#define DajiNormalAttackAfterShake 1.0/ DajiAttackSpeed
+#define DajiNormalAttackAfterShake 0.5/ DajiAttackSpeed
 
 
 class DajiHero : public Hero
 {
-	//Éè¶¨Ó¢ĞÛµÄÃû×Ö
-	//æ§¼ºµÄÃû×ÖÎª'D'
+	//è®¾å®šè‹±é›„çš„åå­—
+	//å¦²å·±çš„åå­—ä¸º'D'
 	char _heroName;
 
 
