@@ -88,14 +88,14 @@ class GameScene :public cocos2d::Layer
 	int _meExp;
 	int _otherMoney;
 	int _otherExp;
-	bool _ischecking=false;
+	bool _ischecking = false;
 	cocos2d::TMXTiledMap *_tileMap;
 	cocos2d::TMXLayer *_collidable;
 	cocos2d::Vec2 position_now;
 	cocos2d::Vec2 position_now_me, position_now_other;
 	int RedScore = 9999, BlueScore = 9998;                 //Tag
-	int moneytag = 8888,Expbar = 1234;
-	int equ_num_me = 0,equ_num_enemy;
+	int moneytag = 8888, Expbar = 1234;
+	int equ_num_me = 0, equ_num_enemy;
 
 public:
 	//О­бщ

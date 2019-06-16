@@ -1,26 +1,3 @@
-/****************************************************************************
- Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
-
- http://www.cocos2d-x.org
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
- ****************************************************************************/
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 #include"RoomScene.h"
@@ -88,7 +65,7 @@ bool HelloWorld::init()
 
 		auto menu = Menu::create(closeItem, startItem, NULL);
 		menu->setPosition(Vec2::ZERO);
-		this->addChild(menu,100);
+		this->addChild(menu, 200);
 
 		Sprite *bg = Sprite::create("background.jpg");
 		bg->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
@@ -102,15 +79,23 @@ bool HelloWorld::init()
 	{
 		if (victory)
 		{
+			auto end = LabelTTF::create("Game will end in 5 sec", "Arial", 40);
+			end->setPosition(800, 300);
+			this->addChild(end, 200);
 			auto victory = Sprite::create("VICTORY.png");
 			victory->setPosition(800, 450);
 			this->addChild(victory, 200);
+			this->scheduleOnce(schedule_selector(HelloWorld::close), 5);
 		}
 		else
 		{
+			auto end = LabelTTF::create("Game will end in 5 sec", "Arial", 40);
+			end->setPosition(800, 300);
+			this->addChild(end, 200);
 			auto defeat = Sprite::create("DEFEAT.png");
 			defeat->setPosition(800, 450);
 			this->addChild(defeat, 200);
+			this->scheduleOnce(schedule_selector(HelloWorld::close), 5);
 		}
 	}
 
@@ -129,3 +114,7 @@ void HelloWorld::menuStartCallback(cocos2d::Ref* pSender)
 	Director::getInstance()->replaceScene(sc);
 }
 
+void HelloWorld::close(float dt)
+{
+	Director::getInstance()->end();
+}

@@ -588,24 +588,24 @@ bool GameScene::init()
 	player2Crystal->scheduleUpdate();
 	this->addChild(player2Crystal, 200, OtherCrystalTag);
 	//player2Crystal->setScale(0.8);
-	
+
 
 	//装备商店
-    MenuItemImage *shop_xie = MenuItemImage::create("zhuangbei/xie.png", "zhuangbei/xie.png", CC_CALLBACK_1(GameScene::shop_xie, this));
-    shop_xie->setPosition(Vec2(-710,300));
-    MenuItemImage *shop_shoutao = MenuItemImage::create("zhuangbei/duanjian.png", "zhuangbei/duanjian.png", CC_CALLBACK_1(GameScene::shop_duanjian, this));
-    shop_shoutao->setPosition(Vec2(-710,235));
-    MenuItemImage *shop_changgong = MenuItemImage::create("zhuangbei/changjian.png", "zhuangbei/changgong.png", CC_CALLBACK_1(GameScene::shop_changjian, this));
-    shop_changgong->setPosition(Vec2(-710,170));
-    MenuItemImage *shop_kaijia = MenuItemImage::create("zhuangbei/kaijia.png", "zhuangbei/kaijia.png", CC_CALLBACK_1(GameScene::shop_kaijia, this));
-    shop_kaijia->setPosition(Vec2(-710,115));
-    MenuItemImage *shop_hongshuijing = MenuItemImage::create("zhuangbei/hongshuijing.png", "zhuangbei/hongshuijing.png", CC_CALLBACK_1(GameScene::shop_hongshuijing, this));
-    shop_hongshuijing->setPosition(Vec2(-710,50));
+	MenuItemImage *shop_xie = MenuItemImage::create("zhuangbei/xie.png", "zhuangbei/xie.png", CC_CALLBACK_1(GameScene::shop_xie, this));
+	shop_xie->setPosition(Vec2(-710, 300));
+	MenuItemImage *shop_shoutao = MenuItemImage::create("zhuangbei/duanjian.png", "zhuangbei/duanjian.png", CC_CALLBACK_1(GameScene::shop_duanjian, this));
+	shop_shoutao->setPosition(Vec2(-710, 235));
+	MenuItemImage *shop_changgong = MenuItemImage::create("zhuangbei/changjian.png", "zhuangbei/changgong.png", CC_CALLBACK_1(GameScene::shop_changjian, this));
+	shop_changgong->setPosition(Vec2(-710, 170));
+	MenuItemImage *shop_kaijia = MenuItemImage::create("zhuangbei/kaijia.png", "zhuangbei/kaijia.png", CC_CALLBACK_1(GameScene::shop_kaijia, this));
+	shop_kaijia->setPosition(Vec2(-710, 115));
+	MenuItemImage *shop_hongshuijing = MenuItemImage::create("zhuangbei/hongshuijing.png", "zhuangbei/hongshuijing.png", CC_CALLBACK_1(GameScene::shop_hongshuijing, this));
+	shop_hongshuijing->setPosition(Vec2(-710, 50));
 
-    Menu *_menu = Menu::create(shop_xie, shop_shoutao,shop_changgong,shop_kaijia,shop_hongshuijing, NULL);
-    this->addChild(_menu,200);
+	Menu *_menu = Menu::create(shop_xie, shop_shoutao, shop_changgong, shop_kaijia, shop_hongshuijing, NULL);
+	this->addChild(_menu, 200);
 
-//左上角战绩
+	//左上角战绩
 	auto score_blue = LabelTTF::create("0 ", "Arial", 36);
 	this->addChild(score_blue, 2);
 	score_blue->setPosition(80, 850);
@@ -754,7 +754,7 @@ void GameScene::watchMeAndOther(float dt)
 			}//end 普攻
 
 			//判断并W技能
-			if (length <= YaseWSkillRange - 20 && otherHero->getWSkillWaitTime() <= 0.01)
+			if (length <= YaseWSkillRange && otherHero->getWSkillWaitTime() <= 0.01)
 			{
 				takeYaseWSkill(otherHero, Player2, otherHeroPoint, meHeroPoint);
 				otherHero->setWSkillWaitTime(otherHero->getWSkillCdTime());
@@ -1070,7 +1070,8 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 			case 'A':
 			{
-				if (target->getAttackWaitTime() <= 0.01)
+				if (target->getAttackWaitTime() <= 0.01
+					&& heroPosition.getDistance(touchPosition) <= HouyiNormalAttackRange)
 				{
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
@@ -1182,7 +1183,8 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 			case 'A':
 			{
-				if (target->getAttackWaitTime() <= 0.01)
+				if (target->getAttackWaitTime() <= 0.01 
+					&& heroPosition.getDistance(touchPosition) <= YaseNormalAttackRange)
 				{
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
@@ -1232,7 +1234,9 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 
 			case 'E':
 			{
-				if (target->getESkillWaitTime() <= 0.01)
+				if (target->getESkillWaitTime() <= 0.01
+					&& heroPosition.getDistance(touchPosition) <= YaseESkillRange
+					&& touchPosition.getDistance(this->getChildByTag(601 - this->getMeFlag())->getPosition()) <= 30)
 				{
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
@@ -1291,7 +1295,8 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 			case 'A':
 			{
-				if (target->getAttackWaitTime() <= 0.01)
+				if (target->getAttackWaitTime() <= 0.01
+					&& heroPosition.getDistance(touchPosition) <= DajiNormalAttackRange)
 				{
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
@@ -1416,7 +1421,8 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 			{
 			case 'A':
 			{
-				if (target->getAttackWaitTime() <= 0.01 && !target->isInDisappear())
+				if (target->getAttackWaitTime() <= 0.01 && !target->isInDisappear()
+					&& heroPosition.getDistance(touchPosition) <= JieNormalAttackRange)
 				{
 					//停止当前的移动进行普攻
 					target->stopActionByTag(HeroMove);
@@ -1486,7 +1492,7 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 
 				if (target->getESkillWaitTime() <= 0.01 && heroPosition.getDistance(touchPosition) <= JieESkillRange
 					&& !target->isInDisappear()
-					&& touchPosition.getDistance(this->getChildByTag(601 - this->getMeFlag())->getPosition()) <= 10)
+					&& touchPosition.getDistance(this->getChildByTag(601 - this->getMeFlag())->getPosition()) <= 30)
 				{
 					//停止当前的移动进行大招
 					target->stopActionByTag(HeroMove);
@@ -1526,13 +1532,13 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 
 void GameScene::shop_xie(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300&&equ_num_me<=4) 
+	if (_meMoney >= 300 && equ_num_me <= 4)
 	{
-		_meMoney -= 300; 
+		_meMoney -= 300;
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeMoveSpeed(30);
 		auto xie = Sprite::create("1.png");
 		this->getChildByTag(666)->addChild(xie);
-		xie->setPosition(320+equ_num_me*80,340);
+		xie->setPosition(320 + equ_num_me * 80, 340);
 		if (!IfAI)
 			Cli.MessageSending("BX");
 		equ_num_me++;
@@ -1541,13 +1547,13 @@ void GameScene::shop_xie(cocos2d::Ref* pSender)
 
 void GameScene::shop_duanjian(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300&&equ_num_me<=4)
+	if (_meMoney >= 300 && equ_num_me <= 4)
 	{
 		_meMoney -= 300;
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeAttackSpeed(0.5);
-		auto duanjian= Sprite::create("2.png");
+		auto duanjian = Sprite::create("2.png");
 		this->getChildByTag(666)->addChild(duanjian);
-		duanjian->setPosition(320 + equ_num_me* 80, 340);
+		duanjian->setPosition(320 + equ_num_me * 80, 340);
 		if (!IfAI)
 			Cli.MessageSending("BD");
 		equ_num_me++;
@@ -1556,7 +1562,7 @@ void GameScene::shop_duanjian(cocos2d::Ref* pSender)
 
 void GameScene::shop_changjian(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300&& equ_num_me <= 4)
+	if (_meMoney >= 300 && equ_num_me <= 4)
 	{
 		_meMoney -= 300;
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeAttackPoint(200);
@@ -1571,7 +1577,7 @@ void GameScene::shop_changjian(cocos2d::Ref* pSender)
 
 void GameScene::shop_kaijia(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300&& equ_num_me <= 4)
+	if (_meMoney >= 300 && equ_num_me <= 4)
 	{
 		_meMoney -= 300;
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeDefensePoint(200);
@@ -1586,7 +1592,7 @@ void GameScene::shop_kaijia(cocos2d::Ref* pSender)
 
 void GameScene::shop_hongshuijing(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300&& equ_num_me <= 4)
+	if (_meMoney >= 300 && equ_num_me <= 4)
 	{
 		_meMoney -= 300;
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeMaxHealthPoint(100);
@@ -1664,14 +1670,14 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 					this->changeOtherExp(JinzhanSoldierExp);
 					this->changeOtherMoney(JinzhanSoldierMoney);
 				}
-				else 
+				else
 				{
 					if (meHero->getTag() == MeYuanchengSoldierTag)
 					{
 						this->changeOtherExp(YuanchengSoldierExp);
 						this->changeOtherMoney(YuanchengSoldierMoney);
 					}
-					else 
+					else
 					{
 						if (meHero->getTag() == MePaocheSoldierTag)
 						{
@@ -1819,14 +1825,14 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 					this->changeMeExp(JinzhanSoldierExp);
 					this->changeMeMoney(JinzhanSoldierMoney);
 				}
-				else 
+				else
 				{
 					if (otherHero->getTag() == OtherYuanchengSoldierTag)
 					{
 						this->changeMeExp(YuanchengSoldierExp);
 						this->changeMeMoney(YuanchengSoldierMoney);
 					}
-					else 
+					else
 					{
 						if (otherHero->getTag() == OtherPaocheSoldierTag)
 						{
@@ -2542,47 +2548,47 @@ void GameScene::jinzhanWulawula(float dt)
 {
 	//player1方近战兵
 	auto meJinzhanSoldier = JinzhanSoldier::create(Player1);
-	meJinzhanSoldier->setPosition(500, 500);
+	meJinzhanSoldier->setPosition(300, 200);
 	meJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player2)));
 	this->addChild(meJinzhanSoldier, 200, MeJinzhanSoldierTag);
 	meJinzhanSoldier->scheduleUpdate();
 	//player2方近战兵
 	auto otherJinzhanSoldier = JinzhanSoldier::create(Player2);
-	otherJinzhanSoldier->setPosition(900, 900);
+	otherJinzhanSoldier->setPosition(1400, 800);
 	otherJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherJinzhanSoldier, 200, OtherJinzhanSoldierTag);
 	otherJinzhanSoldier->scheduleUpdate();
-	this->scheduleOnce(schedule_selector(GameScene::yuanchengWulawula), 1);
+	this->scheduleOnce(schedule_selector(GameScene::yuanchengWulawula), 1.5);
 }
 
 void GameScene::yuanchengWulawula(float dt)
 {
 	//player1方远程兵
 	auto meYuanchengSoldier = YuanchengSoldier::create(Player1);
-	meYuanchengSoldier->setPosition(500, 500);
+	meYuanchengSoldier->setPosition(300, 200);
 	meYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player2)));
 	this->addChild(meYuanchengSoldier, 200, MeYuanchengSoldierTag);
 	meYuanchengSoldier->scheduleUpdate();
 	//player2方远程兵
 	auto otherYuanchengSoldier = YuanchengSoldier::create(Player2);
-	otherYuanchengSoldier->setPosition(900, 900);
+	otherYuanchengSoldier->setPosition(1400, 800);
 	otherYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherYuanchengSoldier, 200, OtherYuanchengSoldierTag);
 	otherYuanchengSoldier->scheduleUpdate();
-	this->scheduleOnce(schedule_selector(GameScene::paocheWulawula), 1);
+	this->scheduleOnce(schedule_selector(GameScene::paocheWulawula), 1.5);
 }
 
 void GameScene::paocheWulawula(float dt)
 {
 	//player1方炮车兵
 	auto mePaocheSoldier = PaocheSoldier::create(Player1);
-	mePaocheSoldier->setPosition(500, 500);
+	mePaocheSoldier->setPosition(300, 200);
 	mePaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player2)));
 	this->addChild(mePaocheSoldier, 200, MePaocheSoldierTag);
 	mePaocheSoldier->scheduleUpdate();
 	//player2方炮车兵
 	auto otherPaocheSoldier = PaocheSoldier::create(Player2);
-	otherPaocheSoldier->setPosition(900, 900);
+	otherPaocheSoldier->setPosition(1400, 800);
 	otherPaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherPaocheSoldier, 200, OtherPaocheSoldierTag);
 	otherPaocheSoldier->scheduleUpdate();

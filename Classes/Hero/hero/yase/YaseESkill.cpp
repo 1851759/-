@@ -10,8 +10,8 @@ YaseESkill *YaseESkill::createYaseESkill(Hero* hero)
 	YaseESkill* bigSword = new YaseESkill();
 	if (bigSword&&bigSword->initWithFile("YaseESkill.png"))
 	{
-		bigSword->setCanTakeDamage(false);
-		bigSword->setIfRemoveWhenDamage(false);
+		bigSword->setCanTakeDamage(true);
+		bigSword->setIfRemoveWhenDamage(true);
 		bigSword->setDamagePoint(YaseESkillDamage* hero->getESkillLevel());
 		bigSword->autorelease();
 		bigSword->setScale(0.5);
@@ -27,8 +27,8 @@ void YaseESkill::takeYaseESkill(cocos2d::Vec2 startPoint, cocos2d::Vec2 targetPo
 	float length = sqrt(distance.x*distance.x + distance.y*distance.y);//获取两者之间的距离
 	cocos2d::Vec2 unitVector = distance / length;//获取单位向量
 	this->setSwordMoveDirection(unitVector);//将单位向量赋给_swordMOveDirection
-	this->setPosition(targetPoint+ Vec2(0,900));
-	this->setOriginPosition(targetPoint + Vec2(0, 900));
+	this->setPosition(targetPoint+ Vec2(0,500));
+	this->setOriginPosition(targetPoint + Vec2(0, 500));
 	this->unscheduleUpdate();
 	this->scheduleUpdate();
 }

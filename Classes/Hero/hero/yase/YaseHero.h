@@ -20,7 +20,7 @@
 #define YaseWSkillRollNumber 10//20
 #define YaseWSkillAfterShake 0.5
 
-#define YaseESkillRange 300.0
+#define YaseESkillRange 200.0
 #define YaseESkillDamage 150
 #define YaseESkillMoveSpeed 15.0
 #define YaseESkillCD 10.0

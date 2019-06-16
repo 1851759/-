@@ -67,10 +67,9 @@ void YaseNormalAttack::update(float dt)
 	else
 	{
 		this->setPosition(this->getPosition() - YaseNormalAttackMoveSpeed * this->getSwordMoveDirection());
-		if (length <= 0.01)
+		if (length <= 1)
 		{
 			this->removeFromParent();
 		}
 	}
-	//Î´Ìí¼ÓÅö×²¼ì²â
 }
