@@ -51,7 +51,6 @@ bool HelloWorld::init()
 
 
 
-
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -85,15 +84,19 @@ bool HelloWorld::init()
 		MenuItemFont::setFontName("Arial");
 		MenuItemFont::setFontSize(100);
 		auto startItem = MenuItemFont::create("start", CC_CALLBACK_1(HelloWorld::menuStartCallback, this));
-		startItem->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
+		startItem->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 4);
 
 		auto menu = Menu::create(closeItem, startItem, NULL);
 		menu->setPosition(Vec2::ZERO);
-		this->addChild(menu);
+		this->addChild(menu,100);
 
-		auto pictrue = Sprite::create("HelloWorld.png");
-		pictrue->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 3);
-		this->addChild(pictrue);
+		Sprite *bg = Sprite::create("background.jpg");
+		bg->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
+		Size size_back = bg->getContentSize();
+		float scale_x = (float)visibleSize.width / (float)size_back.width;
+		float scale_y = (float)visibleSize.height / (float)size_back.height;
+		bg->setScale(scale_x, scale_y);
+		this->addChild(bg);
 	}
 	else
 	{

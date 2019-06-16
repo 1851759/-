@@ -19,8 +19,8 @@ DefenceTower* DefenceTower::create(PlayerFlag flag)
 		//基础攻击速度，每秒攻击多少次
 		defence->changeAttackSpeed(DefenceAttackSpeed);
 		defence->setAttackWaitTime(0);
-		defence->setHealthPoint(2500);
-		defence->changeMaxHealthPoint(2500);
+		defence->setHealthPoint(3000);
+		defence->changeMaxHealthPoint(3000);
 		//基础攻击力
 		defence->changeAttackPoint(DefenceAttack);
 		//基础防御力

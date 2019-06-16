@@ -5,14 +5,14 @@
 
 
 #define DefenceNormalAttackRange 200.0
-#define DefenceNormalAttackMoveSpeed 3.5
+#define DefenceNormalAttackMoveSpeed 4.0
 
 
 
 //在此处定义防御塔初始属性
 #define DefenceAttackSpeed 0.3
-#define DefenceAttack 150.0
-#define DefenceDefence 100.0
+#define DefenceAttack 40.0
+#define DefenceDefence 40.0
 
 
 class DefenceTower : public Hero

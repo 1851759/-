@@ -31,7 +31,7 @@
 #define YaseAttackSpeed 0.5
 #define YaseAttack 100.0
 #define YaseDefence 80.0
-#define YaseMaxHealth 600.0.0
+#define YaseMaxHealth 600.0
 #define YaseHealth 600.0
 #define YaseMaxMagic 100.0
 #define YaseMagic 100.0

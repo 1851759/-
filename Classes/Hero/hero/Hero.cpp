@@ -1,6 +1,10 @@
 #include "cocos2d.h"
 #include "Hero.h"
 #include"client.h"
+#include"HouyiHero.h"
+#include"DajiHero.h"
+#include"YaseHero.h"
+#include"JieHero.h"
 USING_NS_CC;
 //定义两方英雄复活点
 //注意此处用数字表示///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +53,7 @@ Hero* Hero::create()
 
 void Hero::update(float dt)
 {
-	float cuttime = 1.0 / 20.0;
+	float cuttime = 1.0 / 60.0;
 	//平A冷却
 	if (this->getAttackWaitTime() >= 0.01)
 	{
@@ -86,17 +90,46 @@ void Hero::update(float dt)
 	{
 		this->changeExpPoint(-ExpPerLevel);
 		this->levelUp();
-		this->qSkillLevelUp();
-		this->wSkillLevelUp();
-		this->eSkillLevelUp();
-		this->changeAttackPoint(AtkPerLevel);
-		this->changeDefensePoint(DefPerLevel);
-		this->changeMaxHealthPoint(HpPerLevel);
+		//this->qSkillLevelUp();
+		//this->wSkillLevelUp();
+		//this->eSkillLevelUp();
+		//this->changeAttackPoint(AtkPerLevel);
+		//this->changeDefensePoint(DefPerLevel);
+		//this->changeMaxHealthPoint(HpPerLevel);
 		//this->setHealthPoint(this->getMaxHealthPoint());
-		this->changeMagicPoint(MpPerLevel);
+		//this->changeMagicPoint(MpPerLevel);
 		cocos2d::log("levelUP");
 	}
 
+	this->setQSkillLevel(this->getLevel());
+	this->setWSkillLevel(this->getLevel());
+	this->setESkillLevel(this->getLevel());
+	
+	if (this->getHeroName() == 'H')
+	{
+		this->setAttackPoint(HouyiAttack+AtkPerLevel*(this->getLevel()-1));
+		this->setDefencePoint(HouyiDefence + DefPerLevel * (this->getLevel()-1));
+		this->setMaxHealthPoint(HoyyiMaxHealth + DefPerLevel * (this->getLevel()-1));
+	}
+	if (this->getHeroName() == 'Y')
+	{
+		this->setAttackPoint(YaseAttack + AtkPerLevel * (this->getLevel()-1));
+		this->setDefencePoint(YaseDefence + DefPerLevel * (this->getLevel()-1));
+		this->setMaxHealthPoint(YaseMaxHealth + DefPerLevel * (this->getLevel()-1));
+	}
+	if (this->getHeroName() == 'D')
+	{
+		this->setAttackPoint(DajiAttack + AtkPerLevel * (this->getLevel()-1));
+		this->setDefencePoint(DajiDefence + DefPerLevel * (this->getLevel()-1));
+		this->setMaxHealthPoint(DajiMaxHealth + DefPerLevel * (this->getLevel()-1));
+	}
+
+	if (this->getHeroName() == 'J')
+	{
+		this->setAttackPoint(JieAttack + AtkPerLevel * (this->getLevel() - 1));
+		this->setDefencePoint(JieDefence + DefPerLevel * (this->getLevel() - 1));
+		this->setMaxHealthPoint(JieMaxHealth + DefPerLevel * (this->getLevel() - 1));
+	}
 	//英雄后摇时间
 	if (this->getHeroAfterShake() > 0.01)
 	{

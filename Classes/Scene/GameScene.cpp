@@ -46,7 +46,7 @@ Vec2 Player1StartPosition(650, 350);
 Vec2 Player2StartPosition(1050, 650);
 Vec2 HeroPosition;
 char *AboutKeyboardMessage;
-char JustAboutKeyboard[SIZE] = "Q0/0/", TwoBlood[SIZE] = "X", TwoExp[SIZE] = "L";
+char JustAboutKeyboard[SIZE] = "Q0/0/", TwoBlood[SIZE] = "X", TwoLevel[SIZE] = "L";
 
 GameScene* GameScene::create(char meName, char otherName, bool isAI)
 {
@@ -80,22 +80,12 @@ GameScene* GameScene::create(char meName, char otherName, bool isAI)
 Scene* GameScene::createScene(char meHero, char otherHero, bool isAI)
 {
 	Scene* scene = Scene::createWithPhysics();
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	/*scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);*/
 	//将物理世界的重力设为0
 	scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
 	auto gs = GameScene::create(meHero, otherHero, isAI);
 	scene->addChild(gs);
 	return scene;
-}
-//返回初始场景函数
-void GameScene::menuBackCallback(cocos2d::Ref* pSender)
-{
-
-	if (IfAI)
-	{
-		auto sc = HelloWorld::createScene();
-		Director::getInstance()->replaceScene(sc);
-	}
 }
 
 //onEnter函数
@@ -113,12 +103,7 @@ void GameScene::onEnter()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	//游戏地图
-	_tileMap = TMXTiledMap::create("Map.tmx");
-	addChild(_tileMap, 0, 100);
 
-	//初始化碰撞层
-	_collidable = _tileMap->getLayer("Collidable");
 
 
 	//注册鼠标监听器
@@ -224,6 +209,7 @@ bool GameScene::init()
 
 	//初始化碰撞层
 	_collidable = _tileMap->getLayer("Collidable");
+	_collidable->setVisible(false);
 
 
 	//根据meHeroTag设置己方英雄精灵
@@ -602,33 +588,24 @@ bool GameScene::init()
 	player2Crystal->scheduleUpdate();
 	this->addChild(player2Crystal, 200, OtherCrystalTag);
 	//player2Crystal->setScale(0.8);
-	//设置返回初始场景的菜单
-	MenuItemFont::setFontName("Arial");
-	MenuItemFont::setFontSize(20);
-	MenuItemFont* backItem = MenuItemFont::create("back", CC_CALLBACK_1(GameScene::menuBackCallback, this));
-	backItem->setPosition(origin.x + visibleSize.width - backItem->getContentSize().width / 2,
-		origin.y + backItem->getContentSize().height / 2);
-
-	auto menu = Menu::create(backItem, NULL);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu, 200);
+	
 
 	//装备商店
-	MenuItemImage *shop_xie = MenuItemImage::create("zhuangbei/xie.png", "zhuangbei/xie.png", CC_CALLBACK_1(GameScene::shop_xie, this));
-	shop_xie->setPosition(Vec2(-710, 300));
-	MenuItemImage *shop_shoutao = MenuItemImage::create("zhuangbei/duanjian.png", "zhuangbei/duanjian.png", CC_CALLBACK_1(GameScene::shop_duanjian, this));
-	shop_shoutao->setPosition(Vec2(-710, 235));
-	MenuItemImage *shop_changgong = MenuItemImage::create("zhuangbei/changjian.png", "zhuangbei/changgong.png", CC_CALLBACK_1(GameScene::shop_changjian, this));
-	shop_changgong->setPosition(Vec2(-710, 170));
-	MenuItemImage *shop_kaijia = MenuItemImage::create("zhuangbei/kaijia.png", "zhuangbei/kaijia.png", CC_CALLBACK_1(GameScene::shop_kaijia, this));
-	shop_kaijia->setPosition(Vec2(-710, 115));
-	MenuItemImage *shop_hongshuijing = MenuItemImage::create("zhuangbei/hongshuijing.png", "zhuangbei/hongshuijing.png", CC_CALLBACK_1(GameScene::shop_hongshuijing, this));
-	shop_hongshuijing->setPosition(Vec2(-710, 50));
+    MenuItemImage *shop_xie = MenuItemImage::create("zhuangbei/xie.png", "zhuangbei/xie.png", CC_CALLBACK_1(GameScene::shop_xie, this));
+    shop_xie->setPosition(Vec2(-710,300));
+    MenuItemImage *shop_shoutao = MenuItemImage::create("zhuangbei/duanjian.png", "zhuangbei/duanjian.png", CC_CALLBACK_1(GameScene::shop_duanjian, this));
+    shop_shoutao->setPosition(Vec2(-710,235));
+    MenuItemImage *shop_changgong = MenuItemImage::create("zhuangbei/changjian.png", "zhuangbei/changgong.png", CC_CALLBACK_1(GameScene::shop_changjian, this));
+    shop_changgong->setPosition(Vec2(-710,170));
+    MenuItemImage *shop_kaijia = MenuItemImage::create("zhuangbei/kaijia.png", "zhuangbei/kaijia.png", CC_CALLBACK_1(GameScene::shop_kaijia, this));
+    shop_kaijia->setPosition(Vec2(-710,115));
+    MenuItemImage *shop_hongshuijing = MenuItemImage::create("zhuangbei/hongshuijing.png", "zhuangbei/hongshuijing.png", CC_CALLBACK_1(GameScene::shop_hongshuijing, this));
+    shop_hongshuijing->setPosition(Vec2(-710,50));
 
-	Menu *_menu = Menu::create(shop_xie, shop_shoutao, shop_changgong, shop_kaijia, shop_hongshuijing, NULL);
-	this->addChild(_menu, 200);
+    Menu *_menu = Menu::create(shop_xie, shop_shoutao,shop_changgong,shop_kaijia,shop_hongshuijing, NULL);
+    this->addChild(_menu,200);
 
-	//左上角战绩
+//左上角战绩
 	auto score_blue = LabelTTF::create("0 ", "Arial", 36);
 	this->addChild(score_blue, 2);
 	score_blue->setPosition(80, 850);
@@ -652,6 +629,22 @@ bool GameScene::init()
 	this->addChild(num, 2);
 	//_meMoney_moment = _meMoney*100;
 	this->setTag(moneytag);
+
+	//经验条
+	Sprite* bar = Sprite::create("bar.png");
+	this->addChild(bar, 200);
+	bar->setPosition(1300, 200);
+	bar->setScale(0.5);
+	Sprite* Exp = Sprite::create("Exp.png");
+	ProgressTimer* EXP = ProgressTimer::create(Exp);
+	EXP->setType(ProgressTimer::Type::BAR);
+	EXP->setPosition(1300, 200);
+	EXP->setMidpoint(Vec2(0, 0.5));
+	EXP->setBarChangeRate(Vec2(1, 0));
+	EXP->setTag(Expbar);
+	this->addChild(EXP, 200);
+	Exp->setScale(0.5);
+	this->schedule(schedule_selector(GameScene::checkExp), 0.1f);
 
 	//装备查看面板
 	Sprite*equ_che = Sprite::create("equipment.png");
@@ -906,21 +899,21 @@ void GameScene::watchMeAndOther(float dt)
 	{
 		P1Blood = meHero->getHealthPoint();
 		P2Blood = otherHero->getHealthPoint();
-		P1Exp = meHero->getExpPoint();
-		P2Exp = otherHero->getExpPoint();
+		P1Level = meHero->getLevel();
+		P2Level = otherHero->getLevel();
 		TwoBlood[1] = P1Blood / 10;
 		TwoBlood[2] = P2Blood / 10;
-		TwoExp[1] = P1Exp / 100;
-		TwoExp[2] = P2Exp / 100;
+		TwoLevel[1] = P1Level;
+		TwoLevel[2] = P2Level;
 		Cli.MessageSending(TwoBlood);
-		Cli.MessageSending(TwoExp);
+		Cli.MessageSending(TwoLevel);
 	}
 	else
 	{
 		meHero->setHealthPoint(P2Blood);
 		otherHero->setHealthPoint(P1Blood);
-		meHero->setExpPoint(P2Exp);
-		otherHero->setExpPoint(P1Exp);
+		meHero->setLevel(P2Level);
+		otherHero->setLevel(P1Level);
 	}
 }
 
@@ -1533,13 +1526,13 @@ void GameScene::touchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 
 void GameScene::shop_xie(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300 && equ_num_me <= 4)
+	if (_meMoney >= 300&&equ_num_me<=4) 
 	{
-		_meMoney -= 300;
+		_meMoney -= 300; 
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeMoveSpeed(30);
 		auto xie = Sprite::create("1.png");
 		this->getChildByTag(666)->addChild(xie);
-		xie->setPosition(320 + equ_num_me * 80, 340);
+		xie->setPosition(320+equ_num_me*80,340);
 		if (!IfAI)
 			Cli.MessageSending("BX");
 		equ_num_me++;
@@ -1548,13 +1541,13 @@ void GameScene::shop_xie(cocos2d::Ref* pSender)
 
 void GameScene::shop_duanjian(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300 && equ_num_me <= 4)
+	if (_meMoney >= 300&&equ_num_me<=4)
 	{
 		_meMoney -= 300;
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeAttackSpeed(0.5);
-		auto duanjian = Sprite::create("2.png");
+		auto duanjian= Sprite::create("2.png");
 		this->getChildByTag(666)->addChild(duanjian);
-		duanjian->setPosition(320 + equ_num_me * 80, 340);
+		duanjian->setPosition(320 + equ_num_me* 80, 340);
 		if (!IfAI)
 			Cli.MessageSending("BD");
 		equ_num_me++;
@@ -1563,7 +1556,7 @@ void GameScene::shop_duanjian(cocos2d::Ref* pSender)
 
 void GameScene::shop_changjian(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300 && equ_num_me <= 4)
+	if (_meMoney >= 300&& equ_num_me <= 4)
 	{
 		_meMoney -= 300;
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeAttackPoint(200);
@@ -1578,7 +1571,7 @@ void GameScene::shop_changjian(cocos2d::Ref* pSender)
 
 void GameScene::shop_kaijia(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300 && equ_num_me <= 4)
+	if (_meMoney >= 300&& equ_num_me <= 4)
 	{
 		_meMoney -= 300;
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeDefensePoint(200);
@@ -1593,7 +1586,7 @@ void GameScene::shop_kaijia(cocos2d::Ref* pSender)
 
 void GameScene::shop_hongshuijing(cocos2d::Ref* pSender)
 {
-	if (_meMoney >= 300 && equ_num_me <= 4)
+	if (_meMoney >= 300&& equ_num_me <= 4)
 	{
 		_meMoney -= 300;
 		static_cast<Hero*>(this->getChildByTag(this->getMeFlag()))->changeMaxHealthPoint(100);
@@ -1666,13 +1659,62 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		{
 			if (ID == 1)
 			{
-				this->changeOtherExp(HeroExp);
-				this->changeOtherMoney(HeroMoney);
+				if (meHero->getTag() == MeJinzhanSoldierTag)
+				{
+					this->changeOtherExp(JinzhanSoldierExp);
+					this->changeOtherMoney(JinzhanSoldierMoney);
+				}
+				else 
+				{
+					if (meHero->getTag() == MeYuanchengSoldierTag)
+					{
+						this->changeOtherExp(YuanchengSoldierExp);
+						this->changeOtherMoney(YuanchengSoldierMoney);
+					}
+					else 
+					{
+						if (meHero->getTag() == MePaocheSoldierTag)
+						{
+							this->changeOtherExp(PaocheSoldierExp);
+							this->changeOtherMoney(PaocheSoldierMoney);
+						}
+						else
+						{
+							this->changeOtherExp(HeroExp);
+							this->changeOtherMoney(HeroMoney);
+						}
+					}
+				}
 			}
 			else
 			{
-				this->changeMeExp(HeroExp);
-				this->changeMeMoney(HeroMoney);
+				if (meHero->getTag() == MeJinzhanSoldierTag)
+				{
+					this->changeMeExp(JinzhanSoldierExp);
+					this->changeMeMoney(JinzhanSoldierMoney);
+				}
+				else
+				{
+					if (meHero->getTag() == MeYuanchengSoldierTag)
+					{
+						this->changeMeExp(YuanchengSoldierExp);
+						this->changeMeMoney(YuanchengSoldierMoney);
+					}
+					else
+					{
+						if (meHero->getTag() == MePaocheSoldierTag)
+						{
+							this->changeMeExp(PaocheSoldierExp);
+							this->changeMeMoney(PaocheSoldierMoney);
+						}
+						else
+						{
+							this->changeMeExp(HeroExp);
+							this->changeMeMoney(HeroMoney);
+						}
+					}
+				}
+
 			}
 		}
 		//如果技能为打中就消失，则让技能消失
@@ -1694,13 +1736,63 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		{
 			if (ID == 1)
 			{
-				this->changeOtherExp(HeroExp);
-				this->changeOtherMoney(HeroMoney);
+				if (meHero->getTag() == MeJinzhanSoldierTag)
+				{
+					this->changeOtherExp(JinzhanSoldierExp);
+					this->changeOtherMoney(JinzhanSoldierMoney);
+				}
+				else
+				{
+					if (meHero->getTag() == MeYuanchengSoldierTag)
+					{
+						this->changeOtherExp(YuanchengSoldierExp);
+						this->changeOtherMoney(YuanchengSoldierMoney);
+					}
+					else
+					{
+						if (meHero->getTag() == MePaocheSoldierTag)
+						{
+							this->changeOtherExp(PaocheSoldierExp);
+							this->changeOtherMoney(PaocheSoldierMoney);
+						}
+						else
+						{
+							this->changeOtherExp(HeroExp);
+							this->changeOtherMoney(HeroMoney);
+						}
+					}
+				}
 			}
 			else
 			{
-				this->changeMeExp(HeroExp);
-				this->changeMeMoney(HeroMoney);
+
+				if (meHero->getTag() == MeJinzhanSoldierTag)
+				{
+					this->changeMeExp(JinzhanSoldierExp);
+					this->changeMeMoney(JinzhanSoldierMoney);
+				}
+				else
+				{
+					if (meHero->getTag() == MeYuanchengSoldierTag)
+					{
+						this->changeMeExp(YuanchengSoldierExp);
+						this->changeMeMoney(YuanchengSoldierMoney);
+					}
+					else
+					{
+						if (meHero->getTag() == MePaocheSoldierTag)
+						{
+							this->changeMeExp(PaocheSoldierExp);
+							this->changeMeMoney(PaocheSoldierMoney);
+						}
+						else
+						{
+							this->changeMeExp(HeroExp);
+							this->changeMeMoney(HeroMoney);
+						}
+					}
+				}
+
 			}
 		}
 		//如果技能为打中就消失，则让技能消失
@@ -1722,13 +1814,61 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		{
 			if (ID == 1)
 			{
-				this->changeMeExp(HeroExp);
-				this->changeMeMoney(HeroMoney);
+				if (otherHero->getTag() == OtherJinzhanSoldierTag)
+				{
+					this->changeMeExp(JinzhanSoldierExp);
+					this->changeMeMoney(JinzhanSoldierMoney);
+				}
+				else 
+				{
+					if (otherHero->getTag() == OtherYuanchengSoldierTag)
+					{
+						this->changeMeExp(YuanchengSoldierExp);
+						this->changeMeMoney(YuanchengSoldierMoney);
+					}
+					else 
+					{
+						if (otherHero->getTag() == OtherPaocheSoldierTag)
+						{
+							this->changeMeExp(PaocheSoldierExp);
+							this->changeMeMoney(PaocheSoldierMoney);
+						}
+						else
+						{
+							this->changeMeExp(HeroExp);
+							this->changeMeMoney(HeroMoney);
+						}
+					}
+				}
 			}
 			else
 			{
-				this->changeOtherExp(HeroExp);
-				this->changeOtherMoney(HeroMoney);
+				if (otherHero->getTag() == OtherJinzhanSoldierTag)
+				{
+					this->changeOtherExp(JinzhanSoldierExp);
+					this->changeOtherMoney(JinzhanSoldierMoney);
+				}
+				else
+				{
+					if (otherHero->getTag() == OtherYuanchengSoldierTag)
+					{
+						this->changeOtherExp(YuanchengSoldierExp);
+						this->changeOtherMoney(YuanchengSoldierMoney);
+					}
+					else
+					{
+						if (otherHero->getTag() == OtherPaocheSoldierTag)
+						{
+							this->changeOtherExp(PaocheSoldierExp);
+							this->changeOtherMoney(PaocheSoldierMoney);
+						}
+						else
+						{
+							this->changeOtherExp(HeroExp);
+							this->changeOtherMoney(HeroMoney);
+						}
+					}
+				}
 			}
 		}
 		//如果技能为打中就消失，则让技能消失
@@ -1753,13 +1893,62 @@ bool GameScene::contactBegin(cocos2d::PhysicsContact& contact)
 		{
 			if (ID == 1)
 			{
-				this->changeMeExp(HeroExp);
-				this->changeMeMoney(HeroMoney);
+				if (otherHero->getTag() == OtherJinzhanSoldierTag)
+				{
+					this->changeMeExp(JinzhanSoldierExp);
+					this->changeMeMoney(JinzhanSoldierMoney);
+				}
+				else
+				{
+					if (otherHero->getTag() == OtherYuanchengSoldierTag)
+					{
+						this->changeMeExp(YuanchengSoldierExp);
+						this->changeMeMoney(YuanchengSoldierMoney);
+					}
+					else
+					{
+						if (otherHero->getTag() == OtherPaocheSoldierTag)
+						{
+							this->changeMeExp(PaocheSoldierExp);
+							this->changeMeMoney(PaocheSoldierMoney);
+						}
+						else
+						{
+							this->changeMeExp(HeroExp);
+							this->changeMeMoney(HeroMoney);
+						}
+					}
+				}
+
 			}
 			else
 			{
-				this->changeOtherExp(HeroExp);
-				this->changeOtherMoney(HeroMoney);
+				if (otherHero->getTag() == OtherJinzhanSoldierTag)
+				{
+					this->changeOtherExp(JinzhanSoldierExp);
+					this->changeOtherMoney(JinzhanSoldierMoney);
+				}
+				else
+				{
+					if (otherHero->getTag() == OtherYuanchengSoldierTag)
+					{
+						this->changeOtherExp(YuanchengSoldierExp);
+						this->changeOtherMoney(YuanchengSoldierMoney);
+					}
+					else
+					{
+						if (otherHero->getTag() == OtherPaocheSoldierTag)
+						{
+							this->changeOtherExp(PaocheSoldierExp);
+							this->changeOtherMoney(PaocheSoldierMoney);
+						}
+						else
+						{
+							this->changeOtherExp(HeroExp);
+							this->changeOtherMoney(HeroMoney);
+						}
+					}
+				}
 			}
 		}
 		//如果技能为打中就消失，则让技能消失
@@ -1801,7 +1990,13 @@ void GameScene::heroMove(Hero* target)
 void GameScene::takeHouyiNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	HouyiNormalAttack* houyiNormalAttack = HouyiNormalAttack::createTheAttack(hero);
-	auto body = PhysicsBody::createBox(houyiNormalAttack->getContentSize());
+	Vec2 verts[]{
+	Vec2(90,10),
+	Vec2(100,10),
+	Vec2(100,-10),
+	Vec2(90,-10)
+	};
+	auto body = PhysicsBody::createPolygon(verts, 4);
 	houyiNormalAttack->setPhysicsBody(body);
 	//停止当前的移动进行普攻
 	if (flag == Player1)
@@ -1826,14 +2021,19 @@ void GameScene::takeHouyiNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec
 
 void GameScene::takeHouyiWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
+	Vec2 verts[]{
+	Vec2(90,10),
+	Vec2(100,10),
+	Vec2(100,-10),
+	Vec2(90,-10)
+	};
 	//先弄他十个箭头
-					//修改箭头数记得修改for循环
 	HouyiWSkill* houyiWSkill[HouyiWSkillArrowNumber];
 	//中间的箭头单独创建
 	houyiWSkill[0] = HouyiWSkill::createHouyiWSkill(hero);
 	houyiWSkill[0]->takeHouyiWSkill(startPoint, targetPoint, 0);
 	PhysicsBody* body[HouyiWSkillArrowNumber];
-	body[0] = PhysicsBody::createBox(houyiWSkill[0]->getContentSize());
+	body[0] = PhysicsBody::createPolygon(verts, 4);
 	houyiWSkill[0]->setPhysicsBody(body[0]);
 	if (flag == Player1)
 	{
@@ -1854,7 +2054,7 @@ void GameScene::takeHouyiWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targ
 	for (int i = 1; i < HouyiWSkillArrowNumber; i += 2)
 	{
 		houyiWSkill[i] = HouyiWSkill::createHouyiWSkill(hero);
-		body[i] = PhysicsBody::createBox(houyiWSkill[i]->getContentSize());
+		body[i] = PhysicsBody::createPolygon(verts, 4);
 		houyiWSkill[i]->setPhysicsBody(body[i]);
 		if (flag == Player1)
 		{
@@ -1873,7 +2073,7 @@ void GameScene::takeHouyiWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targ
 		houyiWSkill[i]->takeHouyiWSkill(startPoint, targetPoint, i * 3.14 / 30);//根据弧度制
 
 		houyiWSkill[i + 1] = HouyiWSkill::createHouyiWSkill(hero);
-		body[i + 1] = PhysicsBody::createBox(houyiWSkill[i + 1]->getContentSize());
+		body[i + 1] = PhysicsBody::createPolygon(verts, 4);
 		houyiWSkill[i + 1]->setPhysicsBody(body[i + 1]);
 		if (flag == Player1)
 		{
@@ -1898,7 +2098,15 @@ void GameScene::takeHouyiWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targ
 void GameScene::takeHouyiESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	HouyiESkill* bigBird = HouyiESkill::createHouyiESkill(hero);
-	auto body = PhysicsBody::createCircle(bigBird->getContentSize().height / 2.5);
+	Vec2 verts[]{
+	Vec2(50,0),
+	Vec2(50,150),
+	Vec2(200,150),
+	Vec2(320,0),
+	Vec2(50,-150),
+	Vec2(200,-150)
+	};
+	auto body = PhysicsBody::createPolygon(verts, 6);
 
 	bigBird->setPhysicsBody(body);
 	bigBird->takeHouyiESkill(startPoint, targetPoint);
@@ -1926,7 +2134,13 @@ void GameScene::takeHouyiESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targ
 void GameScene::takeYaseNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	YaseNormalAttack* yaseNormalAttack = YaseNormalAttack::createTheAttack(hero);
-	auto body = PhysicsBody::createBox(yaseNormalAttack->getContentSize());
+	Vec2 verts[]{
+		Vec2(0,10),
+		Vec2(10,10),
+		Vec2(10,-10),
+		Vec2(0,-10)
+	};
+	auto body = PhysicsBody::createPolygon(verts, 4);
 	yaseNormalAttack->setPhysicsBody(body);
 	if (flag == Player1)
 	{
@@ -1993,7 +2207,13 @@ void GameScene::takeYaseWSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targe
 void GameScene::takeYaseESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	YaseESkill* yaseESkill = YaseESkill::createYaseESkill(hero);
-	auto body = PhysicsBody::createBox(yaseESkill->getContentSize());
+	Vec2 verts[]{
+	Vec2(-20,-50),
+	Vec2(20,-50),
+	Vec2(20,-130),
+	Vec2(-20,-130)
+	};
+	auto body = PhysicsBody::createPolygon(verts, 4);
 	yaseESkill->setPhysicsBody(body);
 	if (flag == Player1)
 	{
@@ -2015,7 +2235,7 @@ void GameScene::takeYaseESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targe
 void GameScene::takeDajiNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	DajiNormalAttack* dajiNormalAttack = DajiNormalAttack::createTheAttack(hero);
-	auto body = PhysicsBody::createBox(dajiNormalAttack->getContentSize());
+	auto body = PhysicsBody::createCircle(dajiNormalAttack->getContentSize().width / 2);
 	dajiNormalAttack->setPhysicsBody(body);
 	//停止当前的移动进行普攻
 	if (flag == Player1)
@@ -2041,7 +2261,15 @@ void GameScene::takeDajiNormalAttack(Hero* hero, int flag, Vec2 startPoint, Vec2
 void GameScene::takeDajiQSkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targetPoint)
 {
 	DajiQSkill* bigMoon = DajiQSkill::createDajiQSkill(hero);
-	auto body = PhysicsBody::createCircle(bigMoon->getContentSize().height / 2);
+	Vec2 verts[]{
+	Vec2(50,0),
+	Vec2(50,120),
+	Vec2(200,120),
+	Vec2(320,0),
+	Vec2(50,-120),
+	Vec2(200,-120)
+	};
+	auto body = PhysicsBody::createPolygon(verts, 6);
 
 	bigMoon->setPhysicsBody(body);
 	bigMoon->takeDajiQSkill(startPoint, targetPoint);
@@ -2101,14 +2329,20 @@ void GameScene::takeDajiESkill(Hero* hero, int flag, Vec2 startPoint, Vec2 targe
 	Vec2 dis = targetPoint - startPoint;
 	Vec2 vertical = { -dis.y,dis.x };
 	Vec2 standardVertical = vertical / sqrt(pow(vertical.x, 2) + pow(vertical.y, 2));
+	Vec2 verts[]{
+		Vec2(0,0),
+		Vec2(20,20),
+		Vec2(40,0),
+		Vec2(20,-20)
+	};
 	for (int i = 0; i < DajiESkillArrowNumber; i += 2)
 	{
 		bigBall[i] = DajiESkill::createDajiESkill(hero);
-		auto body1 = PhysicsBody::createCircle(bigBall[i]->getContentSize().height / 2);
+		auto body1 = PhysicsBody::createPolygon(verts, 4);
 		bigBall[i]->setPhysicsBody(body1);
 		bigBall[i]->takeDajiESkill(startPoint + (0.5 * i + 0.5) * standardVertical * DajiESkillArrowInterval, targetPoint);
 		bigBall[i + 1] = DajiESkill::createDajiESkill(hero);
-		auto body2 = PhysicsBody::createCircle(bigBall[i + 1]->getContentSize().height / 2);
+		auto body2 = PhysicsBody::createPolygon(verts, 4);
 		bigBall[i + 1]->setPhysicsBody(body2);
 		bigBall[i + 1]->takeDajiESkill(startPoint - (0.5 * i + 0.5) * standardVertical * DajiESkillArrowInterval, targetPoint);
 		if (flag == Player1)
@@ -2308,13 +2542,13 @@ void GameScene::jinzhanWulawula(float dt)
 {
 	//player1方近战兵
 	auto meJinzhanSoldier = JinzhanSoldier::create(Player1);
-	meJinzhanSoldier->setPosition(300, 200);
+	meJinzhanSoldier->setPosition(500, 500);
 	meJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player2)));
 	this->addChild(meJinzhanSoldier, 200, MeJinzhanSoldierTag);
 	meJinzhanSoldier->scheduleUpdate();
 	//player2方近战兵
 	auto otherJinzhanSoldier = JinzhanSoldier::create(Player2);
-	otherJinzhanSoldier->setPosition(1400, 800);
+	otherJinzhanSoldier->setPosition(900, 900);
 	otherJinzhanSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherJinzhanSoldier, 200, OtherJinzhanSoldierTag);
 	otherJinzhanSoldier->scheduleUpdate();
@@ -2325,13 +2559,13 @@ void GameScene::yuanchengWulawula(float dt)
 {
 	//player1方远程兵
 	auto meYuanchengSoldier = YuanchengSoldier::create(Player1);
-	meYuanchengSoldier->setPosition(300, 200);
+	meYuanchengSoldier->setPosition(500, 500);
 	meYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player2)));
 	this->addChild(meYuanchengSoldier, 200, MeYuanchengSoldierTag);
 	meYuanchengSoldier->scheduleUpdate();
 	//player2方远程兵
 	auto otherYuanchengSoldier = YuanchengSoldier::create(Player2);
-	otherYuanchengSoldier->setPosition(1400, 800);
+	otherYuanchengSoldier->setPosition(900, 900);
 	otherYuanchengSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherYuanchengSoldier, 200, OtherYuanchengSoldierTag);
 	otherYuanchengSoldier->scheduleUpdate();
@@ -2342,13 +2576,13 @@ void GameScene::paocheWulawula(float dt)
 {
 	//player1方炮车兵
 	auto mePaocheSoldier = PaocheSoldier::create(Player1);
-	mePaocheSoldier->setPosition(300, 200);
+	mePaocheSoldier->setPosition(500, 500);
 	mePaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player2)));
 	this->addChild(mePaocheSoldier, 200, MePaocheSoldierTag);
 	mePaocheSoldier->scheduleUpdate();
 	//player2方炮车兵
 	auto otherPaocheSoldier = PaocheSoldier::create(Player2);
-	otherPaocheSoldier->setPosition(1400, 800);
+	otherPaocheSoldier->setPosition(900, 900);
 	otherPaocheSoldier->AIcontrol(static_cast<Hero*>(this->getChildByTag(Player1)));
 	this->addChild(otherPaocheSoldier, 200, OtherPaocheSoldierTag);
 	otherPaocheSoldier->scheduleUpdate();
@@ -2468,8 +2702,12 @@ void GameScene::Zhanji(float dt)
 
 void GameScene::MakeMoney(float dt)
 {
-	if (ID == 1)
-		this->changeMeMoney(1);
-	else
-		this->changeOtherMoney(1);
+	this->changeMeMoney(1);
+}
+
+void GameScene::checkExp(float dt)
+{
+	auto EXP = (ProgressTimer*)this->getChildByTag(Expbar);
+	EXP->setScale(0.5);
+	EXP->setPercentage(this->getMeExp() / 2);
 }

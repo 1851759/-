@@ -228,16 +228,20 @@ public:
 	//获得和改变等级
 	int getLevel() const { return _level; }
 	void levelUp() { _level++; }
+	void setLevel(int level1) { _level = level1; }
 
 	//获得和改变技能等级
 	int getQSkillLevel() const { return _qSkillLevel; }
 	void qSkillLevelUp() { _qSkillLevel++; }
+	void setQSkillLevel(int qlevel) { _qSkillLevel = qlevel; }
 
 	int getWSkillLevel() const { return _wSkillLevel; }
 	void wSkillLevelUp() { _wSkillLevel++; }
+	void setWSkillLevel(int wlevel) { _wSkillLevel = wlevel; }
 
 	int getESkillLevel() const { return _eSkillLevel; }
 	void eSkillLevelUp() { _eSkillLevel++; }
+	void setESkillLevel(int elevel) { _eSkillLevel = elevel; }
 
 	//获得和改变移动速度
 	float getMoveSpeed() const { return _moveSpeed; }
@@ -246,16 +250,19 @@ public:
 	//获得和改变攻击力
 	float getAttackPoint() const { return _atk; }
 	void changeAttackPoint(float point) { _atk += point; }
+	void setAttackPoint(float atk1) { _atk = atk1; }
 
 	//获得和改变防御力
 	float getDefensePoint() const { return _def; }
 	void changeDefensePoint(float point) { _def += point; }
+	void setDefencePoint(float def1) { _def = def1; }
 
 	//生命值相关
 	virtual float getHealthPoint() const { return _healthPoint; }
 	float getMaxHealthPoint() const { return _maxHealthPoint; }
 	void changeMaxHealthPoint(float point) { _maxHealthPoint += point; }
 	void changeHealthPoint(float point) { _healthPoint += point; }
+	void setMaxHealthPoint(float mhp) { _maxHealthPoint = mhp; }
 	virtual void setHealthPoint(float point) { _healthPoint = point; }
 	virtual void sufferDamage(float damage) { _healthPoint -= damage; }
 

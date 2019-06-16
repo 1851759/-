@@ -36,17 +36,17 @@ USING_NS_CC;
 
 //被杀后给对面英雄加的经验
 #define HeroExp 100
-#define JinzhanSoldierExp 100
-#define YuanchengSoldierExp 100
-#define PaocheSoldierExp 100
-#define TowerExp 100
+#define JinzhanSoldierExp 40
+#define YuanchengSoldierExp 30
+#define PaocheSoldierExp 50
+#define TowerExp 0
 
 //被杀后给对面英雄加的金币
-#define HeroMoney 100
-#define JinzhanSoldierMoney 100
-#define YuanchengSoldierMoney 100
+#define HeroMoney 300
+#define JinzhanSoldierMoney 50
+#define YuanchengSoldierMoney 40
 #define PaocheSoldierMoney 100
-#define TowerMoney 100
+#define TowerMoney 300
 
 //出兵间隔
 #define WulaWulaCD 30.0
@@ -94,10 +94,12 @@ class GameScene :public cocos2d::Layer
 	cocos2d::Vec2 position_now;
 	cocos2d::Vec2 position_now_me, position_now_other;
 	int RedScore = 9999, BlueScore = 9998;                 //Tag
-	int moneytag = 8888;
+	int moneytag = 8888,Expbar = 1234;
 	int equ_num_me = 0,equ_num_enemy;
 
 public:
+	//经验
+	void checkExp(float dt);
 
 	void setMeFlag(int flag) { _meFlag = flag; }
 	int getMeFlag() const { return _meFlag; }
@@ -156,8 +158,6 @@ public:
 	static cocos2d::Scene* createScene(char meHero, char otherHero, bool isAI);
 	virtual bool init();
 
-	//返回初始场景
-	void menuBackCallback(cocos2d::Ref* pSender);
 	//鼠标监听
 	void touchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
 	//键盘监听
