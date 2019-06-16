@@ -4,7 +4,7 @@
 #include"GameScene.h"
 #include"cocos2d.h"
 USING_NS_CC;
-int ID = 1, n = 0, IfStart = 0, IfAI = 0, IfEquipUpdate = 0, P1Exp = 0, P2Exp = 0, P1Blood = 200, P2Blood = 200;         //IfStartÅÐ¶ÏÊÇ·ñ¿ªÊ¼£¬IfAIÅÐ¶ÏÊÇ·ñÊÇÈË»ú¶ÔÕ½
+int ID = 1, n = 0, IfStart = 0, IfAI = 0, IfEquipUpdate = 0, P1Level = 1, P2Level = 1, P1Blood = 200, P2Blood = 200;         //IfStartÅÐ¶ÏÊÇ·ñ¿ªÊ¼£¬IfAIÅÐ¶ÏÊÇ·ñÊÇÈË»ú¶ÔÕ½
 char EnemyHero = '\0', AQWE, EnemyEquip;
 Vec2 Position = { 0,0 }, AQWE_Direction;
 Vec2 CharToVec2(char Message[SIZE])                //½«´«µÝµÄcharÊý×é×ª»¯ÎªfloatÊý×é
@@ -129,8 +129,8 @@ DWORD WINAPI ClientThread(LPVOID lpParameter)                              //Ïß³
 		}
 		if (message[1] == 'L')
 		{
-			P1Exp = message[2] * 100;
-			P2Exp = message[3] * 100;
+			P1Level = message[2];
+			P2Level = message[3];
 		}
 		if (message[1] == 'X')
 		{
